@@ -1,0 +1,444 @@
+snes_init:
+008000 phk
+008001 plb
+008002 rep #$38
+008004 ldx #$02ff
+008007 txs
+008008 lda #$0000
+00800b tcd
+00800c sep #$20
+00800e lda #$01
+008010 sta $420d
+008013 lda #$8f
+008015 sta $2100
+008018 stz $2101
+00801b stz $2102
+00801e stz $2103
+008021 stz $2105
+008024 stz $2106
+008027 stz $2107
+00802a stz $2108
+00802d stz $2109
+008030 stz $210a
+008033 stz $210b
+008036 stz $210c
+008039 stz $210d
+00803c stz $210d
+00803f stz $210e
+008042 stz $210e
+008045 stz $210f
+008048 stz $210f
+00804b stz $2110
+00804e stz $2110
+008051 stz $2111
+008054 stz $2111
+008057 stz $2112
+00805a stz $2112
+00805d stz $2113
+008060 stz $2113
+008063 stz $2114
+008066 stz $2114
+008069 stz $211b
+00806c lda #$01
+00806e sta $211b
+008071 stz $211c
+008074 stz $211c
+008077 stz $211d
+00807a stz $211d
+00807d stz $211e
+008080 sta $211e
+008083 stz $211f
+008086 stz $211f
+008089 stz $2120
+00808c stz $2120
+00808f stz $2123
+008092 stz $2124
+008095 stz $2125
+008098 stz $2126
+00809b stz $2127
+00809e stz $2128
+0080a1 stz $2129
+0080a4 stz $212a
+0080a7 stz $212b
+0080aa stz $212c
+0080ad stz $212d
+0080b0 stz $212e
+0080b3 stz $212f
+0080b6 lda #$30
+0080b8 sta $2130
+0080bb stz $2131
+0080be lda #$e0
+0080c0 sta $2132
+0080c3 stz $2133
+0080c6 stz $4016
+0080c9 stz $4200
+0080cc lda #$ff
+0080ce sta $4201
+0080d1 stz $4202
+0080d4 stz $4203
+0080d7 stz $4204
+0080da stz $4205
+0080dd stz $4206
+0080e0 stz $4207
+0080e3 stz $4208
+0080e6 stz $4209
+0080e9 stz $420a
+0080ec stz $420b
+0080ef stz $420c
+0080f2 ldx #$0080
+0080f5 lda #$e0
+0080f7 sta $2104
+0080fa sta $2104
+0080fd stz $2104
+008100 stz $2104
+008103 dex
+008104 bne $80f7
+008106 ldx #$0020
+008109 stz $2104
+00810c dex
+00810d bne $8109
+00810f ldy #$0000
+008112 sty $2181
+008115 stz $2183
+008118 ldx #$8008
+00811b stx $4300
+00811e ldx #$8164
+008121 lda #$00
+008123 stx $4302
+008126 sta $4304
+008129 sty $4305
+00812c lda #$01
+00812e sta $420b
+008131 nop
+008132 sta $420b
+008135 lda #$80
+008137 sta $2115
+00813a ldy #$0000
+00813d sty $2116
+008140 sty $4305
+008143 ldx #$1809
+008146 stx $4300
+008149 lda #$01
+00814b sta $420b
+00814e stz $2121
+008151 ldx #$0200
+008154 stx $4305
+008157 ldx #$2208
+00815a stx $4300
+00815d sta $420b
+008160 jml $008c5c
+
+reset:
+008966 sei
+008967 clc
+008968 xce
+008969 jml $008000
+
+dmaToCgram:
+00896d stx $4302
+008970 sta $4304
+008973 sty $4305
+
+008976 ldx #$2200
+008979 stx $4300
+
+00897c lda #$01
+00897e sta $420b
+008981 rts
+
+dmaToVram:
+008982 stx $4302
+008985 sta $4304
+008988 sty $4305
+
+00898b lda #$80
+00898d sta $2115
+
+008990 ldx #$1801
+008993 stx $4300
+
+008996 lda #$01
+008998 sta $420b
+00899b rts
+
+dmaToWram:
+0089cb stx $4302
+0089ce sta $4304
+0089d1 sty $4305
+
+0089d4 ldx #$8008
+0089d7 stx $4300
+
+0089da lda #$01
+0089dc sta $420b
+0089df rts
+
+print_string:
+008a17 phb
+008a18 php
+008a19 stx $00
+008a1b sta $02
+008a1d lda #$7e
+008a1f pha
+008a20 plb
+008a21 rep #$20
+008a23 ldx $2701
+008a26 ldy #$ffff
+008a29 cpx #$0700
+008a2c bcs $8a54
+008a2e iny
+008a2f lda [$00],y
+008a31 and #$00ff
+008a34 beq $8a59
+008a36 cmp #$000a
+008a39 beq $8a49
+008a3b sec
+008a3c sbc #$0020
+008a3f ora $2703
+008a42 sta $2001,x
+008a45 inx
+008a46 inx
+008a47 bra $8a29
+008a49 txa
+008a4a and #$ffc0
+008a4d clc
+008a4e adc #$0040
+008a51 tax
+008a52 bra $8a29
+008a59 stx $2701
+008a5c plp
+008a5d inc
+008a5e sta $2000
+008a61 plb
+008a62 rts
+
+write_string_stack_relative:
+008a63 plx
+008a64 pla
+008a65 php
+008a66 inx
+008a67 phx
+008a68 jsr $8a17
+008a6b plx
+008a6c rep #$31
+008a6e txa
+008a6f sty $00
+008a71 adc $00
+008a73 tax
+008a74 plp
+008a75 phx
+008a76 rts
+
+clear_buffer?
+008a77 lda #$00
+008a79 sta $7e2701
+008a7d sta $7e2702
+008a81 ldx #$2001
+008a84 stx $2181
+008a87 lda #$7e
+008a89 sta $2183
+008a8c ldx #$8164
+008a8f lda #$00
+008a91 ldy #$0700
+008a94 jsr $89cb
+008a97 rts
+
+upload_test_buffer:
+008a98 lda $7e2000
+008a9c beq $8ab9
+        lda #0
+        sta $7e2701
+        sta $7e2702
+        ldx #$7400
+        stx $2116
+        ldx #$2100
+        lda #$7e
+        ldy #$0700
+        jsr $8982
+008ab9 rts
+
+integer_to_string:
+008aba stx $00
+008abc sty $02
+008abe tax
+008abf ldy #$0004
+008ac2 sep #$20
+008ac4 lda #$00
+008ac6 sta [$00],y
+008ac8 dey
+008ac9 txa
+008aca and #$0f
+008acc cmp #$0a
+008ace bcs $8ad4
+008ad0 adc #$30
+008ad2 bra $8ad7
+008ad7 sta [$00],y
+008ad9 rep #$20
+008adb txa
+008adc lsr a
+008add lsr a
+008ade lsr a
+008adf lsr a
+008ae0 tax
+008ae1 sep #$20
+008ae3 dey
+008ae4 bpl $8aca
+008ae6 rts
+
+setupInterrupts:
+008ae7 lda #$81
+008ae9 sta $0316
+008aec sta $4200
+008aef cli
+008af0 rts
+
+
+008af1 rep #$30
+008af3 pha
+008af4 phx
+008af5 phy
+008af6 phb
+008af7 inc $10
+008af9 sep #$20
+008afb lda #$00
+008afd pha
+008afe plb
+008aff jsr $8a98
+008b02 lda $0315
+008b05 sta $2100
+008b08 rep #$30
+008b0a plb
+008b0b ply
+008b0c plx
+008b0d pla
+008b0e rti
+
+008b2f php
+008b30 rep #$10
+008b32 sep #$20
+008b34 ldx $0304
+008b37 bne $8b51
+008b39 lda $2137
+008b3c lda $213d
+008b3f xba
+008b40 lda $213d
+008b43 and #$01
+008b45 xba
+008b46 rep #$20
+008b48 cmp #$00e0
+008b4b sep #$20
+008b4d bne $8b39
+008b4f bra $8b67
+008b67 ldx #$000a
+008b6a sep #$20
+008b6c lda #$01
+008b6e bit $4212
+008b71 bne $8b6e
+008b73 rep #$20
+008b75 lda $4218
+008b78 dex
+008b79 dex
+008b7a sta $0306,x
+008b7d bne $8b6a
+008b7f ldx #$000a
+008b82 dex
+008b83 dex
+008b84 phx
+008b85 rep #$20
+008b87 lda $0306,x
+008b8a ldx #$0310
+008b8d ldy #$007e
+008b90 jsr $8aba
+008b93 sep #$20
+008b95 phk
+008b96 jsr $8a63
+008bad lda #$7e
+008baf ldx #$0310
+008bb2 jsr $8a17
+008bb5 plx
+008bb6 bne $8b82
+008bb8 plp
+008bb9 rts
+
+setup_clock_timer_thingy?:
+008bba lda #$02
+008bbc sta $0300
+008bbf sta $0302
+008bc2 rts
+
+testJoypad:
+008bc3 php
+008bc4 rep #$30
+008bc6 lda $10
+008bc8 cmp #$003c
+008bcb bne $8be3
+    missing
+008be3 lda $0302
+008be6 ldx #$0310
+008be9 ldy #$007e
+008bec jsr $8aba
+008bef lda $0304
+008bf2 sep #$20
+008bf4 bne $8c18
+008bf6 phk
+008bf7 jsr $8a63
+008c16 bra $8c37
+008c37 phk
+008c38 jsr $8a63
+008c52 lda #$7e
+008c5c rep #$10
+008c5e sep #$20
+008c60 jsr $8c96
+008c63 rep #$20
+008c65 lda #$0000
+008c68 sta $7e2703
+008c6c sep #$20
+008c6e jsr $8bba
+008c71 jsr $8a77
+008c74 lda $2137
+008c77 lda $213d
+008c7a xba
+008c7b lda $213d
+008c7e and #$01
+008c80 xba
+008c81 rep #$20
+008c83 cmp #$00e1
+008c86 sep #$20
+008c88 bne $8c74
+008c8a jsr $8ae7
+008c8d jsr $8b2f
+008c90 jsr $8bc3
+008c96 ldx #$7000
+008c99 stx $2116
+008c9c ldx #$8166
+008c9f lda #$00
+008ca1 ldy #$0600
+008ca4 jsr $8982
+008ca7 lda #$00
+008ca9 sta $2121
+008cac ldx #$8766
+008caf lda #$00
+008cb1 ldy #$0200
+008cb4 jsr $896d
+008cb7 lda #$74
+008cb9 sta $2107
+008cbc sta $2108
+008cbf lda #$77
+008cc1 sta $210b
+008cc4 lda #$00
+008cc6 sta $2132
+008cc9 lda #$00
+008ccb sta $2105
+008cce lda #$03
+008cd0 sta $212c
+008cd3 lda #$fe
+008cd5 sta $210e
+008cd8 stz $210e
+008cdb dec
+008cdc sta $2110
+008cdf stz $2110
+008ce2 lda #$0f
+008ce4 sta $0315
+008ce7 rts
+
+// vim:ft=snes
