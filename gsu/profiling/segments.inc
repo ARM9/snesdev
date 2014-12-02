@@ -1,12 +1,6 @@
 
 //define DEBUG_SEGMENTS(1)
 
-macro align (variable size) {
-  while (pc() % size) {
-    db 0
-  }
-}
-
 scope seg {
   scope bank0 {
     constant start($8000)

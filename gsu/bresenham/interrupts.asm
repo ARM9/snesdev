@@ -95,7 +95,7 @@ irqHandler:
     rtl
 }
 
-    bank2()
+    bank0()
 //Interrupt vectors to be executed during 65816 operation in WRAM
 scope dummy_vectors: {
     nop //cop

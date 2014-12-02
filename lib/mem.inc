@@ -7,7 +7,22 @@ rom_to_wram:
     stx.w $4302
     sta.w $4304
     sty.w $4305
-    ldx.w #$8000
+
+    ldx.w #$8000    // wram, 1 register 1 byte
+    stx.w $4300
+
+    lda.b #$01
+    sta.w $420B
+    rts
+
+rom_fixed_to_wram:
+    //a8
+    //i16
+    stx.w $4302
+    sta.w $4304
+    sty.w $4305
+
+    ldx.w #$8008 // $2180, write 1 register once fixed source
     stx.w $4300
 
     lda.b #$01
@@ -21,8 +36,8 @@ wram_to_sram:
     sta.w $4304
     sty.w $4305
 
-    lda.b #$80
-    xba
+    lda.b #$80  // wram
+    xba         // mode byte passed in upper byte of accumulator
     tax
     stx.w $4300
 
@@ -63,7 +78,21 @@ macro LoadWram(src, dest, size) {
     jsr dma.rom_to_wram
 }
 
-macro LoadWramToSram(src, dest, size, mode) {
+macro FillWram(src, dest, size) {
+    //a8
+    //i16
+    ldx.w #{dest}
+    stx.w $2181
+    lda.b #{dest}>>16
+    sta.w $2183
+    
+    ldx.w #{src}
+    lda.b #{src}>>16
+    ldy.w #{size}
+    jsr dma.rom_fixed_to_wram
+}
+
+macro LoadWramSram(src, dest, size, mode) {
     //a8
     //i16
     ldx.w #{src}
@@ -71,7 +100,7 @@ macro LoadWramToSram(src, dest, size, mode) {
     lda.b #{src}>>16
     sta.w $2183
 
-    lda.b #{mode}
+    lda.b #{mode} // direction for transfer
     xba
     ldx.w #{dest}
     lda.b #{dest}>>16

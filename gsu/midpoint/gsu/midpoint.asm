@@ -11,7 +11,6 @@ scope drawCircle: {
     define x2(r6)
     define y2(r7)
     define err(r8)
-//  err =
 // clobbers:
 //  r0-r8
     // int x2 = r;

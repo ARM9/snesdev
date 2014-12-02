@@ -1,15 +1,15 @@
 
     arch snes.gsu
 
-include "../../lib/gsu/gsu.inc"
+include "../../../lib/gsu/gsu.inc"
 
     sram0()
 line_x:; fill 2
 line_y:; fill 2
 
-    bank1()
+    bank0()
 _gsu_start:
-    ibt r0, #sin8>>16
+    ibt r0, #lut.sin8>>16
     romb
 
     sub r0 // fast way to set r0 = 0
@@ -28,7 +28,7 @@ scope gsu_main: {
         jal fillScreen
         nop
 
-        iwt r0, #sin8
+        iwt r0, #lut.sin8
         move r5, r0
         lms r1, (line_x)
         to r14; add r1  // r14 = sin8 + line_x
@@ -91,6 +91,5 @@ scope fillScreen: {
 
 include "bresenham.asm"
 
-    bank1()
-include "../../lib/sine_lut8.inc"
+include "../../../lib/lut/sin8.inc"
 // vim:ft=bass

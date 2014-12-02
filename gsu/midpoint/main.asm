@@ -7,16 +7,16 @@ macro seek(variable offset) {
     arch snes.cpu
 include "segments.inc"
 include "header.inc"
-include "../lib/snes_regs_gsu.inc"
-include "../lib/zpage.inc"
-    bank3()
+include "../../lib/snes_regs_gsu.inc"
+include "../../lib/zpage.inc"
+    bank0()
 constant _stack_top($2ff)
-include "../lib/snes_init.inc"
+include "../../lib/snes_init.inc"
 
 include "assets.asm"
 
 //-------------------------------------
-constant wram_prg($7e8000) //allocate space for relocated scpu program
+constant wram_prg($7e8000) //relocated scpu program
 //-------------------------------------
 
     bank0()
@@ -25,9 +25,9 @@ _start:
 
 //-------------------------------------
     bank0()
-include "../lib/ppu.inc"
-include "../lib/mem.inc"
-include "../lib/timing.inc"
+include "../../lib/ppu.inc"
+include "../../lib/mem.inc"
+include "../../lib/timing.inc"
 include "framebuffer.asm"
 include "interrupts.asm"
 //-------------------------------------
@@ -62,7 +62,7 @@ main: {
     jml $7E0000|(wramMain & $ffff)
 }
 
-wramMain: {
+scope wramMain: {
     sep #$20
 
     lda.b #1
@@ -74,7 +74,7 @@ wramMain: {
     lda.b #FRAMEBUFFER>>10
     sta.w GSU_SCBR  // Set screen base to $702000
 
-    lda.b #(GSU_RON|GSU_RAN) | GSU_SCMR_4BPP | GSU_SCMR_H192
+    lda.b #(GSU_SCMR_RON|GSU_SCMR_RAN) | GSU_SCMR_4BPP | GSU_SCMR_H192
     sta.w GSU_SCMR
     sta.w gsu_scmr_mirror
 

@@ -1,10 +1,10 @@
 // ROM header including interrupt vectors
 
-include "../lib/snes_header.inc"
+include "../../lib/snes_header.inc"
 
 scope header {
 constant MAP_MODE(MAP_LOROM)
-constant ROM_SIZE(SIZE_128KiB)
+constant ROM_SIZE(SIZE_32KiB)
 constant SRAM_SIZE(SIZE_64KiB)
 constant CART_TYPE(CART_GSU + CART_ROM_RAM)
 
@@ -18,7 +18,7 @@ seek($FFB0)
     db SRAM_SIZE            // BD - Ext cart RAM (for GSU carts), no$sns seems to ignore this unless licensee code is $33
     db 0                    // BE - Special version(?)
     db 0                    // BF - Cartridge sub-number(?)
-    db "plot test            " // C0 - Game title 21 bytes
+    db "midpoint             " // C0 - Game title 21 bytes
 //     "                     "
 seek($FFD5)
     db MAP_MODE             // D5 - Map mode

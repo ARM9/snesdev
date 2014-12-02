@@ -1,6 +1,6 @@
 // ROM header including interrupt vectors
 
-include "../lib/snes_header.inc"
+include "../../lib/snes_header.inc"
 
 scope header {
 constant MAP_MODE(MAP_LOROM)

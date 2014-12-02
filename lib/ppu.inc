@@ -7,7 +7,7 @@ to_cgram:
     sta.w $4304
     sty.w $4305
     
-    ldx.w #$2200
+    ldx.w #$2200 // $2122, write 1 register once
     stx.w $4300
 
     lda.b #$01
@@ -24,8 +24,8 @@ to_vram:
     lda.b #$80
     sta.w $2115
 
-    ldx.w #$1801
-    stx.w $4300 // DMA mode word write, normal increment, dest $2118
+    ldx.w #$1801 // $2118, write 2 registers once
+    stx.w $4300
 
     lda.b #$01
     sta.w $420b
@@ -41,7 +41,7 @@ fixed_to_vram:
     lda.b #$80
     sta.w $2115
 
-    ldx.w #$1809
+    ldx.w #$1809 // $2118, write 2 registers once fixed source addr
     stx.w $4300
 
     lda.b #$01
@@ -78,6 +78,7 @@ macro FillVram(src, dest, size) {
     //i16
     ldx.w #{dest}
     stx.w $2116
+
     ldx.w #{src}
     lda.b #{src}>>16
     ldy.w #{size}

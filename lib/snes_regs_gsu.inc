@@ -62,7 +62,7 @@ constant GSU_SFR($3030) //Status/flag registers
 //	H = Immediate upper 8 bit flag /when processing opcodes with imm operands
 //	B = Prefix flag (for WITH prefix, used by MOVE/MOVES opcodes)
 //	I = Interrupt Flag (reset on read, set on STOP) (also set if IRQ masked in $3037?)
-constant GSU_GO_BIT($20)
+constant GSU_SFR_GO_BIT($20)
 
 constant GSU_BRAMR($3033) //Back-up (s)ram register
 // Access from snes cpu: W
@@ -109,8 +109,8 @@ constant GSU_SCMR($303A) //Screen mode register
 // Write 1 to give game pak ROM/RAM access back to GSU and it will resume processing.
 // hh settings: 00 = 128px, 01 = 160px, 10 = 192px, 11 = obj mode
 // cc settings: 00 = 2bpp, 01 = 4bpp, 10 = not used, 11 = 8bpp
-constant GSU_RON($10)
-constant GSU_RAN($08)
+constant GSU_SCMR_RON($10)
+constant GSU_SCMR_RAN($08)
 constant GSU_SCMR_2BPP($00)
 constant GSU_SCMR_4BPP($01)
 constant GSU_SCMR_8BPP($03)

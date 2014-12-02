@@ -1,7 +1,7 @@
 
 scope column_major_map: {
     variable map_size($400)
-    variable tile0($0000)
+    variable tile0($1400)
     constant blank_tile($12a0)
 
     while map_size > $3c0 {

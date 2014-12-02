@@ -2,13 +2,13 @@
 
     arch snes.gsu
 
-include "../../lib/gsu/gsu.inc"
+include "../../../lib/gsu/gsu.inc"
 
     sram0()
 line_x:; fill 2
 line_y:; fill 2
 
-    bank1()
+    bank0()
 _gsu_start:
     sub r0 // fast way to set r0 = 0
     cmode // cmode = 0, see lib/snes_regs_gsu.inc for further information

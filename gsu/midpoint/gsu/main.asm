@@ -1,16 +1,16 @@
 
     arch snes.gsu
 
-include "../../lib/gsu/gsu.inc"
+include "../../../lib/gsu/gsu.inc"
 
     sram0()
 line_x:; fill 2
 line_y:; fill 2
 
-    bank1()
+    bank0()
 _gsu_start:
-    sub r0 // fast way to set r0 = 0
-    cmode // cmode = 0, see lib/snes_regs_gsu.inc for further information
+    sub r0
+    cmode
 
     AlignCache()
     cache
@@ -19,7 +19,7 @@ scope gsu_main: {
     ror
     bcs dont_draw
     nop
-        ibt r0, #$ff
+        ibt r0, #0
         jal fillScreen
         nop
 

@@ -161,7 +161,7 @@ dmaToVram:
 008998 sta $420b
 00899b rts
 
-dmaToWram:
+dmaToWramFixed:
 0089cb stx $4302
 0089ce sta $4304
 0089d1 sty $4305
@@ -292,7 +292,7 @@ setupInterrupts:
 008aef cli
 008af0 rts
 
-
+nmi
 008af1 rep #$30
 008af3 pha
 008af4 phx
@@ -312,6 +312,7 @@ setupInterrupts:
 008b0c plx
 008b0d pla
 008b0e rti
+
 
 008b2f php
 008b30 rep #$10
@@ -360,7 +361,7 @@ setupInterrupts:
 008bb8 plp
 008bb9 rts
 
-setup_clock_timer_thingy?:
+setup_timer_thingy?:
 008bba lda #$02
 008bbc sta $0300
 008bbf sta $0302
