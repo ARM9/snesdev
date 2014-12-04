@@ -21,4 +21,13 @@ constant PADH_SELECT($20)
 constant PADH_Y($40)
 constant PADH_B($80)
 
+macro ReadJoypad1() {
+    //a8
+    //i16
+    lda.b #1
+L{#}:
+    bit.w REG_HVBJOY
+    bne L{#}
+    ldx.w REG_JOY1L
+}
 // vim:ft=bass

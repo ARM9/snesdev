@@ -1,11 +1,11 @@
 sa-1/
-spc700/
 *.exe
 *.sfc
 *.smc
 *.srm
 *.sym
 *.spc
+*.brr
 *.bnk
 *.rom
 *.vim
