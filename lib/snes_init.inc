@@ -1,14 +1,14 @@
 
 macro InitSnes() {
     sei; clc; xce
-    jml _InitSNES
+    jml _init_snes
 }
 
-_InitSNES:
+_init_snes:
     phk; plb
     rep #$38
 
-    ldx #>_stack_top
+    ldx #>_STACK_TOP
     txs
 
     lda #$0000
@@ -83,7 +83,7 @@ _InitSNES:
 
     stz $2131             // Add/Sub sub designation for screen, sprite, color
 
-    lda #$E0              // Color data for addition/subtraction
+    lda #$e0              // Color data for addition/subtraction
     sta $2132
 
     stz $2133             // Color data for addition/subtraction

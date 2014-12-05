@@ -10,7 +10,7 @@ include "header.inc"
 include "../../lib/snes_regs_gsu.inc"
 include "../../lib/zpage.inc"
     bank0()
-constant _stack_top($2ff)
+constant _STACK_TOP($2ff)
 include "../../lib/snes_init.inc"
 
 include "assets.asm"

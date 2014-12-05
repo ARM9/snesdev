@@ -267,8 +267,6 @@ constant REG_RDDIVH($4215) // qqqq qqqq, high byte of quotient
 //Hardware multiplication read registers, see $4202/3
 constant REG_RDMPYL($4216) // xxxx xxxx, low byte of product/remainder
 constant REG_RDMPYH($4217) // xxxx xxxx, high byte of product/remainder
-constant REG_PRODUCTL($4216)
-constant REG_PRODUCTH($4217)
 
 //Joypad registers, one word per pad read high to low
 constant REG_JOY1L($4218) // axlr0000 = A/X/L/R button status

@@ -10,13 +10,13 @@ include "header.inc"
 include "../../lib/snes_regs_gsu.inc"
 include "../../lib/zpage.inc"
     bank0()
-constant _stack_top($2ff)
+constant _STACK_TOP($2ff)
 include "../../lib/snes_init.inc"
 
 include "assets.asm"
 
 //-------------------------------------
-constant wram_prg($7e8000)
+constant WRAM_PRG($7e8000)
 //-------------------------------------
 
     bank0()
@@ -48,7 +48,7 @@ scope main: {
     rep #$10
     sep #$20
     
-    LoadWram($8000, wram_prg, $8000)
+    LoadWram($8000, WRAM_PRG, $8000)
     
     jsr setupVideo
     

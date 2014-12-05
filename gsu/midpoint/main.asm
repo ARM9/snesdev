@@ -10,13 +10,13 @@ include "header.inc"
 include "../../lib/snes_regs_gsu.inc"
 include "../../lib/zpage.inc"
     bank0()
-constant _stack_top($2ff)
+constant _STACK_TOP($2ff)
 include "../../lib/snes_init.inc"
 
 include "assets.asm"
 
 //-------------------------------------
-constant wram_prg($7e8000) //relocated scpu program
+constant WRAM_PRG($7e8000) //relocated scpu program
 //-------------------------------------
 
     bank0()
@@ -56,7 +56,7 @@ main: {
     LoadVram(column_major_map, $2C00, column_major_map.size)
     LoadCgram(sfx_pal, $00, sfx_pal.size)
 
-    LoadWram($008000, wram_prg, $8000)
+    LoadWram($008000, WRAM_PRG, $8000)
     LoadWram(dummy_vectors, $7E0104, dummy_vectors.size)
 
     jml $7E0000|(wramMain & $ffff)
