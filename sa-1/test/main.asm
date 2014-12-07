@@ -1,11 +1,5 @@
-.define ROM_NAME "SA-1 test by ARM9"
 
-.include "assert.asm"
-
-.p816   ; 65816 processor
-.a8		;\ Register convention for this entire software
-.i16	;/ 
-.smart
+    arch snes.cpu
 
 ;- Includes -------------------------------------
 

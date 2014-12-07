@@ -19,9 +19,10 @@ profile_gsu_program:
     lda #$20
     stx GSU_R15 // Go
     
-:   iny             
+-
+    iny             
     bit GSU_SFR 
-    beq :-  
+    bne -
     
     stz GSU_SCMR
     rep #$31

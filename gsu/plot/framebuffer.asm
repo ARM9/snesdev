@@ -18,7 +18,7 @@ constant VRAM_FB_MAP($2C00)
 scope chugFramebuffer: {
     //a8
     //i16
-    lda.b #GSU_SFR_GO_BIT
+    lda.b #GSU_SFR_GO
 -;  bit.w GSU_SFR   // Wait for GSU to stop
     bne -
 
@@ -82,7 +82,7 @@ dma_done:
     lda.w gsu_scmr_mirror
     sta.w GSU_SCMR
     lda.w GSU_SFR
-    ora.b #GSU_SFR_GO_BIT
+    ora.b #GSU_SFR_GO
     sta.w GSU_SFR
 
     rts

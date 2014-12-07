@@ -54,19 +54,19 @@ constant DSP_FIR5($5F)      // Echo FIR Filter Coefficient 5                    
 constant DSP_FIR6($6F)      // Echo FIR Filter Coefficient 6                             1B/RW
 constant DSP_FIR7($7F)      // Echo FIR Filter Coefficient 7                             1B/RW
 
-constant DSP_VVOLL($00)    // Voice 0 Left  Volume                                      1B/RW
-constant DSP_VVOLR($01)    // Voice 0 Right Volume                                      1B/RW
-constant DSP_VPITCHL($02)  // Voice 0 Pitch Scaler  (Lower 8bit)                        2B/RW
-constant DSP_VPITCHH($03)  // Voice 0 Pitch Scaler  (Upper 6bit)                        1B/RW
-constant DSP_VSRCN($04)    // Voice 0 Source Number (0-255)                             1B/RW
-constant DSP_VADSR1($05)   // Voice 0 ADSR Settings (Lower 8bit)                        2B/RW
-constant DSP_VADSR2($06)   // Voice 0 ADSR Settings (Upper 8bit)                        1B/RW
-constant DSP_VGAIN($07)    // Voice 0 Gain Settings                                     1B/RW
-constant DSP_VENVX($08)    // Voice 0 Current Envelope Value                            1B/R
-constant DSP_VOUTX($09)    // Voice 0 Current Sample   Value                            1B/R
-constant DSP_VUNUSEDA($0A) // Voice 0 Unused Byte A (1 Byte Of General-Purpose RAM)     1B/RW
-constant DSP_VUNUSEDB($0B) // Voice 0 Unused Byte B (1 Byte Of General-Purpose RAM)     1B/RW
-constant DSP_VUNUSEDC($0E) // Voice 0 Unused Byte C (1 Byte Of General-Purpose RAM)     1B/RW
+constant DSP_VVOLL($00)    // Voice Left  Volume                                      1B/RW
+constant DSP_VVOLR($01)    // Voice Right Volume                                      1B/RW
+constant DSP_VPITCHL($02)  // Voice Pitch Scaler  (Lower 8bit)                        2B/RW
+constant DSP_VPITCHH($03)  // Voice Pitch Scaler  (Upper 6bit)                        1B/RW
+constant DSP_VSRCN($04)    // Voice Source Number (0-255)                             1B/RW
+constant DSP_VADSR1($05)   // Voice ADSR Settings (Lower 8bit)                        2B/RW
+constant DSP_VADSR2($06)   // Voice ADSR Settings (Upper 8bit)                        1B/RW
+constant DSP_VGAIN($07)    // Voice Gain Settings                                     1B/RW
+constant DSP_VENVX($08)    // Voice Current Envelope Value                            1B/R
+constant DSP_VOUTX($09)    // Voice Current Sample   Value                            1B/R
+constant DSP_VUNUSEDA($0A) // Voice Unused Byte A (1 Byte Of General-Purpose RAM)     1B/RW
+constant DSP_VUNUSEDB($0B) // Voice Unused Byte B (1 Byte Of General-Purpose RAM)     1B/RW
+constant DSP_VUNUSEDC($0E) // Voice Unused Byte C (1 Byte Of General-Purpose RAM)     1B/RW
 
 // $80..$FF - Read-Only Mirror Of $00..$7F
 

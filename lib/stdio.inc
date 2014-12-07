@@ -52,8 +52,8 @@ scope write_string: {
 //  zp0 and zp1  = pointer to text for indirect long addressing
     phb
     php
-    stx zp0
-    sta zp1
+    stx.b zp0
+    sta.b zp1
     
     lda.b #stdout.wram_buffer>>16
     pha; plb
@@ -229,7 +229,7 @@ macro scope itoa(str_ptr) {
     //a16
     //i16
     ldx.w #{str_ptr}
-    ldy.w #{str_prt}>>16
+    ldy.w #{str_ptr}>>16
     jsr stdlib.int_to_string
 }
 // vim:ft=bass

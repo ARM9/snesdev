@@ -1,31 +1,40 @@
 
 macro scope WaitForHblank() {
     //a8
-L{#}:
+L0{#}:
     bit.w REG_HVBJOY
-    bvc L{#}
+    bvc L0{#}
 }
 
 macro scope WaitForHblankLong() {
     //a8
-L{#}:
+L0{#}:
     lda.l REG_HVBJOY
     bit.b #$40
-    beq L{#}
+    beq L0{#}
 }
 
 macro scope WaitForVblank() {
     //a8
-L{#}:
+L0{#}:
     bit.w REG_HVBJOY
-    bpl L{#}
+    bpl L0{#}
 }
 
 macro scope WaitForVblankLong() {
     //a8
-L{#}:
+L0{#}:
     lda.l REG_HVBJOY
-    bpl L{#}
+    bpl L0{#}
+}
+
+// Wait for vblank, less code than WaitForScanline(224) and works for interlace
+macro scope Vsync() {
+    //a8
+L0{#}:
+    bit.w REG_HVBJOY
+    bmi L0{#}
+    WaitForVblank()
 }
 
 macro scope WaitForScanline(line) {

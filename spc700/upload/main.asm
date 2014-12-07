@@ -42,9 +42,8 @@ main: {
     rep #$10
     sep #$20
     
-    jsr spc.waitBoot
-    
-    spc.RunCode($200, sound_driver, sound_driver.size)
+    lda #$00
+    jsl LoadSPC
 
     lda.b #$1B
     stz.w REG_CGADD
@@ -60,7 +59,5 @@ _forever:
     wai
     bra _forever
 }
-
-insert sound_driver, "main.spc"
 
 // vim:ft=bass

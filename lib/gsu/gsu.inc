@@ -28,4 +28,11 @@ macro AlignCache() {
         nop
     }
 }
+
+// useful for checking
+macro BlockSize(start) {
+    print "\n{start} block size:"
+    print pc() - {start}
+    print " bytes\n"
+}
 // vim:ft=bass

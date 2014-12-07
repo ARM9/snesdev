@@ -62,7 +62,7 @@ constant GSU_SFR($3030) //Status/flag registers
 //	H = Immediate upper 8 bit flag /when processing opcodes with imm operands
 //	B = Prefix flag (for WITH prefix, used by MOVE/MOVES opcodes)
 //	I = Interrupt Flag (reset on read, set on STOP) (also set if IRQ masked in $3037?)
-constant GSU_SFR_GO_BIT($20)
+constant GSU_SFR_GO($20)
 
 constant GSU_BRAMR($3033) //Back-up (s)ram register
 // Access from snes cpu: W
