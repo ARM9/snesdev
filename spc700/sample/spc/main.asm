@@ -18,12 +18,6 @@ constant BASE_HZ(570*10)
 constant SAMPLES_PER_CYCLE(2) // number of samples in fundamental wave cycle
 constant BASE_PITCH(BASE_HZ*10000/78125*SAMPLES_PER_CYCLE)
 
-// Moves #immediate or A, X, or Y to DSP register reg
-macro wdsp(reg, data) {
-    str REG_DSPADDR=#{reg}
-    str REG_DSPDATA={data}
-}
-
 // Starts note with VPITCH=pitch for chan (0 through 7)
 macro start_note(pitch, chan, inst) {
     ldy #{pitch}>>8
@@ -32,51 +26,51 @@ macro start_note(pitch, chan, inst) {
     phx
     ldx #{chan} * $10
     jsr init_note
-    wdsp(DSP_KON, #1 << {chan})
+    WDSP(DSP_KON, #1 << {chan})
 }
 
 main:
     clp
     jsr init_dsp
-    
+
     // Have timer 0 tick at TIMER_BPM
     str REG_T0DIV=#(8000 + TIMER_BPM/2) / TIMER_BPM
     str REG_CONTROL=#$81    // enable IPL ROM and TIMER0
-    
+
     // Start the three notes of major chord with some delay between each
     //start_note BASE_PITCH*4/4, 0, 3
     start_note((BASE_PITCH+100)*5/4, 2, 1)
-    
+
     lda #100
     jsr delay_beats
     start_note((BASE_PITCH+140)*5/4, 2, 1)
     //start_note BASE_PITCH*5/4, 1, 2
-    
+
     lda #100
     jsr delay_beats
-    
+
     start_note((BASE_PITCH+180)*5/4, 2, 1)
-    
+
 _forever:
     bra _forever
 
 
 // Initializes global DSP registers
 init_dsp:
-    wdsp(DSP_FLG,  #$20)
-    wdsp(DSP_KON,  #0)
-    wdsp(DSP_KOFF, #$FF)
-    wdsp(DSP_DIR,  #directory>>8)
-    
-    wdsp(DSP_PMON,  #0)
-    wdsp(DSP_KOFF,  #0)
-    wdsp(DSP_NON,   #0)
-    wdsp(DSP_EON,   #0)
-    wdsp(DSP_MVOLL, #$7F)
-    wdsp(DSP_MVOLR, #$7F)
-    wdsp(DSP_EVOLL, #0)
-    wdsp(DSP_EVOLR, #0)
-    
+    WDSP(DSP_FLG,  #$20)
+    WDSP(DSP_KON,  #0)
+    WDSP(DSP_KOFF, #$FF)
+    WDSP(DSP_DIR,  #directory>>8)
+
+    WDSP(DSP_PMON,  #0)
+    WDSP(DSP_KOFF,  #0)
+    WDSP(DSP_NON,   #0)
+    WDSP(DSP_EON,   #0)
+    WDSP(DSP_MVOLL, #$7F)
+    WDSP(DSP_MVOLR, #$7F)
+    WDSP(DSP_EVOLL, #0)
+    WDSP(DSP_EVOLR, #0)
+
     rts
 
 // Moves data to x OR addr. X should be $00, $10 ... $70 to select the voice.
@@ -85,22 +79,21 @@ init_dsp:
 macro dmovx(addr, data) {
     txa
     ora #{addr}
-    sta REG_DSPADDR
-    str REG_DSPDATA={data} // #imm
+    ldy {data}
+    stw REG_DSPADDR
 }
 
 macro dmovx(addr) {
     txa
     ora #{addr}
-    sta REG_DSPADDR
-    sty REG_DSPDATA
+    stw REG_DSPADDR
 }
 
 // Initializes note on voice X ($00, $10 ... $70) with pitch YA
 init_note:
     phy
     pha
-    
+
     dmovx(DSP_VVOLL,  #$7F)
     dmovx(DSP_VVOLR,  #$7F)
     ply
@@ -119,7 +112,7 @@ init_note:
     dmovx(DSP_VADSR1, #$CF)
     dmovx(DSP_VADSR2, #$28)
     dmovx(DSP_VGAIN,  #$CF)
-    
+
     rts
 
 // Delays A beats
@@ -137,23 +130,18 @@ _wait_timer_tick:
 
 // Sample directory must be aligned to page
 
-macro align(bytes) {
-    while (pc() & ({bytes}-1)) {
-        nop
-    }
-}
     align($100)
 directory:
     dw trumpet, trumpet
-    
+
     dw holdit, 0
 
     dw 0, 0
 
     //dw snare, snare+snare.size-2
-    
+
     dw timpani, timpani+timpani.size-2
-    
+
     //dw bass, bass+$A2
 brr_heap_start:
     insert trumpet, "trumpet.brr"

@@ -1,9 +1,10 @@
 
     loram()
 tmp_intstr:; fill 5
+
     bank0()
 scope sqrtTest: {
-define num0($100)
+define num0($64)
     php
 
     // store parameters
@@ -30,7 +31,7 @@ define num0($100)
 
     stz.w GSU_SCMR
 
-    rep #$31
+    rep #$30
 
     lda.w GSU_R0
     itoa(tmp_intstr)

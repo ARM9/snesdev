@@ -1,4 +1,10 @@
 
+macro align(bytes) {
+  while (pc() & ({bytes}-1)) {
+    nop
+  }
+}
+
 macro InitSnes() {
     sei; clc; xce
     jml _init_snes

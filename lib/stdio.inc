@@ -193,7 +193,7 @@ int_to_string:
     //a16
     //i16
     stx.b zp0
-    sty.w zp1
+    sty.b zp1
 
     tax
     ldy.w #4
@@ -211,7 +211,7 @@ _next:
     bra +
 _is_hex:
     clc
-    adc #23+32
+    adc.b #23+32
 +
     sta [zp0],y
     rep #$20

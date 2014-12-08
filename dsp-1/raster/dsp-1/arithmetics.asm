@@ -45,12 +45,7 @@ dspMult16:
 	sta.l _DSP_DATA_REG_LONG // L
 	lda.l _DSP_DATA_REG_LONG // M
 	sta.b tcc__r0
-	rtl
-
-//int dspMult8(char A, char B)//
-dspMult8:
-	
-	rtl
+	rts
 
 // 5.1.2 INVERSE CALCULATION (FLOATING POINT)
 // Name: Inverse

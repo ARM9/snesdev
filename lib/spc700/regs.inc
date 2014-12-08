@@ -70,10 +70,16 @@ constant DSP_VUNUSEDC($0E) // Voice Unused Byte C (1 Byte Of General-Purpose RAM
 
 // $80..$FF - Read-Only Mirror Of $00..$7F
 
+macro align(bytes) {
+  while (pc() & ({bytes}-1)) {
+    nop
+  }
+}
+
 // SPC700 Macros
-macro WDSP(REG, variable DATA) {
+macro WDSP(REG, DATA) {
   lda #{REG}
-  ldy #DATA
+  ldy {DATA}
   stw REG_DSPADDR
 }
 
@@ -83,14 +89,14 @@ macro WDSP_REG(REG) {
 }
 
 macro SPCInit() { // SPC700 Initialisation
-  WDSP(DSP_FLG,$20)  // Disable Echo Buffer Writes
-  WDSP(DSP_KON,$00)  // Reset Key On Flags
-  WDSP(DSP_KOFF,$FF) // Set Key Off Flags
-  WDSP(DSP_PMON,$00) // Reset Pitch Modulation Enable Flags
-  WDSP(DSP_NON,$00)  // Reset Noise Enable Flags
-  WDSP(DSP_EON,$00)  // Reset Echo On Flags
-  WDSP(DSP_EVOLL,0)  // Reset Echo Volume Left
-  WDSP(DSP_EVOLR,0)  // Reset Echo Volume Right
+  WDSP(DSP_FLG, #$20)  // Disable Echo Buffer Writes
+  WDSP(DSP_KON, #$00)  // Reset Key On Flags
+  WDSP(DSP_KOFF, #$FF) // Set Key Off Flags
+  WDSP(DSP_PMON, #$00) // Reset Pitch Modulation Enable Flags
+  WDSP(DSP_NON, #$00)  // Reset Noise Enable Flags
+  WDSP(DSP_EON, #$00)  // Reset Echo On Flags
+  WDSP(DSP_EVOLL, #0)  // Reset Echo Volume Left
+  WDSP(DSP_EVOLR, #0)  // Reset Echo Volume Right
 }
 
 macro scope SPCWaitMS(AMOUNT) { // Wait For MilliSecond Amount (Granularity = 1ms, Max Wait = 255ms)
@@ -255,7 +261,7 @@ macro SetPitch(voice, note, octave, C9Pitch) {
     pitch = (pitch >> (9-{octave}))
   }
 
-  WDSP({voice}<<4|DSP_VPITCHL, pitch & $FF) // Voice X: Pitch (Lower Byte)
-  WDSP({voice}<<4|DSP_VPITCHH, pitch >> 8)  // Voice X: Pitch (Upper Byte)
+  WDSP({voice}<<4|DSP_VPITCHL, #pitch & $FF) // Voice X: Pitch (Lower Byte)
+  WDSP({voice}<<4|DSP_VPITCHH, #pitch >> 8)  // Voice X: Pitch (Upper Byte)
 }
 // vim:ft=bass
