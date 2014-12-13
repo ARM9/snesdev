@@ -3,10 +3,10 @@
 include "../../lib/snes_header.inc"
 
 scope header {
-constant MAP_MODE(MAP_LOROM)
-constant ROM_SIZE(SIZE_32KiB)
-constant SRAM_SIZE(SIZE_NONE)
-constant CART_TYPE(CART_ROM_RAM)
+constant MAP_MODE(MAP_SA1ROM)
+constant CART_TYPE(CART_SA1 + CART_ROM_RAM)
+constant ROM_SIZE(SIZE_256KiB)
+constant SRAM_SIZE(SIZE_128KiB)
 
 origin (($400<<ROM_SIZE)-1)
 db $ff //fill rom
@@ -18,7 +18,7 @@ seek($FFB0)
     db 0                    // BD - Ext cart RAM (for GSU carts), no$sns seems to ignore this unless licensee code is $33
     db 0                    // BE - Special version(?)
     db 0                    // BF - Cartridge sub-number(?)
-    db "spc700 test          " // C0 - Game title 21 bytes
+    db "sa1 test             " // C0 - Game title 21 bytes
 //     "                     "
 seek($FFD5)
     db MAP_MODE             // D5 - Map mode
@@ -34,9 +34,9 @@ seek($FFE4)             // native vectors
     dw 0                // cop
     dw 0                // brk
     dw 0                // abort
-    dw nmiHandler       // nmi
+    dw WRAM_NMI_VECTOR  // nmi
     dw 0                // unused
-    dw irqHandler       // irq
+    dw WRAM_IRQ_VECTOR  // irq
     dw 0, 0             // -
 seek($FFF4)             // emulation mode vectors
     dw 0                // cop

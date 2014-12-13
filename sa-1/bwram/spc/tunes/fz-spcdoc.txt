@@ -1,0 +1,35 @@
+	F-Zero spc engine doc
+I'm not sure how much F-Zero stores in ARAM at once, at least 8 tunes and samples for all of them.
+
+
+	APU IO ports
+
+$2140
+This port is multi-purpose, you use the high nibble to play sound effects, the low nibble to play a tune.
+Writing 0 in the high nibble stops sfx, likewise writing 0 in the low nibble stops the current tune from playing.
+This does not affect registers $2141-$2143, however some effects played with those registers take precedence over this register.
+Only sound effects that use noise exclusively can play simultaneously with sound effects played through this register.
+
+Writing #$F0 (derp) to $2140 seems to trigger a special case in spc, is this the command to change tune?
+
+Sound effect values and control bit (high nibble):
+$0 - stop playing current $2140 sound effect. Writing 0 to this nibble also resets the port, which you have to do if you want to play the same sound effect twice in a row.
+
+$8 - Seems to be control bit for fading out music and sound effects (including $2141-$2143). If this bit is set, then fade out, so writing $E7 fades out while playing sound effect $6 and tune $7
+
+Tune values (low nibble):
+$0 - stop music, write a non-zero value to play another tune.
+$8 - only fade out music, not sound effects, unless the bit 3 is set in the high nibble as well then fade out all.
+Note that, unlike its high nibble counterpart, this is not a control bit, for example $F is the same tune as $7.
+
+$2141
+Write to play various effects
+$00 to mute
+
+$2142
+Write to play some other sound effects
+write 0 in the high nibble to mute.
+
+$2143
+Write to play more sound effects
+$00 to mute

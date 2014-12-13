@@ -40,6 +40,17 @@ macro puts(string) {
 
     bank0()
 scope stdout {
+
+scope init: {
+    php
+
+    rep #$30
+    lda.w #$2000
+    sta.l stdout.vram_map_properties
+
+    plp
+    rts
+}
 // supported control characters:
 //  \n = 0x0A
 scope write_string: {
@@ -163,7 +174,7 @@ macro SetXY(column, row) {
 
 macro SetPalette(palette) {
     //a16
-    lda.w #({palette} & 7) << 10
+    lda.w #$2000 | (({palette} & 7) << 10)
     sta.l stdout.vram_map_properties
 }
 
@@ -171,15 +182,15 @@ macro SetPalette(palette) {
 
     loram()
 scope stdout {
-constant WRAM_BUFFER_SIZE($700)
+    constant WRAM_BUFFER_SIZE($700)
 
-wram_buffer_dirty:; fill 1
-wram_buffer:; fill WRAM_BUFFER_SIZE
-wram_buffer_pointer:; fill 2
-vram_map_properties:; fill 2
+    wram_buffer_dirty:; fill 1
+    wram_buffer:; fill WRAM_BUFFER_SIZE
+    wram_buffer_pointer:; fill 2
+    vram_map_properties:; fill 2
 
-constant VRAM_MAP_ADDR($7400)
-constant VRAM_TILES_ADDR($7000)
+    constant VRAM_MAP_ADDR($7400)
+    constant VRAM_TILES_ADDR($7000)
 }
 
     bank0()
@@ -192,6 +203,8 @@ int_to_string:
 //  y16 = bank byte of pointer to dest string
     //a16
     //i16
+    php
+
     stx.b zp0
     sty.b zp1
 
@@ -222,6 +235,7 @@ _is_hex:
     dey
     bpl _next
 
+    plp
     rts
 }
 

@@ -27,6 +27,7 @@ _init_snes:
 
     lda #$8f              // Force v-blank
     sta $2100
+    stz $4200             // Reset V-blank, interrupt, joypad register
 
     stz $2101             // Sprite register (size + address in VRAM)
     stz $2102             // Sprite registers (address of sprite memory)
@@ -95,8 +96,6 @@ _init_snes:
     stz $2133             // Color data for addition/subtraction
 
     stz $4016
-
-    stz $4200             // Reset V-blank, interrupt, joypad register
 
     lda #$ff
     sta $4201             // Programmable I/O Port

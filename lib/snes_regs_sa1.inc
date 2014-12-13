@@ -3,47 +3,53 @@ include "snes_regs.inc"
 // SA-1 registers, assume 8 bits wide unless stated otherwise
 
 //SA-1 CPU control
-constant SA1_CCNT($2200) // idrn 3210, scpu access: W
+constant SA1_CCNT($2200) // idrn 3210, SCPU access: W
 //	i = set IRQ, 0 disable 1 enable
 //	d = rdy b, 0 ready 1 wait
 //	r = SA-1 cpu reset, 0 boot 1 reset and stop. write 0 to boot I guess
-//	n = SA-1 nmi from scpu, 0 disable 1 enable
-//	3210 = message from scpu to SA-1
+//	n = SA-1 nmi from SCPU, 0 disable 1 enable
+//	3210 = message from SCPU to SA-1
+constant SA1_CCNT_IRQ($80)
+constant SA1_CCNT_WAIT($40)
+constant SA1_CCNT_STOP($20)
+constant SA1_CCNT_NMI($10)
 
 //SCPU Interrupt Enable
-constant SA1_SIE($2201) // i-c- ----, scpu access: W
+constant SA1_SIE($2201) // i-c- ----, SCPU access: W
 //	i = IRQ, 0 disable 1 enable
 //	c = character conversion DMA IRQ, 0 disable 1 enable
 
 //SCPU Interrupt Clear
-constant SA1_SIC($2202) // i-c- ----, scpu access: W
+constant SA1_SIC($2202) // i-c- ----, SCPU access: W
 //	i = IRQ clear from SA-1, 0 no change 1 clear
 //	c = character conversion DMA IRQ clear, 0 no change 1 clear
 
-constant SA1_CRV($2203) // SA-1 reset vector 16 bits, scpu access: W
-constant SA1_CNV($2205) // SA-1 NMI vector 16 bits, scpu access: W
-constant SA1_CIV($2207) // SA-1 IRQ vector 16 bits, scpu access: W
+constant SA1_CRV($2203) // SA-1 reset vector 16 bits, SCPU access: W
+constant SA1_CNV($2205) // SA-1 NMI vector 16 bits, SCPU access: W
+constant SA1_CIV($2207) // SA-1 IRQ vector 16 bits, SCPU access: W
 
 //SCPU Controll
 constant SA1_SCNT($2209) // qi-n 3210, SA-1 access: W
-//	q = IRQ from SA-1 to scpu, 0 disable irq 1 enable
-//	i = scpu IRQ vector selection, 0 game pak rom 1 $220E
-//	n = scpu NMI vector selection, 0 game pak rom 1 $220C
-//	3210 = message from SA-1 to scpu 
+//	q = IRQ from SA-1 to SCPU, 0 disable irq 1 enable
+//	i = SCPU IRQ vector selection, 0 game pak rom 1 $220E
+//	n = SCPU NMI vector selection, 0 game pak rom 1 $220C
+//	3210 = message from SA-1 to SCPU 
+constant SA1_SCNT_IRQV_SIV($40)
+constant SA1_SCNT_NMIV_SNV($10)
 
 // SA-1 Interrupt enable
 constant SA1_CIE($220A) // itdn ----, SA-1 access: W
-//	i = irq control from scpu to SA-1, 0 disable 1 enable
+//	i = irq control from SCPU to SA-1, 0 disable 1 enable
 //	t = irq control from timer to SA-1, 0 disable 1 enable
 //	d = irq control to SA-1 at end of SA-1 DMA, 0 disable 1 enable
-//	n = nmi control from scpu to SA-1, 0 disable 1 enable
+//	n = nmi control from SCPU to SA-1, 0 disable 1 enable
 
 // SA-1 Interrupt clear
 constant SA1_CIC($220B) // itdn ---, SA-1 access: W
-//	i = irq clear from scpu to SA-1, 0 no change 1 clear
+//	i = irq clear from SCPU to SA-1, 0 no change 1 clear
 //	t = irq clear from timer to SA-1, 0 no change 1 clear
 //	d = irq clear to SA-1 at end of SA-1 DMA, 0 no change 1 clear
-//	n = nmi clear from scpu to SA-1, 0 no change 1 clear
+//	n = nmi clear from SCPU to SA-1, 0 no change 1 clear
 
 constant SA1_SNV($220C) // SCPU NMI vector 16 bits, SCPU W
 constant SA1_SIV($220E) // SCPU IRQ vector 16 bits, SCPU W
@@ -70,26 +76,26 @@ constant SA1_VCNT($2214) // 9 bits, SA-1 access: W
 //		Timer IRQ vertical count value (NTSC 0-261, PAL 0-311)
 
 //The following 4 registers are used to set memory mapping for banks C,D,E and F respectively.
-constant SA1_CXB($2220) // b--- -aaa SCPU access: W
+constant SA1_CXB($2220) // b--- -aaa, SCPU access: W
 //	When B is set, accessing an address in $00-1F:8000-FFFF will return (aaa << 20) | (addr & 0x0F7FFF).
 //	If B is not set accessing an address in $00-1F:8000-FFFF will return  (addr & 0x0f7fff)
 //	$C0-$CF:0000-FFFF will always return (aaa << 20) | (addr & 0x0FFFFF)
 
-constant SA1_DXB($2221) // b--- -aaa SCPU access: W
+constant SA1_DXB($2221) // b--- -aaa, SCPU access: W
 //	see above but replace $00-1F with $20-3F, $C0-CF with $D0-DF
 
-constant SA1_EXB($2222) // b--- -aaa SCPU access: W
+constant SA1_EXB($2222) // b--- -aaa, SCPU access: W
 //	$80-9F, $E0-EF
 
-constant SA1_FXB($2223) // b--- -aaa SCPU access: W
+constant SA1_FXB($2223) // b--- -aaa, SCPU access: W
 //	$A0-BF, $F0-FF
 
-constant SA1_BMAPS($2224) // ---s ssss SCPU access: W
-//	s = BW-RAM address image mapping for scpu.
+constant SA1_BMAPS($2224) // ---s ssss, SCPU access: W
+//	s = BW-RAM address image mapping for SCPU.
 //		The BW-RAM image to be mapped to address range $6000-7FFF of banks $00-3F and $80-BF is user selectable from $00-1F.
 //		This is image is mirrored across all lorom banks.
 
-constant SA1_BMAP($2225) // sccc cccc SA-1 access: W
+constant SA1_BMAP($2225) // sccc cccc, SA-1 access: W
 //	c = BW-RAM address image mapping for SA-1
 //		This selects the BW-RAM image to be mapped to the SA-1 at addresses $6000-7FFF of banks $00-3F and $80-BF.
 //	s = specifies the BW-RAM source to be projected
@@ -97,28 +103,28 @@ constant SA1_BMAP($2225) // sccc cccc SA-1 access: W
 //		1 banks $60-6F are displayed in 128 blocks using bits 0-6
 //	The image is mirrored across all lorom ($00-3F/$80-BF:$6000-7FFF)
 
-constant SA1_SBWE($2226) // s--- ---- SCPU access: W
+constant SA1_SBWE($2226) // s--- ----, SCPU access: W
 //	s = cancels BW-RAM write protection from SCPU
 //		0 protect, 1 write enable
 
-constant SA1_CBWE($2227) // c--- ---- SA-1 access: W
+constant SA1_CBWE($2227) // c--- ----, SA-1 access: W
 //	c = Cancels BW-RAM write protection from SA-1
 //		0 protect, 1 write enable
 
-constant SA1_BWPA($2228) // ---- bbbb SCPU access: W
+constant SA1_BWPA($2228) // ---- bbbb, SCPU access: W
 //	b = BW-RAM write protected area setting (bank $40-43)
 //		write protected area size: 2048 << bbbb
 //	At start-up all areas are write-protected.
 
-constant SA1_SIWP($2229) // ssss ssss SCPU access: W
+constant SA1_SIWP($2229) // ssss ssss, SCPU access: W
 //	s = SA-1 I-RAM write protection setting, works differently from BW-RAM write protection in that each bit enables/disables writing to a 256 byte area.
 //		0 write disable, 1 enable (for the corresponding area)
 //		$01 to enable writing $3000-30FF, $02 $3100-31FFF, $03 $3000-31FF
 
-constant SA1_CIWP($222A) // cccc cccc SA-1 access: W
+constant SA1_CIWP($222A) // cccc cccc, SA-1 access: W
 //	c = SA-1 I-RAM write protection setting, works same as $2229
 
-constant SA1_DCNT($2230) // cpel -dss SA-1 access: W
+constant SA1_DCNT($2230) // cpel -dss, SA-1 access: W
 //	c = DMA enable control, 0 disable 1 enable
 //	p = DPrio processing priority between SA-1 and DMA, 0 SA-1 priority, 1 DMA priority
 //	d = destination device, 0 SA-1 I-RAM, 1 BW-RAM
@@ -128,8 +134,8 @@ constant SA1_DCNT($2230) // cpel -dss SA-1 access: W
 //		0 SA-1 -> SA-1 I-RAM write (CHR conv 2)
 //		1 BW-RAM -> SA-1 I-RAM transfer (CHR conv 1)
 
-constant SA1_CDMA($2231) // h--s sscc
-//	h = End character conversion 1, when character conversion 1 is completed, CHDEND is set to 1 by the SCPU.
+constant SA1_CDMA($2231) // h--s sscc, SCPU & SA-1 access: W
+//	h = 1 to end character conversion 1, when character conversion 1 is completed, CHDEND is set to 1 by the SCPU.
 //	c = character conversion DMA color mode,
 //		00 8bpp
 //		01 4bpp
@@ -143,10 +149,16 @@ constant SA1_CDMA($2231) // h--s sscc
 //		100		16
 //		101		32
 
+constant SA1_SDAL($2232) // low 8 bits, SCPU & SA-1 access: W
+constant SA1_SDAM($2233) // mid 8 bits, SCPU & SA-1 access: W
+constant SA1_SDAH($2234) // high 8 bits, SCPU & SA-1 access: W
 constant SA1_SDA($2232) // 24 bits, SCPU & SA-1 access: W
 //	bit 0-23: DMA source device A start address
 //		Data should be stored to the SDA registers in the order of low -> middle -> high
 
+constant SA1_DDAL($2235) // low 8 bits, SCPU & SA-1 access: W
+constant SA1_DDAM($2235) // mid 8 bits, SCPU & SA-1 access: W
+constant SA1_DDAH($2235) // high 8 bits, SCPU & SA-1 access: W
 constant SA1_DDA($2235) // 24 bits, SCPU & SA-1 access: W
 //	bit 0-23: DMA destination device start address
 //		When transmitting to SA-1 IRAM, DMA transfer is initiated by the write to register $2236
@@ -207,11 +219,11 @@ constant SA1_SFR($2300) // ivdn cccc, SCPU access: R
 // Note: reading this register does not clear its contents.
 
 constant SA1_CFR($2301) // itdn ssss
-//	i = IRQ flag from scpu, 0 no IRQ, 1 IRQ
+//	i = IRQ flag from SCPU, 0 no IRQ, 1 IRQ
 //	t = IRQ flag from timer, 0 no IRQ, 1 IRQ
 //	d = IRQ flag at the end of DMA, 0 no IRQ, 1 IRQ (end of DMA)
-//	n = NMI flag from scpu, 0 no NMI, 1 NMI
-//	s = Message port from scpu 0-15
+//	n = NMI flag from SCPU, 0 no NMI, 1 NMI
+//	s = Message port from SCPU 0-15
 //	Note: reading this register does not clear its contents.
 
 constant SA1_HCR($2302) // 9 bits, SA-1 access: R

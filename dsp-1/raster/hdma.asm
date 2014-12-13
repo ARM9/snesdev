@@ -1,9 +1,7 @@
 
-scope macro _hdma_routine_macro1(channel) {
+macro _hdma_setup(channel) {
 	lda.b #{channel}
-	ora.w _WRAM_HDMAEN
-	sta.w _WRAM_HDMAEN
-	//tsb.w _WRAM_HDMAEN
+    tsb.w _WRAM_HDMAEN
 }
 
 setupHDMAChannel0: // 16 bit X = $AABB AA = destination register BB = mode , 16 bit Y = $AABB source address high and low bytes,  8 bit A = source bank
@@ -13,7 +11,7 @@ setupHDMAChannel0: // 16 bit X = $AABB AA = destination register BB = mode , 16 
 	//	$4313 = high byte
 	sta.w $4314
 	
-	_hdma_routine_macro1($01)
+	_hdma_setup($01)
 	rts
 
 setupHDMAChannel1: // 16 bit X = $AABB AA = destination register BB = mode , 16 bit Y = $AABB source address high and low bytes,  8 bit A = source bank
@@ -23,7 +21,7 @@ setupHDMAChannel1: // 16 bit X = $AABB AA = destination register BB = mode , 16 
 	//	$4313 = high byte
 	sta.w $4314
 	
-	_hdma_routine_macro1($02)
+	_hdma_setup($02)
 	rts
 
 setupHDMAChannel2:
@@ -33,7 +31,7 @@ setupHDMAChannel2:
 	//	$4313 = high byte
 	sta.w $4324
 	
-	_hdma_routine_macro1($04)
+	_hdma_setup($04)
 	rts
 
 setupHDMAChannel3: // 16 bit X = $AABB AA = destination register BB = mode , 16 bit Y = $AABB source address high and low bytes,  8 bit A = source bank
@@ -43,7 +41,7 @@ setupHDMAChannel3: // 16 bit X = $AABB AA = destination register BB = mode , 16 
 	//	$4313 = high byte
 	sta.w $4334
 	
-	_hdma_routine_macro1($08)
+	_hdma_setup($08)
 	rts
 
 setupHDMAChannel4:
@@ -53,7 +51,7 @@ setupHDMAChannel4:
 	//	$4313 = high byte
 	sta.w $4344
 	
-	_hdma_routine_macro1($10)
+	_hdma_setup($10)
 	rts
 	
 setupHDMAChannel5:
@@ -63,7 +61,7 @@ setupHDMAChannel5:
 	//	$4313 = high byte
 	sta.w $4354
 	
-	_hdma_routine_macro1($20)
+	_hdma_setup($20)
 	rts
 
 setupHDMAChannel6:
@@ -73,7 +71,7 @@ setupHDMAChannel6:
 	//	$4313 = high byte
 	sta.w $4364
 	
-	_hdma_routine_macro1($40)
+	_hdma_setup($40)
 	rts
 	
 setupHDMAChannel7:
@@ -83,7 +81,7 @@ setupHDMAChannel7:
 	//	$4313 = high byte
 	sta.w $4374
 	
-	_hdma_routine_macro1($80)
+	_hdma_setup($80)
 	rts
 
 // vim:ft=bass

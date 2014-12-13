@@ -1,0 +1,8 @@
+$2140 
+seems to be control command port
+
+$2141
+unkown
+
+$2142 and $2143
+control cart sounds, different panning, pitch and volume

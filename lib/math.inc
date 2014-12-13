@@ -1,4 +1,41 @@
 
+    bss()
+__rand_seed1:;  fill 2
+__rand_seed2:;  fill 2
+
+    bank0()
+rand:
+//returns:
+//  a16 = pseudo random number
+    //a16
+	lda.w __rand_seed2
+	lsr
+	clc
+	adc.w __rand_seed1
+	sta.w __rand_seed1
+	eor.w #$000F
+	sta.b zp0
+	lda.w __rand_seed2
+	sec
+	sbc.b zp0
+	sta.w __rand_seed2
+
+    rts
+
+srand:
+//returns: void
+//args:
+//  a16  = seed
+    //a16
+	sta.w __rand_seed2
+	lda.w #5
+    //lda.w __rand_seed1
+    //eor.w #5
+	//rol
+    sta.w __rand_seed1
+	//;sta.w __rand_seed2
+    rts
+
 // unsigned 8*8 multiplication
 macro umult8(B) {
 //returns:
