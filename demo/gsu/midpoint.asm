@@ -4,13 +4,13 @@
 scope drawCircle: {
 // returns: void
 // args:
-    define x1(r3) // center x
-    define y1(r4) // center y
-    define radius(r5)
+    define x1(r3) // u8 center x
+    define y1(r4) // u8 center y
+    define radius(r5) // u8
 // vars:
-    define x2(r6)
-    define y2(r7)
-    define err(r8)
+    define x2(r6) // u16
+    define y2(r7) // u16
+    define err(r8) // s16
 // clobbers:
 //  r0-r8
     // int x2 = r;

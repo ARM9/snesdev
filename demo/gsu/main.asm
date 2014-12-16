@@ -18,6 +18,9 @@ _gsu_start:
     ibt r0, #lut.sin8>>16
     romb
 
+    jal srand
+    rol
+
     sub r0
     cmode
 
@@ -100,6 +103,7 @@ circle_scene:
     color
 
     move r0, r5
+    lms r5, (sram_rand_seed1)
     with r5; and #15
     with r5; add #11
     lsr #4
@@ -142,6 +146,9 @@ line_scene:
     //add r2
     //sbk
 
+    jal rand
+    nop
+
     // set up loop
     ibt r12, #10
     move r13, r15
@@ -153,12 +160,14 @@ line_scene:
 
     dec r10; dec r10; from r12; stw (r10)
 
+    lms r6, (sram_rand_seed2)
     iwt r0, #lut.sin8
     move r5, r0
     lms r1, (line_x)
     to r14; add r1
     ibt r9, #64
     from r1; add r9
+    add r6
     lob
     to r3; getb
 
@@ -203,9 +212,9 @@ scope updateCoords: {
 scope fillScreen: {
 // returns: void
 // args:
-//  r0 = fill value
+//  u16 r0 = fill value
 // vars:
-//  r3 = screen base
+//  u16* r3 = screen base
 // clobbers:
 //  r3 r12 r13
     iwt r3, #FRAMEBUFFER
@@ -223,7 +232,8 @@ scope fillScreen: {
 
 include "midpoint.asm"
 include "bresenham.asm"
-
+include "../../lib/gsu/rand.inc"
 BlockSize(gsu_main)
+
 include "../../lib/lut/sin8.inc"
 // vim:ft=bass

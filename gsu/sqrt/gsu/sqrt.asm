@@ -2,14 +2,13 @@
 
 scope sqrt16: {
 // returns:
-//  r1  = square root of num
+//  u16 r1  = square root of num
 // args:
-//  r3  = num
-    define num(r3)
+    define num(r3)  // u16
 // vars:
-    define res(r1)
-    define bit(r2)
-    define t0(r4)
+    define res(r1)  // u16
+    define bit(r2)  // u16
+    define t0(r4)   // u16
 // clobbers:
 //  r0-r4
     //short res = 0;
