@@ -71,9 +71,9 @@ dont_draw:
 scope fillScreen: {
 // returns: void
 // args:
-//  r0 = fill value
+//  u16 r0 = fill value
 // vars:
-//  r3 = screen base
+//  u16* r3 = screen base
 // clobbers:
 //  r3 r12 r13
     iwt r3, #FRAMEBUFFER

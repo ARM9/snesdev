@@ -6,17 +6,17 @@
 scope drawLine: {
 // returns: void
 // args:
-    define x1(r1)
-    define y1(r2)
-    define x2(r3)
-    define y2(r4)
+    define x1(r1)   // s16
+    define y1(r2)   // s16
+    define x2(r3)   // s16
+    define y2(r4)   // s16
 // vars:
-    define dx(r5)
-    define dy(r6)
-    define sx(r7)
-    define sy(r8)
-    define err(r9)
-    define e2(r12)
+    define dx(r5)   // s16
+    define dy(r6)   // s16
+    define sx(r7)   // s16
+    define sy(r8)   // s16
+    define err(r9)  // s16
+    define e2(r12)  // s16
 // clobbers:
 //  r0-r9, r12
 

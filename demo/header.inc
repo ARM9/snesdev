@@ -18,7 +18,7 @@ seek($FFB0)
     db SRAM_SIZE            // BD - Ext cart RAM (for GSU carts), no$sns seems to ignore this unless licensee code is $33
     db 0                    // BE - Special version(?)
     db 0                    // BF - Cartridge sub-number(?)
-    db "midpoint             " // C0 - Game title 21 bytes
+    db "silly demo           " // C0 - Game title 21 bytes
 //     "                     "
 seek($FFD5)
     db MAP_MODE             // D5 - Map mode
