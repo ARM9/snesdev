@@ -23,7 +23,6 @@ include "../../lib/stdio.inc"
 
 //------------------------------------------------
 include "interrupts.asm"
-include "spc/spc_upload.asm"
 
 include "assets.asm"
 //------------------------------------------------
@@ -54,9 +53,6 @@ main:
     sep #$20
 
     jsr initSA1
-
-    lda.b #$00
-    jsl LoadSPC
 
     LoadWram($008000, WRAM_PRG, $8000)
     LoadWram(egg, $403000, egg.size)

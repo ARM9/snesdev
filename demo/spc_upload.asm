@@ -2,7 +2,7 @@
 // /Mic, 2010
 // Based on code by Joe Lee
 // Modified for bass by ARM9
-define SPC_BINARY("spc/tunes/wt-nowl.spc")
+define SPC_BINARY("spc/tunes/sf-corneria.spc")
 
 // The starting SNES ROM bank of the 64kB SPC RAM dump
 constant SPC_DATA_BANK(spc_bin_low32k>>16)

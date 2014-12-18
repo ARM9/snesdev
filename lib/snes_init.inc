@@ -1,6 +1,6 @@
 
-macro align(bytes) {
-  while (pc() & ({bytes}-1)) {
+macro align(size) {
+  while (pc() % {size}) {
     nop
   }
 }
