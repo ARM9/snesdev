@@ -1,9 +1,7 @@
+export PATH	:= $(DEVKITSNES)/bass/bass/:$(PATH)
 export EMU	:= $(DEVKITPRO)/emulators/snes
 
-AS		:= $(DEVKITSNES)/bass/bass/bass
-
 ASFLAGS		:= -benchmark -create
-SPCFLAGS	:= -create -o main.spc
 #DEBUG	:= 1
 
 higan-p		:= $(EMU)/../higan/higan-performance
@@ -24,7 +22,6 @@ export OUTPUT	:= $(CURDIR)/$(TARGET).sfc
 
 ifneq ($(DEBUG),)
 ASFLAGS		+= -d DEBUG=1
-SPCFLAGS	+= -d DEBUG=1
 endif
 
 ASFLAGS	+= -d ROM_NAME=$(TARGET).sfc -o $(TARGET).sfc
@@ -33,7 +30,7 @@ ASFLAGS	+= -d ROM_NAME=$(TARGET).sfc -o $(TARGET).sfc
 .PHONY: clean run
 
 all:
-	$(AS) $(ASFLAGS) main.asm
+	bass $(ASFLAGS) main.asm
 
 clean:
 	rm -rf $(OUTPUT)

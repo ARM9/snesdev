@@ -21,7 +21,6 @@ scope column_major_map: {
             variable map_size(map_size-1)
         }
         variable tile0(t_tile0-671)
-        variable map_size(map_size-1)
         dw blank_tile
         dw blank_tile
         variable map_size(map_size-2)

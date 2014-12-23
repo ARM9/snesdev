@@ -1,6 +1,7 @@
 
     arch snes.smp
 include "../../../lib/spc700/regs.inc"
+include "../../../lib/spc700/spc700_init.inc"
 
     //spc_zpage()
     origin 0

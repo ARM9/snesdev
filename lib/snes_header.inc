@@ -19,8 +19,8 @@ constant SIZE_4MiB($0C)   // Amount of ROM in Donkey Kong Country 2 and 3
 // Map modes
 constant MAP_LOROM($20) // LoROM
 constant MAP_HIROM($21) // HiROM
+constant MAP_FASTROM($10) // OR with one of the above for FastROM (3.58MHz)
 constant MAP_EXHIROM($25) // ExHiROM + SlowROM
-constant MAP_FASTROM($30) // Bitwise OR with one of the above for FastROM
 constant MAP_SA1ROM($23) // SA-1 ROM
 
 // Cartridge types

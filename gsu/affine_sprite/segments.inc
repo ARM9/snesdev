@@ -54,7 +54,7 @@ scope seg {
   }
   scope loram {
     constant start($7e2000)
-    constant end($7f0000)
+    constant end($7e8000) // make room for program in ram
     variable _pc(start)
   }
   scope hiram {

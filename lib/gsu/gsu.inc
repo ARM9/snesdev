@@ -15,10 +15,10 @@
 //define r13     $0D ; Loop point address
 //define r14     $0E ; ROM buffer address (writing may cause stall)
 //define r15     $0F ; Program counter
-define a0(r0)
-define a1(r3)
-define a2(r5)
-define a3(r9)
+//define a0(r0)
+//define a1(r3)
+//define a2(r5)
+//define a3(r9)
 define sp(r10) // a4
 define lr(r11)
 define pc(r15)
@@ -31,7 +31,7 @@ macro AlignCache() {
 
 // useful for checking
 macro BlockSize(start) {
-    print "\n{start} block size:"
+    print "\n{start} block size: "
     print pc() - {start}
     print " bytes\n"
 }

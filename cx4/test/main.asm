@@ -3,7 +3,7 @@ macro seek(variable offset) {
     origin ((offset & $7f0000) >> 1) | (offset & $7fff)
     base offset
 }
-
+if 0 {
     arch snes.cpu
 
 include "segments.inc"
@@ -107,7 +107,7 @@ scope setupVideo: {
     plp
     rts
 }
-
+}
 //- cx4 code -------------------------------------
 include "cx4/main.asm"
 

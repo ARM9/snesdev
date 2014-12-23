@@ -1,6 +1,5 @@
+export PATH	:= $(DEVKITSNES)/bass/bass/:$(PATH)
 export EMU	:= $(DEVKITPRO)/emulators/snes
-
-AS		:= $(DEVKITSNES)/bass/bass/bass
 
 ASFLAGS	:= -benchmark -create
 #DEBUG	:= 1
@@ -10,6 +9,7 @@ higan-b		:= $(EMU)/../higan/higan-balanced
 higan-a		:= $(EMU)/../higan/higan-accuracy
 bsnes		:= $(EMU)/bsnes/bsnes
 ifeq ($(OS),Windows_NT)
+prevdir		= $(CURDIR)
 snes9x		:= $(EMU)/snes9x/snes9x-x64
 ASFLAGS		+= -d _DEVNULL="NUL"
 else
@@ -30,7 +30,7 @@ ASFLAGS	+= -d ROM_NAME=$(TARGET).sfc -o $(TARGET).sfc
 .PHONY: clean run
 
 all:
-	$(AS) $(ASFLAGS) main.asm
+	bass $(ASFLAGS) main.asm
 
 clean:
 	rm -rf $(OUTPUT)

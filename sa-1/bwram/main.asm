@@ -29,9 +29,6 @@ include "assets.asm"
 constant WRAM_PRG($7E8000)
 //------------------------------------------------
 
-    bank0()
-newline_space:; db "\n", 0
-
     bss()
 bg1_x:; fill 2
 

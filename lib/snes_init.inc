@@ -22,7 +22,7 @@ _init_snes:
 
     sep #$20              // Set 8 bit accumulator
 
-    lda #<(header.MAP_MODE>>4)&1 // Set fast rom access if fastrom
+    lda.b #(header.MAP_MODE & $10)>>4 // Set fast rom access if fastrom
     sta.w REG_MEMSEL
 
     lda #$8f              // Force v-blank

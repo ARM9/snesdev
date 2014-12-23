@@ -1,6 +1,5 @@
+export PATH	:= $(DEVKITSNES)/bass/bass/:$(PATH)
 export EMU	:= $(DEVKITPRO)/emulators/snes
-
-AS		:= $(DEVKITSNES)/bass/bass/bass
 
 ASFLAGS		:= -benchmark -create
 SPCFLAGS	:= -create -o main.spc
@@ -33,8 +32,8 @@ ASFLAGS	+= -d ROM_NAME=$(TARGET).sfc -o $(TARGET).sfc
 .PHONY: clean run
 
 all:
-	$(AS) $(SPCFLAGS) spc/main.asm
-	$(AS) $(ASFLAGS) main.asm
+	bass $(SPCFLAGS) spc/main.asm
+	bass $(ASFLAGS) main.asm
 
 clean:
 	rm -rf $(OUTPUT)

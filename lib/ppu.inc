@@ -85,4 +85,8 @@ macro FillVram(src, dest, size) {
     jsr dma.fixed_to_vram
 }
 
+macro RGB15(r, g, b) {
+    ({b}<<10 | {g}<<5 | {r})
+}
+
 // vim:ft=bass
