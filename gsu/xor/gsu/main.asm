@@ -10,18 +10,31 @@ GSU_PRGROM:
     push base
     base GSU_SRAM_PRG
 
-scope gsuSqrtTest: {
+scope gsuXorTest: {
 // returns:
-//  r0 = square root of x
+//  r0 = r1 XOR (r2 XOR (r3 XOR r4))
 // args: (initiated by scpu)
-//  r0 = x
-    move r3, r0
-    jal sqrt16
-    nop
+//  r1 = u16
+//  r2 = u16
+//  r3 = u16
+//  r4 = u16
+    with r3; xor r4
+    with r2; xor r3
+    from r1; xor r2
 
-    move r0, r1
-    stop
-    nop
+    stop; nop
+}
+
+scope gsuXoriTest: {
+// returns:
+//  r0 = r1 XOR #$0B
+// args: (initiated by scpu)
+//  r1 = u16
+    from r1
+    to r0
+    xor #$0B
+
+    stop; nop
 }
 
 include "sqrt.asm"
