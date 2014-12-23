@@ -1,3 +1,4 @@
+// Based on blarggs ca65 spc700 demo
 
     arch snes.smp
 include "../../../lib/spc700/regs.inc"
@@ -130,26 +131,14 @@ _wait_timer_tick:
 }
 
 // Sample directory must be aligned to page
-
     align($100)
 directory:
-    dw trumpet, trumpet
-
-    dw holdit, 0
 
     dw 0, 0
 
-    //dw snare, snare+snare.size-2
+    dw holdit, 0
 
-    dw timpani, timpani+timpani.size-2
-
-    //dw bass, bass+$A2
 brr_heap_start:
-    insert trumpet, "trumpet.brr"
     insert holdit, "holdit.brr"
-    //insert snare, "snare.brr"
-    insert timpani, "timpani.brr"
-    //insert ploink, "ploink.brr"
-    //insert bass, "hal-bass.brr"
 
 // vim:ft=bass
