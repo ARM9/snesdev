@@ -14,9 +14,6 @@ constant _STACK_TOP($2ff)
 include "../../lib/snes_init.inc"
 
 include "assets.asm"
-
-//-------------------------------------
-constant WRAM_PRG($7e8000) //relocated scpu program
 //-------------------------------------
 
     bank0()
@@ -28,8 +25,9 @@ _start:
 include "../../lib/ppu.inc"
 include "../../lib/mem.inc"
 include "../../lib/timing.inc"
-include "framebuffer.asm"
 include "interrupts.asm"
+include "hdma.asm"
+include "dsp-1.asm"
 //-------------------------------------
 
     zpage()
@@ -37,83 +35,55 @@ frame_counter:;     fill 1
 
     bss()
 inidisp_mirror:;    fill 1
-gsu_scmr_mirror:;   fill 1
+nmitimen_mirror:;   fill 1
+
 //-------------------------------------
 
     bank0()
-main: {
-    // wipe sram
-    rep #$30
-    BlockMoveN($7E0000, $700000, $8000)
-    phk; plb
-    // make screen border tile
-    lda.w #$ffff
-    sta.b zp0
-    sep #$20
-    FillVram($7E0000, $2A00, $20)
-    FillVram($7E0000, $3000+$2A00, $20)
-
-    LoadVram(column_major_map, $2C00, column_major_map.size)
-    LoadCgram(sfx_pal, $00, sfx_pal.size)
-
-    LoadWram($008000, WRAM_PRG, $8000)
-    LoadWram(dummy_vectors, $7E0104, dummy_vectors.size)
-
-    jml $7E0000|(wramMain & $ffff)
-}
-
-scope wramMain: {
+scope main: {
+    rep #$10
     sep #$20
 
-    lda.b #1
-    sta.w GSU_CLSR  // Set clock frequency to 21.4MHz
+    lda.b #_DSP_BANK; pha; plb
 
-    lda.b #(GSU_CFGR_IRQ_MASK | GSU_CFGR_FASTMUL)
-    sta.w GSU_CFGR
+    jsr setupVideo
 
-    lda.b #FRAMEBUFFER>>10
-    sta.w GSU_SCBR  // Set screen base to $702000
+    jsr setupCamera
+    //jsr setupMatrixHDMA
+    jsr setupBGHDMA
 
-    lda.b #(GSU_SCMR_RON|GSU_SCMR_RAN) | GSU_SCMR_4BPP | GSU_SCMR_H192
-    sta.w GSU_SCMR
-    sta.w gsu_scmr_mirror
-
-    stz.w GSU_RAMBR
-
-    lda.b #_gsu_start>>16
-    sta.w GSU_PBR
-
-    ldx.w #_gsu_start
-    stx.w GSU_R15   // GSU is booted on write to R15
-
-    // Set up ppu
-    lda.b #1
-    sta.w REG_BGMODE
-
-    lda.b #(VRAM_FB_MAP >> 8) & $FC
-    sta.w REG_BG1SC
-
-    lda.b #0
-    sta.w REG_BG12NBA
-
-    lda.b #1
-    sta.w REG_TM
-
-    jsr Interrupts.setupIrq
+    jsr Interrupts.setupIRQ
 
 _forever:
     wai
-
-    // turn on screen after first framebuffer is complete
-    lda.w framebuffer_counter
-    and.b #1
-    beq +
-        lda.b #$0F
-        sta.w inidisp_mirror
-+
     bra _forever
 }
+scope setupVideo: {
+    //a8
+    //i16
 
-include "gsu/main.asm"
+    LoadLoVram(koop.map7, $0000, koop.map7.size)
+    LoadHiVram(koop.chr7, $0000, koop.chr7.size)
+    LoadCgram(koop.pal, 0, koop.pal.size)
+
+    lda.b #$07
+    sta.w REG_BGMODE
+
+    // set mode7 stuff
+    lda.b #$C0
+    sta.w REG_M7SEL
+
+    lda.b #$05
+    stz.w REG_M7A
+    sta.w REG_M7A
+    stz.w REG_M7D
+    sta.w REG_M7D
+
+    sta.w REG_TM
+
+    lda.b #$0F
+    sta.w inidisp_mirror
+    rts
+}
 
 // vim:ft=bass

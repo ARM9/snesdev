@@ -18,35 +18,21 @@ profile_gsu_program:
     sta GSU_SCMR
     lda #$20
     stx GSU_R15 // Go
-    
 -
     iny             
     bit GSU_SFR 
     bne -
-    
-    stz GSU_SCMR
-    rep #$31
-    tya
-    sta dp0
-    asl #4
-    .repeat 7
-    adc dp0
-    clc
-    .endrep
 
-    adc dp0
-    dec a
-    
-    itoa performance_str, a// $9F4E
-    sep #$20
+    stz GSU_SCMR
+
     plp
     rtl
 
 runTests:
     sei
     stz $4200
-    CallGSU mult_test, profile_gsu_program
-    lda #$81
+
+    lda nmitimen
     sta $4200
     cli
     rts

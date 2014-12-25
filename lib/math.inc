@@ -4,37 +4,38 @@ __rand_seed1:;  fill 2
 __rand_seed2:;  fill 2
 
     bank0()
-rand:
-//returns:
+scope rand: {
+// returns:
 //  a16 = pseudo random number
+// args: void
     //a16
-	lda.w __rand_seed2
-	lsr
-	clc
-	adc.w __rand_seed1
-	sta.w __rand_seed1
-	eor.w #$000F
-	sta.b zp0
-	lda.w __rand_seed2
-	sec
-	sbc.b zp0
-	sta.w __rand_seed2
-
-    rts
-
-srand:
-//returns: void
-//args:
-//  a16  = seed
-    //a16
-	sta.w __rand_seed2
-	lda.w #5
-    //lda.w __rand_seed1
-    //eor.w #5
-	//rol
+    lda.w __rand_seed2
+    lsr
+    clc
+    adc.w __rand_seed1
     sta.w __rand_seed1
-	//;sta.w __rand_seed2
+    eor.w #$000F
+    sta.b zp0
+    lda.w __rand_seed2
+    sec
+    sbc.b zp0
+    sta.w __rand_seed2
     rts
+}
+
+scope srand: {
+// returns: void
+// args:
+//  a16 = seed
+    //a16
+    sta.w __rand_seed2
+    lda.w __rand_seed1
+    rol
+    sta.w __rand_seed1
+    //lda.w #$0005
+    //sta.w __rand_seed2
+    rts
+}
 
 // unsigned 8*8 multiplication
 macro umult8(B) {
@@ -67,9 +68,9 @@ macro umult8(A, B) {
 }
 
 // unsigned 16/8 division
-macro div16x8() {
+macro udiv16x8() {
 //returns:
-//  a16 = quotient of x16/a8
+//  REG_RDDIVL/H = quotient of x16/a8
 //  REG_RDMPYL/H = 16 bit remainder
 //args:
 //  x16 = numerator
@@ -81,7 +82,7 @@ macro div16x8() {
     nop              // 8+6         6+6         7
     nop              // 8+6         6+6         9
     nop              // 8+6         6+6         11
-    lda.w REG_RDDIVL // 8+8+8+8+8   6+6+6+8+8   16
+  //lda.w REG_RDDIVL // 8+8+8+8+8   6+6+6+8+8   16
 }
 
 // signed 16/16 division

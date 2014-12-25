@@ -31,6 +31,39 @@ to_vram:
     sta.w $420b
     rts
 
+to_low_vram:
+    //a8
+    //i16
+    stx.w $4302
+    sta.w $4304
+    sty.w $4305
+
+    stz.w $2115
+
+    ldx.w #$1800 // $2118, write 1 register once
+    stx.w $4300
+
+    lda.b #$01
+    sta.w $420b
+    rts
+
+to_high_vram:
+    //a8
+    //i16
+    stx.w $4302
+    sta.w $4304
+    sty.w $4305
+
+    lda.b #$80
+    sta.w $2115
+
+    ldx.w #$1900 // $2118, write 1 register once
+    stx.w $4300
+
+    lda.b #$01
+    sta.w $420b
+    rts
+
 fixed_to_vram:
     //a8
     //i16
@@ -71,6 +104,30 @@ macro LoadVram(src, dest, size) {
     lda.b #{src}>>16
     ldy.w #{size}
     jsr dma.to_vram
+}
+
+macro LoadLoVram(src, dest, size) {
+    //a8
+    //i16
+    ldx.w #{dest}
+    stx.w $2116
+
+    ldx.w #{src}
+    lda.b #{src}>>16
+    ldy.w #{size}
+    jsr dma.to_low_vram
+}
+
+macro LoadHiVram(src, dest, size) {
+    //a8
+    //i16
+    ldx.w #{dest}
+    stx.w $2116
+
+    ldx.w #{src}
+    lda.b #{src}>>16
+    ldy.w #{size}
+    jsr dma.to_high_vram
 }
 
 macro FillVram(src, dest, size) {

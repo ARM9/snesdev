@@ -4,7 +4,7 @@ include "../../lib/snes_header.inc"
 
 scope header {
 constant MAP_MODE(MAP_LOROM)
-constant ROM_SIZE(SIZE_32KiB)
+constant ROM_SIZE(SIZE_64KiB)
 constant SRAM_SIZE(SIZE_NONE)
 constant CART_TYPE(CART_DSP1 + CART_ROM)
 
@@ -15,7 +15,7 @@ seek($FFB0)
     db 0, 0                 // B0 - Maker code
     db "ARM9"               // B2 - Game code
     fill 7, 0               // B6 - 7 byte filler
-    db SRAM_SIZE            // BD - Ext cart RAM (for GSU carts), no$sns seems to ignore this unless licensee code is $33
+    db 0                    // BD - Ext cart RAM (for GSU carts)
     db 0                    // BE - Special version(?)
     db 0                    // BF - Cartridge sub-number(?)
     db "dsp-1 raster         " // C0 - Game title 21 bytes

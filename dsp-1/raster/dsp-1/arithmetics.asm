@@ -31,21 +31,23 @@
 //	The number of cycles is the period until the next parameter can
 // 	be selected or the results of the calculation can be read.
 //------------------------------------------------------------------
-//int dspMult16(int A, int B)//
-// B //6
-// A //4
-dspMult16:
-	sep #$20
-	lda #$00
-	sta.l _DSP_DATA_REG_LONG
+
+scope dspMult16: {
+// returns:
+//  x16 = x16 * y16 >> 15
+// args:
+//	x16 = K
+//  y16 = L
+    //a8
+    //i16
+	lda.b #$00
+	sta.w REG_DSP_DATA
 	rep #$20
-	lda.b 4,s
-	sta.l _DSP_DATA_REG_LONG // K
-	lda.b 6,s
-	sta.l _DSP_DATA_REG_LONG // L
-	lda.l _DSP_DATA_REG_LONG // M
-	sta.b tcc__r0
+	stx.w REG_DSP_DATA // K
+	sty.w REG_DSP_DATA // L
+	ldx.w REG_DSP_DATA // M
 	rts
+}
 
 // 5.1.2 INVERSE CALCULATION (FLOATING POINT)
 // Name: Inverse
@@ -76,6 +78,6 @@ dspMult16:
 //void dspInverse(DSP_float *input)//
 dspInverse:
 	
-	rtl
+	rts
 
 // vim:ft=bass
