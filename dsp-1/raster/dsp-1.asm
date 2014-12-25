@@ -8,25 +8,27 @@ constant hdma_matrix1_size((127<<2))
 constant hdma_matrix2_size((97<<2)+1)
 
     bss()
-_cam_x:; dw 0// [CI] horizontal
-_cam_y:; dw 0// [CI] depth
-_cam_z:; dw 0// [CI] vertical
-_cam_Lfe:; dw 0// [U] Distance between base point and viewpoint (Sets screen-sprite ratio)
-_cam_Les:; dw 0// [U] fov, Distance between viewpoint and screen (the effect of screen angle considered// screen horizontal distance 256)
-_cam_Aas:; dw 0// [A] Azimuth angle, rotation around Y axis
-_cam_Azs:; dw 0// [A] Zenith angle, X/Z rotationish
-_cam_cx:; dw 0//\ [CI] focal point
-_cam_cy:; dw 0///
-_rastercenter:; dw 0 // [I]
-_horizon:; dw 0 // [I]
+scope Camera: {
+x:; dw 0// [CI] horizontal
+y:; dw 0// [CI] depth
+z:; dw 0// [CI] vertical
+Lfe:; dw 0// [U] Distance between base point and viewpoint (Sets screen-sprite ratio)
+Les:; dw 0// [U] fov, Distance between viewpoint and screen (the effect of screen angle considered; screen horizontal distance 256)
+Aas:; dw 0// [A] Azimuth angle, rotation around Y axis
+Azs:; dw 0// [A] Zenith angle, X/Z rotationish
+cx:; dw 0//\ [CI] focal point
+cy:; dw 0///
+raster_center:; dw 0 // [I]
+horizon:; dw 0 // [I]
+}
 
-_hdmaMatrixPointerAB:; fill (1+2 + 1+2 + 1+2)//1 byte repeat, 2 byte pointer for each entry
-_hdmaMatrixPointerCD:; fill (1+2 + 1+2 + 1+2)
+hdmaMatrixPointerAB:; fill (1+2 + 1+2 + 1+2)//1 byte repeat, 2 byte pointer for each entry
+hdmaMatrixPointerCD:; fill (1+2 + 1+2 + 1+2)
 
-_hdmaMatrixAB1:; fill hdma_matrix1_size
-_hdmaMatrixAB2:; fill hdma_matrix2_size
-_hdmaMatrixCD1:; fill hdma_matrix1_size
-_hdmaMatrixCD2:; fill hdma_matrix2_size
+hdmaMatrixAB1:; fill hdma_matrix1_size
+hdmaMatrixAB2:; fill hdma_matrix2_size
+hdmaMatrixCD1:; fill hdma_matrix1_size
+hdmaMatrixCD2:; fill hdma_matrix2_size
 
 //perspective:;        db 0
 //perspective_x:;      dw 0
@@ -39,7 +41,7 @@ _hdmaMatrixCD2:; fill hdma_matrix2_size
 //perspective_center_x:; dw 0
 //perspective_center_y:; dw 0
 //perspective_raster_center:; dw 0
-//perspective_horizon:; dw 0
+//perspectiveCamera.horizon:; dw 0
 
     bank0()
 //use during scanning
@@ -55,35 +57,35 @@ dspUpdateProjection:
     ldx.b #$02
     stx.w REG_DSP_DATA// Set up persp projection
 
-    lda.w _cam_x
+    lda.w Camera.x
     sta.w REG_DSP_DATA
 
     WaitRQM()
 
-    lda.w _cam_y
+    lda.w Camera.y
     sta.w REG_DSP_DATA
-    lda.w _cam_z
+    lda.w Camera.z
     sta.w REG_DSP_DATA
-    lda.w _cam_Lfe
+    lda.w Camera.Lfe
     sta.w REG_DSP_DATA
-    lda.w _cam_Les
+    lda.w Camera.Les
     sta.w REG_DSP_DATA
-    lda.w _cam_Aas
+    lda.w Camera.Aas
     sta.w REG_DSP_DATA
-    lda.w _cam_Azs
+    lda.w Camera.Azs
     sta.w REG_DSP_DATA
 
     WaitRQM() // 839 cycle delay ie 117.4 microsec. 296 cpu cycles?
 
     lda.w REG_DSP_DATA
-    sta.w _rastercenter
+    sta.w Camera.raster_center
     lda.w REG_DSP_DATA
-    sta.w _horizon
+    sta.w Camera.horizon
     nop
     lda.w REG_DSP_DATA
-    sta.w _cam_cx
+    sta.w Camera.cx
     lda.w REG_DSP_DATA
-    sta.w _cam_cy
+    sta.w Camera.cy
 
     plp
     rts
@@ -91,12 +93,13 @@ dspUpdateProjection:
 //updates the HDMA table with perspective projection matrix parameters from DSP-1 raster function
 dspRenderProjection:
     php
+    sep #$20
 
-    ldx.b #$0A
-    stx.w REG_DSP_DATA
+    lda.b #$0A
+    sta.w REG_DSP_DATA
+    rep #$30
     stz.w REG_DSP_DATA // start at scanline 0
 
-    rep #$30
     ldy.w #$00C0 //($7F+$41)
     ldx.w #$0000
 
@@ -105,13 +108,13 @@ _loopRasterData1:
     WaitRQM()
     // 200 dsp cycles delay per line
     lda.w REG_DSP_DATA
-    sta.l _hdmaMatrixAB1,x
+    sta.w hdmaMatrixAB1,x
     lda.w REG_DSP_DATA
-    sta.l _hdmaMatrixAB1+2,x
+    sta.w hdmaMatrixAB1+2,x
     lda.w REG_DSP_DATA
-    sta.l _hdmaMatrixCD1,x
+    sta.w hdmaMatrixCD1,x
     lda.w REG_DSP_DATA
-    sta.l _hdmaMatrixCD1+2,x
+    sta.w hdmaMatrixCD1+2,x
 
     inx; inx; inx; inx
     dey
@@ -132,29 +135,28 @@ _loopRasterData1:
 dspObjectProjection:
     php
     sep #$20
-    //lda.b #_DSP_BANK
+    //lda.b #DSP_BANK
     //pha
     //plb
 
     //lda.b #$06 // Command for object projection, standard 6 cycles
     //sta.l REG_DSP_DATA
 
-    plp
     rts
 
 //call during nmi
-dspUpdateCameratemp:
+dspUpdateCamera:
     php
 
     rep #$31
 
-    lda.w _rastercenter
+    lda.w Camera.raster_center
     sta.b zp0
 
-    lda.w _cam_cx
+    lda.w Camera.cx
     tax
 
-    lda.w _cam_cy
+    lda.w Camera.cy
     tay
 
     sep #$20
@@ -189,6 +191,29 @@ dspUpdateCameratemp:
     plp
     rts
 
+setupCamera:
+    php
+    rep #$30
+
+    lda.w #250
+    sta.l Camera.x
+    lda.w #250
+    sta.l Camera.y
+    lda.w #64
+    sta.l Camera.z
+
+    lda.w #$100
+    sta.l Camera.Lfe
+    lda.w #$20
+    sta.l Camera.Les
+    lda.w #$6000 // rotation around Y axis
+    sta.l Camera.Aas
+    lda.w #$3f00
+    sta.l Camera.Azs
+
+    plp
+    rts
+
 setupMatrixHDMA:
     php
     phb
@@ -196,65 +221,42 @@ setupMatrixHDMA:
     rep #$10
     sep #$20
 
-    lda.b #_hdmaMatrixPointerAB>>16
+    lda.b #hdmaMatrixPointerAB>>16
     pha
     plb
 
-    ldx.w #_hdmaMatrixAB1
-    stx.w _hdmaMatrixPointerAB+4//&$FFFF+4
-    ldx.w #_hdmaMatrixAB2
-    stx.w _hdmaMatrixPointerAB+7//&$FFFF+7
+    ldx.w #hdmaMatrixAB1
+    stx.w hdmaMatrixPointerAB+4//&$FFFF+4
+    ldx.w #hdmaMatrixAB2
+    stx.w hdmaMatrixPointerAB+7//&$FFFF+7
 
-    ldx.w #_hdmaMatrixCD1
-    stx.w _hdmaMatrixPointerCD+4//&$FFFF+4
-    ldx.w #_hdmaMatrixCD2
-    stx.w _hdmaMatrixPointerCD+7//&$FFFF+7
+    ldx.w #hdmaMatrixCD1
+    stx.w hdmaMatrixPointerCD+4//&$FFFF+4
+    ldx.w #hdmaMatrixCD2
+    stx.w hdmaMatrixPointerCD+7//&$FFFF+7
 
     lda.b #32
-    sta.w _hdmaMatrixPointerAB//&$FFFF
-    sta.w _hdmaMatrixPointerCD//&$FFFF
+    sta.w hdmaMatrixPointerAB//&$FFFF
+    sta.w hdmaMatrixPointerCD//&$FFFF
     lda #$FF//127 lines with repeat
-    sta.w _hdmaMatrixPointerAB+3//&$FFFF+3
-    sta.w _hdmaMatrixPointerCD+3//&$FFFF+3
+    sta.w hdmaMatrixPointerAB+3//&$FFFF+3
+    sta.w hdmaMatrixPointerCD+3//&$FFFF+3
     lda.b #$C1  //$41|$80 $40 lines with repeat
-    sta.w _hdmaMatrixPointerAB+6//&$FFFF+6
-    sta.w _hdmaMatrixPointerCD+6//&$FFFF+6
+    sta.w hdmaMatrixPointerAB+6//&$FFFF+6
+    sta.w hdmaMatrixPointerCD+6//&$FFFF+6
 
     plb
     ldx.w #$1B43
-    ldy.w #_hdmaMatrixPointerAB
-    lda.b #_hdmaMatrixPointerAB>>16
+    ldy.w #hdmaMatrixPointerAB
+    lda.b #hdmaMatrixPointerAB>>16
     sta.w $4317
-    jsr setupHDMAChannel1
+    jsr HDMA.setChannel1
 
     ldx.w #$1D43
-    ldy.w #_hdmaMatrixPointerCD
-    lda.b #_hdmaMatrixPointerCD>>16
+    ldy.w #hdmaMatrixPointerCD
+    lda.b #hdmaMatrixPointerCD>>16
     sta.w $4327
-    jsr setupHDMAChannel2
-
-    plp
-    rts
-
-setupCamera:
-    php
-    rep #$30
-
-    lda.w #25
-    sta.l _cam_x
-    lda.w #25
-    sta.l _cam_y
-    lda.w #64
-    sta.l _cam_z
-
-    lda.w #$80
-    sta.l _cam_Lfe
-    lda.w #$40
-    sta.l _cam_Les
-    lda.w #$0000 // rotation around Y axis
-    sta.l _cam_Aas
-    lda.w #$3f00
-    sta.l _cam_Azs
+    jsr HDMA.setChannel2
 
     plp
     rts
@@ -268,12 +270,12 @@ setupBGHDMA:
     ldx.w #$0500
     ldy.w #bgmode_hdma
     lda.b #bgmode_hdma>>16
-    jsr setupHDMAChannel3
+    jsr HDMA.setChannel3
 
     ldx.w #$2C00
     ldy.w #tm_hdma
     lda.b #tm_hdma>>16
-    jsr setupHDMAChannel4
+    jsr HDMA.setChannel4
 
     plp
     rts
@@ -287,7 +289,7 @@ db 0
 
 tm_hdma:
 db 33
-db $16
+db 0//$16
 db 1
 db $11
 db 0
@@ -301,7 +303,7 @@ dspSinCos:
 //  y16 = radius
     //a8
     //i16
-    lda.b #_DSP_BANK; pha; plb
+    lda.b #DSP_BANK; pha; plb
 
     lda.b #$04
     sta.w REG_DSP_DATA
@@ -315,7 +317,6 @@ dspSinCos:
 
     rts
 
-//void dspRotate2D(int angle, int *x, int *y)//
 dspRotate2D:
 // returns:
 //  x16 = x2

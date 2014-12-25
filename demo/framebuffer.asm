@@ -39,7 +39,7 @@ scope chugFramebuffer: {
         stx.w $2116
         lda.b #FRAMEBUFFER>>16
         ldx.w #FRAMEBUFFER
-        jsr dma.to_vram
+        jsr DMA.toVram
         lda.l framebuffer_status
         ora.b #1
         sta.l framebuffer_status
@@ -55,7 +55,7 @@ dma_fb_bottom:
         stx.w $2116
         lda.b #FRAMEBUFFER>>16
         ldx.w #(FRAMEBUFFER + (FRAMEBUFFER_SIZE / 2))
-        jsr dma.to_vram
+        jsr DMA.toVram
 
         lda.l framebuffer_status
         and.b #~1

@@ -1,6 +1,6 @@
 
-scope dma {
-to_cgram:
+scope DMA {
+toCgram:
     //a8
     //i16
     stx.w $4302
@@ -14,7 +14,7 @@ to_cgram:
     sta.w $420b
     rts
 
-to_vram:
+toVram:
     //a8
     //i16
     stx.w $4302
@@ -31,7 +31,7 @@ to_vram:
     sta.w $420b
     rts
 
-to_low_vram:
+toLowVram:
     //a8
     //i16
     stx.w $4302
@@ -47,7 +47,7 @@ to_low_vram:
     sta.w $420b
     rts
 
-to_high_vram:
+toHighVram:
     //a8
     //i16
     stx.w $4302
@@ -64,7 +64,7 @@ to_high_vram:
     sta.w $420b
     rts
 
-fixed_to_vram:
+fixedToVram:
     //a8
     //i16
     stx.w $4302
@@ -91,7 +91,7 @@ macro LoadCgram(src, dest, size) {
     ldx.w #{src}
     lda.b #{src}>>16
     ldy.w #{size}
-    jsr dma.to_cgram
+    jsr DMA.toCgram
 }
 
 macro LoadVram(src, dest, size) {
@@ -103,7 +103,7 @@ macro LoadVram(src, dest, size) {
     ldx.w #{src}
     lda.b #{src}>>16
     ldy.w #{size}
-    jsr dma.to_vram
+    jsr DMA.toVram
 }
 
 macro LoadLoVram(src, dest, size) {
@@ -115,7 +115,7 @@ macro LoadLoVram(src, dest, size) {
     ldx.w #{src}
     lda.b #{src}>>16
     ldy.w #{size}
-    jsr dma.to_low_vram
+    jsr DMA.toLowVram
 }
 
 macro LoadHiVram(src, dest, size) {
@@ -127,7 +127,7 @@ macro LoadHiVram(src, dest, size) {
     ldx.w #{src}
     lda.b #{src}>>16
     ldy.w #{size}
-    jsr dma.to_high_vram
+    jsr DMA.toHighVram
 }
 
 macro FillVram(src, dest, size) {
@@ -139,10 +139,10 @@ macro FillVram(src, dest, size) {
     ldx.w #{src}
     lda.b #{src}>>16
     ldy.w #{size}
-    jsr dma.fixed_to_vram
+    jsr DMA.fixedToVram
 }
 
-macro RGB15(r, g, b) {
+macro RGB15(evaluate r, evaluate g, evaluate b) {
     ({b}<<10 | {g}<<5 | {r})
 }
 

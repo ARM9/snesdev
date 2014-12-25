@@ -5,6 +5,7 @@
 *.sym
 *.spc
 *.bnk
+*.bak
 *.rom
 *.vim
 *.pcx

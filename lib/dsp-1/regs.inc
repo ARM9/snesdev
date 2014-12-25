@@ -3,12 +3,12 @@ if ((header.MAP_MODE & 1) == 1) {
     constant REG_DSPIO($806000) // HIROM
     constant REG_DSP_DATA($806000)
     constant REG_DSP_STATUS($807000) //Status register
-    constant _DSP_BANK($80)
+    constant DSP_BANK($80)
 } else {
     constant REG_DSPIO($BF8000) // LOROM
     constant REG_DSP_DATA($BF8000)
     constant REG_DSP_STATUS($BFC000)
-    constant _DSP_BANK($BF)
+    constant DSP_BANK($BF)
 }
 
 macro scope WaitRQM() {

@@ -1,7 +1,9 @@
-scope dma {
+
+scope DMA {
 constant b_to_a($80)
 constant fixed($08)
-rom_to_wram:
+
+romToWram:
     //a8
     //i16
     stx.w $4302
@@ -15,7 +17,7 @@ rom_to_wram:
     sta.w $420B
     rts
 
-rom_fixed_to_wram:
+romFixedToWram:
     //a8
     //i16
     stx.w $4302
@@ -29,7 +31,7 @@ rom_fixed_to_wram:
     sta.w $420B
     rts
 
-wram_to_sram:
+wramToSram:
     //a8
     //i16
     stx.w $4302
@@ -75,7 +77,7 @@ macro LoadWram(src, dest, size) {
     ldx.w #{src}
     lda.b #{src}>>16
     ldy.w #{size}
-    jsr dma.rom_to_wram
+    jsr DMA.romToWram
 }
 
 macro FillWram(src, dest, size) {
@@ -89,7 +91,7 @@ macro FillWram(src, dest, size) {
     ldx.w #{src}
     lda.b #{src}>>16
     ldy.w #{size}
-    jsr dma.rom_fixed_to_wram
+    jsr DMA.romFixedToWram
 }
 
 macro LoadWramSram(src, dest, size, mode) {
@@ -105,7 +107,7 @@ macro LoadWramSram(src, dest, size, mode) {
     ldx.w #{dest}
     lda.b #{dest}>>16
     ldy.w #{size}
-    jsr dma.wram_to_sram
+    jsr DMA.wramToSram
 }
 
 // vim:ft=bass

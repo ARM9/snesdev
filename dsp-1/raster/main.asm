@@ -44,17 +44,19 @@ scope main: {
     rep #$10
     sep #$20
 
-    lda.b #_DSP_BANK; pha; plb
+    lda.b #DSP_BANK; pha; plb
 
     jsr setupVideo
 
     jsr setupCamera
-    //jsr setupMatrixHDMA
+    jsr setupMatrixHDMA
     jsr setupBGHDMA
 
     jsr Interrupts.setupIRQ
 
 _forever:
+    jsr dspUpdateProjection
+    jsr dspRenderProjection
     wai
     bra _forever
 }
@@ -66,8 +68,21 @@ scope setupVideo: {
     LoadHiVram(koop.chr7, $0000, koop.chr7.size)
     LoadCgram(koop.pal, 0, koop.pal.size)
 
+    lda.b #$00
+    sta.w REG_BG1SC
+    lda.b #$4000>>10
+    sta.w REG_BG2SC
+    sta.w REG_BG3SC
+    sta.w REG_BG4SC
+    lda.b #($4000>>12)<<8
+    sta.w REG_BG12NBA
+    sta.w REG_BG34NBA
+
     lda.b #$07
     sta.w REG_BGMODE
+
+    lda.b #$01
+    sta.w REG_TM
 
     // set mode7 stuff
     lda.b #$C0
@@ -78,8 +93,6 @@ scope setupVideo: {
     sta.w REG_M7A
     stz.w REG_M7D
     sta.w REG_M7D
-
-    sta.w REG_TM
 
     lda.b #$0F
     sta.w inidisp_mirror

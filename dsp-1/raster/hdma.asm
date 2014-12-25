@@ -1,13 +1,46 @@
 
+//-------------------------------------
     bss()
 hdmaen_mirror:; fill 1
+//-------------------------------------
 
-macro _SetHDMA(channel) {
+macro InitHdma(chan, mode, reg, src) {
+    //a8
+    //i16
+    ldx.w #({reg}<<8) | ({mode} & $FF)
+    ldy.w #{src}
+    lda.b #{src}>>16
+    if (({mode} & HDMA.indirect) == HDMA.indirect) {
+        sta.w $43{chan}7
+    }
+    jsr HDMA.setChannel{chan}
+}
+
+//-------------------------------------
+    bank0()
+scope HDMA {
+constant indirect($40)
+
+macro _EnableChannel(channel) {
     lda.b #{channel}
     tsb.w hdmaen_mirror
 }
 
-    bank0()
+define i(0)
+while ({i} <= 7) {
+    setChannel{i}:
+        stx.w $43{i}0
+        sty.w $43{i}2
+        sta.w $43{i}4
+        _EnableChannel(1 << {i})
+        rts
+
+    evaluate i({i} + 1)
+}
+}
+
+if 0 {
+
 // 16 bit X = $AABB AA = destination register BB = mode , 16 bit Y = $AABB source address high and low bytes,  8 bit A = source bank
 setupHDMAChannel0:
 // returns: void
@@ -23,7 +56,7 @@ setupHDMAChannel0:
     //  $4313 = high byte
     sta.w $4304
 
-    _SetHDMA($01)
+    HDMA._EnableChannel($01)
     rts
 
 setupHDMAChannel1:
@@ -31,7 +64,7 @@ setupHDMAChannel1:
     sty.w $4312
     sta.w $4314
 
-    _SetHDMA($02)
+    HDMA._EnableChannel($02)
     rts
 
 setupHDMAChannel2:
@@ -39,7 +72,7 @@ setupHDMAChannel2:
     sty.w $4322
     sta.w $4324
 
-    _SetHDMA($04)
+    HDMA._EnableChannel($04)
     rts
 
 setupHDMAChannel3:
@@ -47,7 +80,7 @@ setupHDMAChannel3:
     sty.w $4332
     sta.w $4334
 
-    _SetHDMA($08)
+    HDMA._EnableChannel($08)
     rts
 
 setupHDMAChannel4:
@@ -55,7 +88,7 @@ setupHDMAChannel4:
     sty.w $4342
     sta.w $4344
 
-    _SetHDMA($10)
+    HDMA._EnableChannel($10)
     rts
 
 setupHDMAChannel5:
@@ -63,7 +96,7 @@ setupHDMAChannel5:
     sty.w $4352
     sta.w $4354
 
-    _SetHDMA($20)
+    HDMA._EnableChannel($20)
     rts
 
 setupHDMAChannel6:
@@ -71,7 +104,7 @@ setupHDMAChannel6:
     sty.w $4362
     sta.w $4364
 
-    _SetHDMA($40)
+    HDMA._EnableChannel($40)
     rts
 
 setupHDMAChannel7:
@@ -79,7 +112,7 @@ setupHDMAChannel7:
     sty.w $4372
     sta.w $4374
 
-    _SetHDMA($80)
+    HDMA._EnableChannel($80)
     rts
-
+}
 // vim:ft=bass
