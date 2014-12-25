@@ -152,34 +152,30 @@ dspUpdateCamera:
 
     lda.w Camera.raster_center
     sta.b zp0
-
-    lda.w Camera.cx
-    tax
-
+    
     lda.w Camera.cy
     tay
-
-    sep #$20
-    sta.w REG_M7Y
-    xba
-    sta.w REG_M7Y
-
-    rep #$20
-    txa
+    lda.w Camera.cx
     sep #$20
     sta.w REG_M7X
     xba
     sta.w REG_M7X
-
-    rep #$31
-    txa
+    xba
+    rep #$21
     adc.w #OFFSET_CX
-    sep #$21
+    sep #$20
     sta REG_BG1HOFS
     xba
     sta REG_BG1HOFS
+
     rep #$20
     tya
+    sep #$21 // set carry for "free"
+    sta.w REG_M7Y
+    xba
+    sta.w REG_M7Y
+    xba
+    rep #$20
     sbc.b zp0
     clc
     adc.w #OFFSET_CY
@@ -250,13 +246,13 @@ setupMatrixHDMA:
     ldy.w #hdmaMatrixPointerAB
     lda.b #hdmaMatrixPointerAB>>16
     sta.w $4317
-    jsr HDMA.setChannel1
+    jsr HDMA.setupChannel1
 
     ldx.w #$1D43
     ldy.w #hdmaMatrixPointerCD
     lda.b #hdmaMatrixPointerCD>>16
     sta.w $4327
-    jsr HDMA.setChannel2
+    jsr HDMA.setupChannel2
 
     plp
     rts
@@ -270,12 +266,12 @@ setupBGHDMA:
     ldx.w #$0500
     ldy.w #bgmode_hdma
     lda.b #bgmode_hdma>>16
-    jsr HDMA.setChannel3
+    jsr HDMA.setupChannel3
 
     ldx.w #$2C00
     ldy.w #tm_hdma
     lda.b #tm_hdma>>16
-    jsr HDMA.setChannel4
+    jsr HDMA.setupChannel4
 
     plp
     rts

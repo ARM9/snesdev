@@ -10,10 +10,10 @@ macro InitHdma(chan, mode, reg, src) {
     ldx.w #({reg}<<8) | ({mode} & $FF)
     ldy.w #{src}
     lda.b #{src}>>16
-    if (({mode} & HDMA.indirect) == HDMA.indirect) {
-        sta.w $43{chan}7
-    }
-    jsr HDMA.setChannel{chan}
+    //if (({mode} & HDMA.indirect) == HDMA.indirect) {
+        //sta.w $43{chan}7
+    //}
+    jsr HDMA.setupChannel{chan}
 }
 
 //-------------------------------------
@@ -28,7 +28,7 @@ macro _EnableChannel(channel) {
 
 define i(0)
 while ({i} <= 7) {
-    setChannel{i}:
+    setupChannel{i}:
         stx.w $43{i}0
         sty.w $43{i}2
         sta.w $43{i}4
@@ -42,7 +42,7 @@ while ({i} <= 7) {
 if 0 {
 
 // 16 bit X = $AABB AA = destination register BB = mode , 16 bit Y = $AABB source address high and low bytes,  8 bit A = source bank
-setupHDMAChannel0:
+setupChannel0:
 // returns: void
 // args:
 //  a8  = source bank
@@ -59,7 +59,7 @@ setupHDMAChannel0:
     HDMA._EnableChannel($01)
     rts
 
-setupHDMAChannel1:
+setupChannel1:
     stx.w $4310
     sty.w $4312
     sta.w $4314
@@ -67,7 +67,7 @@ setupHDMAChannel1:
     HDMA._EnableChannel($02)
     rts
 
-setupHDMAChannel2:
+setupChannel2:
     stx.w $4320
     sty.w $4322
     sta.w $4324
@@ -75,7 +75,7 @@ setupHDMAChannel2:
     HDMA._EnableChannel($04)
     rts
 
-setupHDMAChannel3:
+setupChannel3:
     stx.w $4330
     sty.w $4332
     sta.w $4334
@@ -83,7 +83,7 @@ setupHDMAChannel3:
     HDMA._EnableChannel($08)
     rts
 
-setupHDMAChannel4:
+setupChannel4:
     stx.w $4340
     sty.w $4342
     sta.w $4344
@@ -91,7 +91,7 @@ setupHDMAChannel4:
     HDMA._EnableChannel($10)
     rts
 
-setupHDMAChannel5:
+setupChannel5:
     stx.w $4350
     sty.w $4352
     sta.w $4354
@@ -99,7 +99,7 @@ setupHDMAChannel5:
     HDMA._EnableChannel($20)
     rts
 
-setupHDMAChannel6:
+setupChannel6:
     stx.w $4360
     sty.w $4362
     sta.w $4364
@@ -107,7 +107,7 @@ setupHDMAChannel6:
     HDMA._EnableChannel($40)
     rts
 
-setupHDMAChannel7:
+setupChannel7:
     stx.w $4370
     sty.w $4372
     sta.w $4374

@@ -25,8 +25,8 @@ _start:
 include "../../lib/ppu.inc"
 include "../../lib/mem.inc"
 include "../../lib/timing.inc"
+include "../../lib/hdma.inc"
 include "interrupts.asm"
-include "hdma.asm"
 include "dsp-1.asm"
 //-------------------------------------
 
@@ -52,7 +52,7 @@ scope main: {
     jsr setupMatrixHDMA
     jsr setupBGHDMA
 
-    jsr Interrupts.setupIRQ
+    jsr Interrupts.init
 
 _forever:
     jsr dspUpdateProjection

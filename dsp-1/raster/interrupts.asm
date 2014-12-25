@@ -3,7 +3,7 @@
 
 scope Interrupts: {
 
-setupIRQ: {
+init: {
     //a8
     //i16
     lda #$81
