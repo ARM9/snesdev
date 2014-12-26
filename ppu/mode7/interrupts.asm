@@ -25,9 +25,7 @@ scope nmiHandler: {
     lda.w REG_RDNMI
     
     rep #$20
-    lda.b frame_count
-    inc
-    sta.b frame_count
+    inc.b frame_count
 
     jsr updateCamera
 
@@ -41,14 +39,17 @@ scope nmiHandler: {
     rti
 }
 
-constant OFFSET_CX(-128)
-constant OFFSET_CY(-112)
+//constant OFFSET_CX(-128)
+//constant OFFSET_CY(-112)
+constant OFFSET_CX($80)
+constant OFFSET_CY($D6)
 
 scope updateCamera: {
     php
 
     rep #$30
     lda.b frame_count
+    eor #-1; inc
     lsr
     sep #$30
     and.b #$7F
@@ -61,6 +62,7 @@ scope updateCamera: {
     sta.w wram_matrixB+4//$4342
     rep #$20
     lda.b frame_count
+    eor #-1; inc
     lsr
     sep #$20
     clc
@@ -72,39 +74,38 @@ scope updateCamera: {
     lda.l hdmaMatrixCLUT,x
     sta.w wram_matrixC+4
 
-    rep #$20
+    rep #$30
     lda.w Camera.x
     inc
     sta.w Camera.x
     sep #$20
-    sta.w REG_M7X
+    sta.w REG_BG1HOFS
     xba
-    sta.w REG_M7X
+    sta.w REG_BG1HOFS
     xba
     rep #$21
-    adc.w #OFFSET_CX
+    adc.w Camera.cx
     sep #$20
-    sta.w REG_BG1HOFS
+    sta.w REG_M7X
     xba
-    sta.w REG_BG1HOFS
+    sta.w REG_M7X
 
-    rep #$20
+    rep #$21
     lda.w Camera.y
     inc
     sta.w Camera.y
-    sep #$21 // set carry
-    sta.w REG_M7Y
-    xba
-    sta.w REG_M7Y
-    xba
-    rep #$20
-    sbc.w #$0080//raster_center
-    clc
-    adc.w #OFFSET_CY
     sep #$20
     sta.w REG_BG1VOFS
     xba
     sta.w REG_BG1VOFS
+    xba
+    rep #$21
+    adc.w Camera.cy
+    sec; sbc.w Camera.fov
+    sep #$20
+    sta.w REG_M7Y
+    xba
+    sta.w REG_M7Y
 
     plp
     rts

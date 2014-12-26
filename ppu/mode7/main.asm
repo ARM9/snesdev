@@ -37,6 +37,8 @@ nmitimen_mirror:; db 0
 scope Camera: {
 x:;     dw 0
 y:;     dw 0
+cx:;    dw 0
+cy:;    dw 0
 fov:;   dw 0
 }
 
@@ -167,12 +169,17 @@ scope setupCamera: {
     php
     rep #$20
 
-    lda.w #$0200
+    lda.w #-128
     sta.w Camera.x
-    lda.w #$0010
+    lda.w #64
     sta.w Camera.y
-    //lda.w #$0100
-    //sta.w Camera.fov
+    lda.w #256/2
+    sta.w Camera.cx
+    lda.w #192
+    sta.w Camera.cy
+
+    lda.w #32
+    sta.w Camera.fov
 
     plp
     rts
