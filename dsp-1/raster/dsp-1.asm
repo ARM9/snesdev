@@ -1,6 +1,4 @@
 
-include "../../lib/dsp-1/regs.inc"
-
 constant OFFSET_CX(-128)
 constant OFFSET_CY(-112)
 
@@ -30,21 +28,33 @@ hdmaMatrixAB2:; fill hdma_matrix2_size
 hdmaMatrixCD1:; fill hdma_matrix1_size
 hdmaMatrixCD2:; fill hdma_matrix2_size
 
-//perspective:;        db 0
-//perspective_x:;      dw 0
-//perspective_y:;      dw 0
-//perspective_z:;      dw 0
-//perspective_Lfe:;    dw 0
-//perspective_Les:;    dw 0
-//perspective_Aas:;    dw 0
-//perspective_Azs:;    dw 0
-//perspective_center_x:; dw 0
-//perspective_center_y:; dw 0
-//perspective_raster_center:; dw 0
-//perspectiveCamera.horizon:; dw 0
-
     bank0()
-//use during scanning
+
+scope Camera {
+scope init: {
+    php
+    rep #$30
+
+    lda.w #200
+    sta.l Camera.x
+    lda.w #200
+    sta.l Camera.y
+    lda.w #48
+    sta.l Camera.z
+
+    lda.w #$100
+    sta.l Camera.Lfe
+    lda.w #$20
+    sta.l Camera.Les
+    lda.w #$6000 // rotation around Y axis
+    sta.l Camera.Aas
+    lda.w #$3f00
+    sta.l Camera.Azs
+
+    plp
+    rts
+}
+}
 //DSP_perspective variables used, not modified:
 //  x, y, z, Lfe, Les, Aas, Azs
 //modified:
@@ -104,7 +114,6 @@ dspRenderProjection:
     ldx.w #$0000
 
 _loopRasterData1:
-
     WaitRQM()
     // 200 dsp cycles delay per line
     lda.w REG_DSP_DATA
@@ -122,6 +131,7 @@ _loopRasterData1:
 
     WaitRQM()
 
+    // tell dsp we're done
     lda.w #$8000
     sta.w REG_DSP_DATA
     sta.w REG_DSP_DATA
@@ -142,6 +152,7 @@ dspObjectProjection:
     //lda.b #$06 // Command for object projection, standard 6 cycles
     //sta.l REG_DSP_DATA
 
+    plp
     rts
 
 //call during nmi
@@ -150,9 +161,6 @@ dspUpdateCamera:
 
     rep #$31
 
-    lda.w Camera.raster_center
-    sta.b zp0
-    
     lda.w Camera.cy
     tay
     lda.w Camera.cx
@@ -176,7 +184,7 @@ dspUpdateCamera:
     sta.w REG_M7Y
     xba
     rep #$20
-    sbc.b zp0
+    sbc.w Camera.raster_center
     clc
     adc.w #OFFSET_CY
     sep #$20
@@ -187,30 +195,7 @@ dspUpdateCamera:
     plp
     rts
 
-setupCamera:
-    php
-    rep #$30
-
-    lda.w #250
-    sta.l Camera.x
-    lda.w #250
-    sta.l Camera.y
-    lda.w #64
-    sta.l Camera.z
-
-    lda.w #$100
-    sta.l Camera.Lfe
-    lda.w #$20
-    sta.l Camera.Les
-    lda.w #$6000 // rotation around Y axis
-    sta.l Camera.Aas
-    lda.w #$3f00
-    sta.l Camera.Azs
-
-    plp
-    rts
-
-setupMatrixHDMA:
+initMatrixHdma:
     php
     phb
 
@@ -246,18 +231,18 @@ setupMatrixHDMA:
     ldy.w #hdmaMatrixPointerAB
     lda.b #hdmaMatrixPointerAB>>16
     sta.w $4317
-    jsr HDMA.setupChannel1
+    jsr HDMA.initChannel1
 
     ldx.w #$1D43
     ldy.w #hdmaMatrixPointerCD
     lda.b #hdmaMatrixPointerCD>>16
     sta.w $4327
-    jsr HDMA.setupChannel2
+    jsr HDMA.initChannel2
 
     plp
     rts
 
-setupBGHDMA:
+initBgHdma:
     php
 
     rep #$10
@@ -266,12 +251,12 @@ setupBGHDMA:
     ldx.w #$0500
     ldy.w #bgmode_hdma
     lda.b #bgmode_hdma>>16
-    jsr HDMA.setupChannel3
+    jsr HDMA.initChannel3
 
     ldx.w #$2C00
     ldy.w #tm_hdma
     lda.b #tm_hdma>>16
-    jsr HDMA.setupChannel4
+    jsr HDMA.initChannel4
 
     plp
     rts
@@ -299,10 +284,12 @@ dspSinCos:
 //  y16 = radius
     //a8
     //i16
-    lda.b #DSP_BANK; pha; plb
+    php
 
+    sep #$20
     lda.b #$04
     sta.w REG_DSP_DATA
+
     rep #$21
     stx.w REG_DSP_DATA // angle
     // safe to skip RQM check here
@@ -311,6 +298,7 @@ dspSinCos:
     ldx.w REG_DSP_DATA // radius*sin(angle)
     ldy.w REG_DSP_DATA // radius*cos(angle)
 
+    plp
     rts
 
 dspRotate2D:
@@ -318,9 +306,9 @@ dspRotate2D:
 //  x16 = x2
 //  y16 = y2
 // args:
-//  u16 zp0 = angle
-//  x16     = x1
-//  y16     = y1
+//  zp0 = u16 angle
+//  x16 = x1
+//  y16 = y1
     //a8
     //i16
     php

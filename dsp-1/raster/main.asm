@@ -7,7 +7,7 @@ macro seek(variable offset) {
     arch snes.cpu
 include "segments.inc"
 include "header.inc"
-include "../../lib/snes_regs_gsu.inc"
+include "../../lib/snes_regs_dsp1.inc"
 include "../../lib/zpage.inc"
     bank0()
 constant _STACK_TOP($2ff)
@@ -27,6 +27,7 @@ include "../../lib/mem.inc"
 include "../../lib/timing.inc"
 include "../../lib/hdma.inc"
 include "interrupts.asm"
+include "joypad.asm"
 include "dsp-1.asm"
 //-------------------------------------
 
@@ -37,6 +38,10 @@ frame_counter:;     fill 1
 inidisp_mirror:;    fill 1
 nmitimen_mirror:;   fill 1
 
+scope Player: {
+    dx:; dw 0
+    dy:; dw 0
+}
 //-------------------------------------
 
     bank0()
@@ -46,23 +51,45 @@ scope main: {
 
     lda.b #DSP_BANK; pha; plb
 
-    jsr setupVideo
+    Joypad.Init(1)
 
-    jsr setupCamera
-    jsr setupMatrixHDMA
-    jsr setupBGHDMA
+    jsr initVideo
+
+    jsr Camera.init
+    jsr initMatrixHdma
+    jsr initBgHdma
 
     jsr Interrupts.init
 
 _forever:
+    rep #$30
+    jsr Player.update
     jsr dspUpdateProjection
     jsr dspRenderProjection
     wai
     bra _forever
 }
-scope setupVideo: {
-    //a8
-    //i16
+
+scope Player {
+scope update: {
+    php
+    rep #$30
+
+    lda.w #1
+    jsr Joypad.held
+    
+    bit.w #PAD_UP
+    beq +
+    inc.w Camera.x
++
+    plp
+    rts
+}
+}
+
+scope initVideo: {
+    php
+    rep #$10; sep #$20
 
     LoadLoVram(koop.map7, $0000, koop.map7.size)
     LoadHiVram(koop.chr7, $0000, koop.chr7.size)

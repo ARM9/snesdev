@@ -32,7 +32,7 @@ include "../../lib/stdio.inc"
 
     bank0() // project files
 include "interrupts.asm"
-include "sqrt_test.asm"
+include "xor_test.asm"
 //-------------------------------------
 
     zpage()
@@ -59,8 +59,9 @@ scope main: {
 _gowram:
     jsr setupVideo
 
-    jsr sqrtTest
-    Vsync()
+    jsr xorTest
+    jsr xoriTest
+
     Vsync()
 
     jsr stdout.dmaWramBufferToVram

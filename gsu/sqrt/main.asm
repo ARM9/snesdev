@@ -61,7 +61,6 @@ _gowram:
 
     jsr sqrtTest
     Vsync()
-    Vsync()
 
     jsr stdout.dmaWramBufferToVram
 

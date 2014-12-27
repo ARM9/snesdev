@@ -26,6 +26,7 @@ scope nmiHandler: {
     lda.w REG_RDNMI
 
     jsr dspUpdateCamera
+    jsr Joypad.updatePads
 
     lda.w inidisp_mirror
     sta.w REG_INIDISP

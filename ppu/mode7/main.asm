@@ -51,19 +51,19 @@ scope main: {
     rep #$10
     sep #$20
 
-    jsr setupVideo
-    jsr setupMatrixHdma
-    jsr setupCamera
+    jsr initVideo
+    jsr initMatrixHdma
+    jsr initCamera
 
     ldx.w #$0500
     ldy.w #bgmode_hdma
     lda.b #bgmode_hdma>>16
-    jsr HDMA.setupChannel5
+    jsr HDMA.initChannel5
 
     ldx.w #$2C00
     ldy.w #tm_hdma
     lda.b #tm_hdma>>16
-    jsr HDMA.setupChannel6
+    jsr HDMA.initChannel6
 
     jsr Interrupts.init
 
@@ -72,7 +72,7 @@ _forever:
     jmp _forever
 }
 
-scope setupVideo: {
+scope initVideo: {
     php
     rep #$10; sep #$20
     
@@ -110,7 +110,7 @@ scope setupVideo: {
     rts
 }
 
-scope setupMatrixHdma: {
+scope initMatrixHdma: {
     // todo less magic numbers
     php
     rep #$10; sep #$20
@@ -136,28 +136,28 @@ scope setupMatrixHdma: {
     ldx.w #$1B42
     ldy.w #wram_matrixA
     lda.b #$00
-    jsr HDMA.setupChannel1
+    jsr HDMA.initChannel1
     lda.b #hdmaMatrixALUT>>16
     sta.w $4317
 
     ldx.w #$1C42
     ldy.w #wram_matrixB
     lda.b #$00
-    jsr HDMA.setupChannel2
+    jsr HDMA.initChannel2
     lda.b #hdmaMatrixALUT>>16
     sta.w $4327
 
     ldx.w #$1D42
     ldy.w #wram_matrixC
     lda.b #$00
-    jsr HDMA.setupChannel3
+    jsr HDMA.initChannel3
     lda.b #hdmaMatrixALUT>>16
     sta.w $4337
 
     ldx.w #$1E42
     ldy.w #wram_matrixA
     lda.b #$00
-    jsr HDMA.setupChannel4
+    jsr HDMA.initChannel4
     lda.b #hdmaMatrixALUT>>16
     sta.w $4347
     
@@ -165,7 +165,7 @@ scope setupMatrixHdma: {
     rts
 }
 
-scope setupCamera: {
+scope initCamera: {
     php
     rep #$20
 

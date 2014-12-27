@@ -1,4 +1,6 @@
 
+    include "snes_regs.inc"
+
 if ((header.MAP_MODE & 1) == 1) {
     constant REG_DSPIO($806000) // HIROM
     constant REG_DSP_DATA($806000)
@@ -14,7 +16,7 @@ if ((header.MAP_MODE & 1) == 1) {
 macro scope WaitRQM() {
     //a16
 L{#}:
-    bit.w REG_DSP_STATUS // Only works when dbr is $30-3F
+    bit.w REG_DSP_STATUS
     bpl L{#} // bit 15 of DR register set when ready
 }
 
