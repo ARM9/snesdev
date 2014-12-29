@@ -40,12 +40,15 @@ scope dspMult16: {
 //  y16 = L
     //a8
     //i16
+    php
+    sep #$20
 	lda.b #$00
 	sta.w REG_DSP_DATA
-	rep #$20
+	rep #$30
 	stx.w REG_DSP_DATA // K
 	sty.w REG_DSP_DATA // L
 	ldx.w REG_DSP_DATA // M
+    plp
 	rts
 }
 

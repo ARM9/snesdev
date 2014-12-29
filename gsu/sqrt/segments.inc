@@ -1,6 +1,4 @@
 
-//define DEBUG_SEGMENTS(1)
-
 scope seg {
   scope bank0 {
     constant start($8000)

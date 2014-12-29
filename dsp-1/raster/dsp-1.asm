@@ -54,6 +54,51 @@ scope init: {
     plp
     rts
 }
+//call during nmi
+scope update: {
+    php
+
+    rep #$31
+
+    lda.w Camera.Aas
+    adc.w Player.torque
+    sta.w Camera.Aas
+
+    lda.w Camera.cy
+    tay
+    lda.w Camera.cx
+
+    sep #$20
+    sta.w REG_M7X
+    xba
+    sta.w REG_M7X
+    xba
+    rep #$21
+    adc.w #OFFSET_CX
+    sep #$20
+    sta REG_BG1HOFS
+    xba
+    sta REG_BG1HOFS
+
+    rep #$20
+    tya
+    sep #$21 // set carry for "free"
+    sta.w REG_M7Y
+    xba
+    sta.w REG_M7Y
+    xba
+    rep #$20
+    sbc.w Camera.raster_center
+    clc
+    adc.w #OFFSET_CY
+    sep #$20
+    sta.w REG_BG1VOFS
+    xba
+    sta.w REG_BG1VOFS
+
+    plp
+    rts
+}
 }
 //DSP_perspective variables used, not modified:
 //  x, y, z, Lfe, Les, Aas, Azs
@@ -155,45 +200,6 @@ dspObjectProjection:
     plp
     rts
 
-//call during nmi
-dspUpdateCamera:
-    php
-
-    rep #$31
-
-    lda.w Camera.cy
-    tay
-    lda.w Camera.cx
-    sep #$20
-    sta.w REG_M7X
-    xba
-    sta.w REG_M7X
-    xba
-    rep #$21
-    adc.w #OFFSET_CX
-    sep #$20
-    sta REG_BG1HOFS
-    xba
-    sta REG_BG1HOFS
-
-    rep #$20
-    tya
-    sep #$21 // set carry for "free"
-    sta.w REG_M7Y
-    xba
-    sta.w REG_M7Y
-    xba
-    rep #$20
-    sbc.w Camera.raster_center
-    clc
-    adc.w #OFFSET_CY
-    sep #$20
-    sta.w REG_BG1VOFS
-    xba
-    sta.w REG_BG1VOFS
-
-    plp
-    rts
 
 initMatrixHdma:
     php
@@ -275,69 +281,10 @@ db 1
 db $11
 db 0
 
-dspSinCos:
-// returns:
-//  x16 = sin(angle)
-//  y16 = cos(angle)
-// args:
-//  x16 = angle
-//  y16 = radius
-    //a8
-    //i16
-    php
-
-    sep #$20
-    lda.b #$04
-    sta.w REG_DSP_DATA
-
-    rep #$21
-    stx.w REG_DSP_DATA // angle
-    // safe to skip RQM check here
-    sty.w REG_DSP_DATA // radius
-
-    ldx.w REG_DSP_DATA // radius*sin(angle)
-    ldy.w REG_DSP_DATA // radius*cos(angle)
-
-    plp
-    rts
-
-dspRotate2D:
-// returns:
-//  x16 = x2
-//  y16 = y2
-// args:
-//  zp0 = u16 angle
-//  x16 = x1
-//  y16 = y1
-    //a8
-    //i16
-    php
-
-    sep #$20
-    lda.b #$0C
-    sta.w REG_DSP_DATA
-
-    rep #$20
-    lda.b zp0
-    sta.w REG_DSP_DATA
-    stx.w REG_DSP_DATA
-    sty.w REG_DSP_DATA
-
-    //WaitRQM()
-    nop; nop; nop
-    nop; nop; nop
-    nop; nop; nop
-
-    ldx.w REG_DSP_DATA
-    ldy.w REG_DSP_DATA
-
-    plp
-    rts
-
-include "dsp-1/arithmetics.asm"
+include "dsp-1/arithmetic.asm"
 include "dsp-1/matrix.asm"
 include "dsp-1/projection.asm"
-//include "dsp-1/trigonometry.asm"
+include "dsp-1/trigonometry.asm"
 //include "dsp-1/vectors.asm"
 
 // vim:ft=bass
