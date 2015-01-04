@@ -29,6 +29,9 @@ include "../../lib/hdma.inc"
 include "interrupts.asm"
 include "joypad.asm"
 include "dsp-1.asm"
+
+include "camera.asm"
+include "player.asm"
 //-------------------------------------
 
     zpage()
@@ -37,13 +40,6 @@ frame_counter:;     fill 1
     bss()
 inidisp_mirror:;    fill 1
 nmitimen_mirror:;   fill 1
-
-scope Player: {
-    x:;         dw 0
-    y:;         dw 0
-    torque:;    dw 0
-    velocity:;  dw 0
-}
 //-------------------------------------
 
     bank0()
@@ -58,6 +54,7 @@ scope main: {
     jsr initVideo
 
     jsr Camera.init
+    jsr Player.init
     jsr initMatrixHdma
     jsr initBgHdma
 
@@ -65,99 +62,12 @@ scope main: {
 
 _forever:
     rep #$30
-    jsr Player.update
     jsr dspUpdateProjection
-    jsr dspRenderProjection
+    jsr dspUpdateMatrixTable
+    jsr Player.update
+    jsr Camera.update
     wai
     bra _forever
-}
-
-scope Player {
-scope update: {
-    php
-    rep #$30
-
-    lda.w #0
-    jsr Joypad.held
-    sta.b zp7
-
-    bit.w #PAD_B
-    //beq _b_up
-        //lda.w Player.velocity
-        //cmp.w #16
-        //bcs +
-            //inc
-            //sta.w Player.velocity
-            //bra +
-//_b_up:
-    //lda.w Player.velocity
-    //cmp #1
-    //bcc +
-    //dec.w Player.velocity
-//+
-
-    lda.b zp7
-    bit.w #PAD_LEFT
-    beq _left_up
-        lda.w Player.torque
-        cmp #-64
-        beq +
-        dec; sta.w Player.torque
-        bra +
-_left_up:
-    lda.w Player.torque
-    beq +
-    bit.w #$8000 // negative?
-    beq +
-    inc; sta.w Player.torque
-+
-
-    lda.b zp7
-    bit.w #PAD_RIGHT
-    beq _right_up
-        lda.w Player.torque
-        cmp #64
-        beq +
-        inc; sta.w Player.torque
-        bra +
-_right_up:
-    lda.w Player.torque
-    beq +
-    bit.w #$8000
-    bne +
-    dec; sta.w Player.torque
-+
-    // 
-    ldx.w Player.torque
-    lda.w Player.velocity
-    xba
-    tay
-    jsr dspSinCos
-    phy // cos
-
-    // Camera.x += Player.velocity * sin(torque)
-    ldy.w Player.velocity
-    jsr dspMult16
-    
-    stx.b zp0
-    lda.w Camera.x
-    clc
-    adc.b zp0
-    sta.w Camera.x
-
-    // Camera.y += Player.velocity * cos(torque)
-    plx // cos
-    ldy.w Player.velocity
-    jsr dspMult16
-    stx.w zp0
-    lda.w Camera.y
-    clc
-    adc.b zp0
-    sta.w Camera.y
-    
-    plp
-    rts
-}
 }
 
 scope initVideo: {

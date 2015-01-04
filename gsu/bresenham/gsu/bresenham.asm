@@ -79,5 +79,5 @@ L0: // while(1){
     add {sx}
     // }
 }
-
+BlockSize(drawLine)
 // vim:ft=bass

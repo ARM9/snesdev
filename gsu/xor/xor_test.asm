@@ -8,12 +8,14 @@ define r1($101)
 define r2($110)
 define r3($100)
 define r4($8003)
-define result($8112)
+//define result($8112)
+define result({r4}^{r3}^{r2}^{r1})
     php
 
     // store parameters
     rep #$30
-    SetPalette()
+    stdout.SetPalette(0)
+
     lda.w #{r1}
     sta.w GSU_R1
     lda.w #{r2}
@@ -33,10 +35,8 @@ define result($8112)
     sta.w GSU_SCMR
 
     lda.b #GSU_SFR_GO
-    ldy.w #$0000
-    stx.w GSU_R15 // Go
+    stx.w GSU_R15
 -
-    iny
     bit.w GSU_SFR
     bne -
 
@@ -45,22 +45,26 @@ define result($8112)
     rep #$30
 
     lda.w GSU_R0
-    sta.b zp0
+    pha
     itoa(tmp_intstr)
 
     sep #$20
-    puts("\n xor\n {r4}^{r3}^{r2}^{r1}: ")
+    //puts("\n xor\n {r4}^{r3}^{r2}^{r1} = $")
+    puts("\n xor\n {result} = $")
     PrintString(tmp_intstr)
 
     rep #$30
-    lda.b zp0
+    pla
     cmp.w #{result}
     bne _fail
-        SetPalette(2)
-        puts("\n ")
+        stdout.SetPalette(1)
+        sep #$20
+        puts("\n test passed")
     bra +
 _fail:
-    
+    stdout.SetPalette(2)
+    sep #$20
+    puts("\n test failed")
 +
     plp
     rts
@@ -68,11 +72,13 @@ _fail:
 
 scope xoriTest: {
 define r1($64)
-define result($6F)
+define result({r1}^$B)
     php
 
     // store parameters
     rep #$30
+    stdout.SetPalette(0)
+
     lda.w #{r1}
     sta.w GSU_R1
 
@@ -86,10 +92,8 @@ define result($6F)
     sta.w GSU_SCMR
 
     lda.b #GSU_SFR_GO
-    ldy.w #$0000
     stx.w GSU_R15 // Go
 -
-    iny
     bit.w GSU_SFR
     bne -
 
@@ -98,7 +102,7 @@ define result($6F)
     rep #$30
 
     lda.w GSU_R0
-    sta.b zp0
+    //sta.b zp0
     itoa(tmp_intstr)
 
     sep #$20

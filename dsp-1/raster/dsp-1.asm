@@ -1,25 +1,8 @@
 
-constant OFFSET_CX(-128)
-constant OFFSET_CY(-112)
-
 constant hdma_matrix1_size((127<<2))
 constant hdma_matrix2_size((97<<2)+1)
 
     bss()
-scope Camera: {
-x:; dw 0// [CI] horizontal
-y:; dw 0// [CI] depth
-z:; dw 0// [CI] vertical
-Lfe:; dw 0// [U] Distance between base point and viewpoint (Sets screen-sprite ratio)
-Les:; dw 0// [U] fov, Distance between viewpoint and screen (the effect of screen angle considered; screen horizontal distance 256)
-Aas:; dw 0// [A] Azimuth angle, rotation around Y axis
-Azs:; dw 0// [A] Zenith angle, X/Z rotationish
-cx:; dw 0//\ [CI] focal point
-cy:; dw 0///
-raster_center:; dw 0 // [I]
-horizon:; dw 0 // [I]
-}
-
 hdmaMatrixPointerAB:; fill (1+2 + 1+2 + 1+2)//1 byte repeat, 2 byte pointer for each entry
 hdmaMatrixPointerCD:; fill (1+2 + 1+2 + 1+2)
 
@@ -29,77 +12,6 @@ hdmaMatrixCD1:; fill hdma_matrix1_size
 hdmaMatrixCD2:; fill hdma_matrix2_size
 
     bank0()
-
-scope Camera {
-scope init: {
-    php
-    rep #$30
-
-    lda.w #200
-    sta.l Camera.x
-    lda.w #200
-    sta.l Camera.y
-    lda.w #48
-    sta.l Camera.z
-
-    lda.w #$100
-    sta.l Camera.Lfe
-    lda.w #$20
-    sta.l Camera.Les
-    lda.w #$6000 // rotation around Y axis
-    sta.l Camera.Aas
-    lda.w #$3f00
-    sta.l Camera.Azs
-
-    plp
-    rts
-}
-//call during nmi
-scope update: {
-    php
-
-    rep #$31
-
-    lda.w Camera.Aas
-    adc.w Player.torque
-    sta.w Camera.Aas
-
-    lda.w Camera.cy
-    tay
-    lda.w Camera.cx
-
-    sep #$20
-    sta.w REG_M7X
-    xba
-    sta.w REG_M7X
-    xba
-    rep #$21
-    adc.w #OFFSET_CX
-    sep #$20
-    sta REG_BG1HOFS
-    xba
-    sta REG_BG1HOFS
-
-    rep #$20
-    tya
-    sep #$21 // set carry for "free"
-    sta.w REG_M7Y
-    xba
-    sta.w REG_M7Y
-    xba
-    rep #$20
-    sbc.w Camera.raster_center
-    clc
-    adc.w #OFFSET_CY
-    sep #$20
-    sta.w REG_BG1VOFS
-    xba
-    sta.w REG_BG1VOFS
-
-    plp
-    rts
-}
-}
 //DSP_perspective variables used, not modified:
 //  x, y, z, Lfe, Les, Aas, Azs
 //modified:
@@ -146,7 +58,7 @@ dspUpdateProjection:
     rts
 
 //updates the HDMA table with perspective projection matrix parameters from DSP-1 raster function
-dspRenderProjection:
+dspUpdateMatrixTable:
     php
     sep #$20
 
@@ -182,20 +94,6 @@ _loopRasterData1:
     sta.w REG_DSP_DATA
     sta.w REG_DSP_DATA
     sta.w REG_DSP_DATA
-
-    plp
-    rts
-
-//void dspObjectProjection(unsigned int x, unsigned int y, unsigned int z, unsigned int *H, unsigned int *V, unsigned int *M)//
-dspObjectProjection:
-    php
-    sep #$20
-    //lda.b #DSP_BANK
-    //pha
-    //plb
-
-    //lda.b #$06 // Command for object projection, standard 6 cycles
-    //sta.l REG_DSP_DATA
 
     plp
     rts

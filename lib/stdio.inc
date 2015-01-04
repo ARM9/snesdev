@@ -81,7 +81,7 @@ _next:
     and.w #$00FF
     beq _end
 
-    cmp.w #$0A
+    cmp.w #$000A
     beq _line_feed
 
     sec

@@ -25,7 +25,7 @@ scope nmiHandler: {
 
     lda.w REG_RDNMI
 
-    jsr Camera.update
+    jsr Camera.writePpu
 
     jsr Joypad.updatePads
 

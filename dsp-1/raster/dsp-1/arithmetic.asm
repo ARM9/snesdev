@@ -34,7 +34,7 @@
 
 scope dspMult16: {
 // returns:
-//  x16 = x16 * y16 >> 15
+//  x16 = (x16 * y16) >> 15
 // args:
 //	x16 = K
 //  y16 = L

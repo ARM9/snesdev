@@ -28,28 +28,28 @@ constant PADH_B($80)
 scope Joypad {
 __num_joypads:; db 0
 __pads_held:
-__pads1_held:; dw 0
-__pads2_held:; dw 0
-__pads3_held:; dw 0
-__pads4_held:; dw 0
+__pad1_held:; dw 0
+__pad2_held:; dw 0
+__pad3_held:; dw 0
+__pad4_held:; dw 0
 
 __pads_prev:
-__pads1_prev:; dw 0
-__pads2_prev:; dw 0
-__pads3_prev:; dw 0
-__pads4_prev:; dw 0
+__pad1_prev:; dw 0
+__pad2_prev:; dw 0
+__pad3_prev:; dw 0
+__pad4_prev:; dw 0
 
 __pads_down:
-__pads1_down:; dw 0
-__pads2_down:; dw 0
-__pads3_down:; dw 0
-__pads4_down:; dw 0
+__pad1_down:; dw 0
+__pad2_down:; dw 0
+__pad3_down:; dw 0
+__pad4_down:; dw 0
 
 __pads_released:
-__pads1_released:; dw 0
-__pads2_released:; dw 0
-__pads3_released:; dw 0
-__pads4_released:; dw 0
+__pad1_released:; dw 0
+__pad2_released:; dw 0
+__pad3_released:; dw 0
+__pad4_released:; dw 0
 }
 //-----------------------------------------------
 
@@ -62,37 +62,13 @@ macro Init(num_pads) {
     sta.w Joypad.__num_joypads
 }
 
-pressed:
-// returns:
-//  a16 = buttons pressed
-// args:
-//  a8 = joypad number
-    php
+macro Pressed(pad) {
+    lda.w Joypad.__pad{pad}_down
+}
 
-    rep #$30
-    and.w #$000F
-    asl
-    tax
-    
-    lda.w __pads_down,x
-    plp
-    rts
-
-held:
-// returns:
-//  a16 = buttons held
-// args:
-//  a8 = joypad number
-    php
-
-    rep #$30
-    and.w #$000F
-    asl
-    tax
-
-    lda.w __pads_held,x
-    plp
-    rts
+macro Held(pad) {
+    lda.w Joypad.__pad{pad}_held
+}
 
 scope updatePads: {
 // returns: void
@@ -143,16 +119,16 @@ dw __readJoypad4
 //dw _readJoypad8
 
 __readJoypad1:
-    __ReadJoypad(0, __pads1_held, __pads1_prev, __pads1_down)
+    __ReadJoypad(0, __pad1_held, __pad1_prev, __pad1_down)
 
 __readJoypad2:
-    __ReadJoypad(1, __pads2_held, __pads2_prev, __pads2_down)
+    __ReadJoypad(1, __pad2_held, __pad2_prev, __pad2_down)
 
 __readJoypad3:
-    __ReadJoypad(2, __pads3_held, __pads3_prev, __pads3_down)
+    __ReadJoypad(2, __pad3_held, __pad3_prev, __pad3_down)
 
 __readJoypad4:
-    __ReadJoypad(3, __pads4_held, __pads4_prev, __pads4_down)
+    __ReadJoypad(3, __pad4_held, __pad4_prev, __pad4_down)
 }
 
 // vim:ft=bass
