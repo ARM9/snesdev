@@ -14,20 +14,11 @@ dspSinCos:
     lda.b #$04
     sta.w REG_DSP_DATA
 
-    rep #$21
     stx.w REG_DSP_DATA // angle
-    // safe to skip RQM check here
-    nop; nop; nop
-    nop; nop; nop
-    nop; nop; nop
+    //nop
     sty.w REG_DSP_DATA // radius
-    nop; nop; nop
-    nop; nop; nop
-    nop; nop; nop
+    nop; nop
     ldx.w REG_DSP_DATA // radius*sin(angle)
-    nop; nop; nop
-    nop; nop; nop
-    nop; nop; nop
     ldy.w REG_DSP_DATA // radius*cos(angle)
 
     plp

@@ -55,11 +55,27 @@ scope update: {
     sta.w Camera.Aas
 
     lda.w Camera.cy
+    bmi +
     lsr #4
+    bra ++
++
+    sec; ror
+    sec; ror
+    sec; ror
+    sec; ror
++
     sta.w Camera.cy
     tay
     lda.w Camera.cx
+    bmi +
     lsr #4
+    bra ++
++
+    sec; ror
+    sec; ror
+    sec; ror
+    sec; ror
++
     sta.w Camera.cx
 
     plp

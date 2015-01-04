@@ -1,6 +1,11 @@
 
     include "snes_regs.inc"
 
+//  Nec uPD77c25
+// DSP-1 clock 7.6MHz
+// SCPU clock 2.68MHz
+// Clock differential:  2.8358208955223880597014925373134
+//                      0.35263157894736842105263157894737
 if ((header.MAP_MODE & 1) == 1) {
     constant REG_DSPIO($806000) // HIROM
     constant REG_DSP_DATA($806000)

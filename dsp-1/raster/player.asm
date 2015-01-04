@@ -11,6 +11,7 @@ scope Player: {
 //-------------------------------------
     bank0()
 scope Player {
+
 constant VELOCITY_MAX($50)
 constant TORQUE_MAX($70)
 constant Z_MAX($100)
@@ -49,8 +50,7 @@ scope update: {
             bra +
 _up_up:
     lda.w Player.velocity
-    cmp.w #1
-    bcc +
+    beq +
     dec
     sta.w Player.velocity
 +
@@ -138,7 +138,7 @@ _R_up:
     beq _X_up
         lda.w Camera.Les
         cmp.w #$11
-        bcc +
+        beq +
             dec; sta.w Camera.Les
 +
         lda.w Camera.Azs
@@ -156,7 +156,7 @@ _X_up:
     beq _A_up
         lda.w Camera.Les
         cmp.w #$80
-        bcs +
+        beq +
             inc; sta.w Camera.Les
 +
         lda.w Camera.Azs
@@ -176,7 +176,6 @@ _A_up:
     tax
 
     lda.w Player.velocity
-    beq _skip
     and.w #$00ff
     xba
     tay
@@ -197,12 +196,11 @@ _A_up:
     plx // cos
     ldy.w Player.velocity
     jsr dspMult16
-    stx.w zp0
+    stx.b zp0
     lda.w Player.y
     sec
     sbc.b zp0
     sta.w Player.y
-_skip:
 
     plp
     rts

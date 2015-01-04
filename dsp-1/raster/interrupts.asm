@@ -23,16 +23,18 @@ scope nmiHandler: {
     sep #$20
     pha; plb
 
+    inc.b frame_counter
+
     lda.w REG_RDNMI
 
     jsr Camera.writePpu
-
-    jsr Joypad.updatePads
 
     lda.w inidisp_mirror
     sta.w REG_INIDISP
     lda.w hdmaen_mirror
     sta.w REG_HDMAEN
+
+    jsr Joypad.updatePads
 
     rep #$30
     plb; pld; ply; plx; pla

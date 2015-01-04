@@ -1,6 +1,4 @@
 
-constant JOYPADS_MAX(4)
-
 constant PAD_R($0010)
 constant PAD_L($0020)
 constant PAD_X($0040)
@@ -63,10 +61,12 @@ macro Init(num_pads) {
 }
 
 macro Pressed(pad) {
+    //a16
     lda.w Joypad.__pad{pad}_down
 }
 
 macro Held(pad) {
+    //a16
     lda.w Joypad.__pad{pad}_held
 }
 
