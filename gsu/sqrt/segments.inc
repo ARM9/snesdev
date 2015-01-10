@@ -263,7 +263,7 @@ macro zpage() {
     print "zpage()\n"
     print "  zpage pc at:        "; hex(seg.zpage._pc); print "\n"
   }
-  output "{_DEVNULL}"
+  output "/dev/null"
   seek(seg.zpage._pc)
   global variable seg._current(seg.enum.zpage)
 }
@@ -274,7 +274,7 @@ macro bss() {
     print "bss()\n"
     print "  bss pc at:          "; hex(seg.bss._pc); print "\n"
   }
-  output "{_DEVNULL}" // determined by make and passed in as a define
+  output "/dev/null" // determined by make and passed in as a define
   seek(seg.bss._pc)
   global variable seg._current(seg.enum.bss)
 }
@@ -285,7 +285,7 @@ macro loram() {
     print "loram()\n"
     print "  loram pc at:        "; hex(seg.loram._pc); print "\n"
   }
-  output "{_DEVNULL}"
+  output "/dev/null"
   seek(seg.loram._pc)
   global variable seg._current(seg.enum.loram)
 }
@@ -296,7 +296,7 @@ macro hiram() {
     print "hiram()\n"
     print "  hiram pc at:        "; hex(seg.hiram._pc); print "\n"
   }
-  output "{_DEVNULL}"
+  output "/dev/null"
   seek(seg.hiram._pc)
   global variable seg._current(seg.enum.hiram)
 }
@@ -307,7 +307,7 @@ macro sram0() {
     print "sram0()\n"
     print "  sram0 pc at:        "; hex(seg.sram0._pc); print "\n"
   }
-  output "{_DEVNULL}"
+  output "/dev/null"
   seek(seg.sram0._pc)
   global variable seg._current(seg.enum.sram0)
 }

@@ -5,8 +5,8 @@
 scope rotate: {
 // returns: void
 // args:
-//  s16 r3      = rotation (8.8)
-//  u16* r14    = pointer to sprite in rom
+//  r3      = s16 rotation (8.8)
+//  r14     = u16* pointer to sprite in rom
 // vars:
 //	
 // clobbers:
