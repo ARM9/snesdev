@@ -51,4 +51,4 @@ scope srand: {
     sbk
 }
 
-// vim:ft=bass
+// vim:ft=snes

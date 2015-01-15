@@ -35,4 +35,4 @@ db -25, -22, -19, -16, -12, -9, -6, -3
 constant size(pc() - sin8)
 }
 }
-// vim:ft=bass
+// vim:ft=snes

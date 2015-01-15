@@ -116,4 +116,4 @@ scope fillScreen: {
 }
 
 include "midpoint.asm"
-// vim:ft=bass
+// vim:ft=snes

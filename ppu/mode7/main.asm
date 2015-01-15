@@ -184,4 +184,4 @@ scope initCamera: {
     plp
     rts
 }
-// vim:ft=bass
+// vim:ft=snes

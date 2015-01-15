@@ -162,4 +162,4 @@ dspGlobal2ObjC:
 
     rts
 
-// vim:ft=bass
+// vim:ft=snes

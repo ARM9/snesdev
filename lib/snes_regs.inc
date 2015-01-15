@@ -356,4 +356,4 @@ constant REG_NTLR0($430A)
 //	Similarly, a value of $00 will be "128 lines with repeat" when it doesn't mean "terminate the channel"(assuming this can only happen if you manually write $43xA?).
 //	This register is initialized at the end of V-Blank for every active HDMA channel.
 //	Note that if a game wishes to begin HDMA during the frame, it will most likely have to initalize this register.
-// vim:ft=bass
+// vim:ft=snes

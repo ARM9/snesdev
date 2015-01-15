@@ -193,4 +193,4 @@ macro SetPitch(voice, note, octave, C9Pitch) {
   WDSP({voice}<<4|DSP_VPITCHL, #pitch & $FF) // Voice X: Pitch (Lower Byte)
   WDSP({voice}<<4|DSP_VPITCHH, #pitch >> 8)  // Voice X: Pitch (Upper Byte)
 }
-// vim:ft=bass
+// vim:ft=snes

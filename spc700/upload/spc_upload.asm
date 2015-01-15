@@ -622,4 +622,4 @@ SPC_REG_ADDR:
     bank3()
     insert spc_bin_hi32k, {SPC_BINARY}, $8100, $8000
 
-// vim:ft=bass
+// vim:ft=snes

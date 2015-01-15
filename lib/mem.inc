@@ -110,4 +110,4 @@ macro LoadWramSram(src, dest, size, mode) {
     jsr DMA.wramToSram
 }
 
-// vim:ft=bass
+// vim:ft=snes

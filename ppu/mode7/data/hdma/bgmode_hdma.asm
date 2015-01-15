@@ -11,4 +11,4 @@ db 96, $11 // sprites, bg1
 db 96, $00 // 
 db $00
 
-// vim:ft=bass
+// vim:ft=snes

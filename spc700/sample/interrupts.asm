@@ -19,4 +19,4 @@ irqHandler: {
     stp
     rti
 }
-// vim:ft=bass
+// vim:ft=snes

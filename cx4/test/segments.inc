@@ -321,4 +321,4 @@ macro hex(variable value) {
   value = value & 15
   putchar(value < 10 ? '0' + value : 'a' + value - 10)
 }
-// vim:ft=bass sts=2
+// vim:ft=snes sts=2

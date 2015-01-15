@@ -39,4 +39,4 @@ scope irqHandler: {
     rti
 }
 
-// vim:ft=bass
+// vim:ft=snes

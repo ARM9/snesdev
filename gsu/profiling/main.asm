@@ -114,4 +114,4 @@ db "Here is some text hi more text more more need to fill the entire screen shee
 
 // GSU code
 
-// vim:ft=bass
+// vim:ft=snes

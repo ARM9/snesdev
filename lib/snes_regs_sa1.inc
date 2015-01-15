@@ -283,4 +283,4 @@ constant SA1_VC($230E) // vvvv vvvv SA-1 acces: R
 // Some other differences to SNES Side are:
 // I/O Ports are different, on SA-1 side, the mappable BW-RAM area (at 6000h-7FFFh) can be also assigned as 2bit/4bit pixel buffer (on SNES Side it's always normal 8bit memory).
 
-// vim:ft=bass
+// vim:ft=snes

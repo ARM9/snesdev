@@ -179,4 +179,4 @@ _init_snes:
 CONST_ZERO:
     dw $0000
 
-// vim:ft=bass
+// vim:ft=snes

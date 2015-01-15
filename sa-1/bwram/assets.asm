@@ -8,4 +8,4 @@
     insert lake_pal, "gfx/lake.pal"
     insert lake, "gfx/lake.bin", $A000, $3000*2
 
-// vim:ft=bass
+// vim:ft=snes

@@ -116,4 +116,4 @@ _forever:
 
 include "gsu/main.asm"
 
-// vim:ft=bass
+// vim:ft=snes

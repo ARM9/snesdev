@@ -122,4 +122,4 @@ _div3:
     rts
 }
 
-// vim:ft=bass
+// vim:ft=snes

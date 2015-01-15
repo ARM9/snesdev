@@ -54,4 +54,4 @@ constant DEST_BRAZIL($10)
 constant DEST_AUSTRALIA($11)
 
 }
-// vim:ft=bass
+// vim:ft=snes

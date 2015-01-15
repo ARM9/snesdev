@@ -123,4 +123,4 @@ _loop{#}:
 }
 }
 
-// vim:ft=bass
+// vim:ft=snes

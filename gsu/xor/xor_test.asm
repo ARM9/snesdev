@@ -113,4 +113,4 @@ define result({r1}^$B)
     rts
 }
 
-// vim:ft=bass
+// vim:ft=snes

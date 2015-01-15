@@ -32,4 +32,4 @@ scope column_major_map: {
     constant size(pc() - column_major_map)
 }
 
-// vim:ft=bass
+// vim:ft=snes

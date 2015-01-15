@@ -236,4 +236,4 @@ include "../../lib/gsu/rand.inc"
 BlockSize(gsu_main)
 
 include "../../lib/lut/sin8.inc"
-// vim:ft=bass
+// vim:ft=snes

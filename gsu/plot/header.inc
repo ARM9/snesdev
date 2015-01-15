@@ -46,4 +46,4 @@ seek($FFF4)             // emulation mode vectors
     dw _start           // reset
     dw 0                // irq
 }
-// vim:ft=bass
+// vim:ft=snes

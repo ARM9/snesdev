@@ -30,4 +30,4 @@ L{#}:
     bne L{#}
     ldx.w REG_JOY{pad}L
 }
-// vim:ft=bass
+// vim:ft=snes

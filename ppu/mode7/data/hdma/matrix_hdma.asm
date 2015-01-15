@@ -25347,4 +25347,4 @@ dw 65531
 dw 65531
 dw 65531
 dw 65531
-// vim:ft=bass
+// vim:ft=snes

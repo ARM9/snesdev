@@ -92,4 +92,4 @@ scope fillScreen: {
 include "bresenham.asm"
 
 include "../../../lib/lut/sin8.inc"
-// vim:ft=bass
+// vim:ft=snes

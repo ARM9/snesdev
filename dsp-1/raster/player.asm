@@ -206,4 +206,4 @@ _A_up:
     rts
 }
 }
-// vim:ft=bass
+// vim:ft=snes

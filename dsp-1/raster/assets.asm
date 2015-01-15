@@ -7,4 +7,4 @@ insert map7,"gfx/koop.map7"
 insert pal,"gfx/koop.pal"
 }
 
-// vim:ft=bass
+// vim:ft=snes

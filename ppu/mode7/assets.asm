@@ -6,4 +6,4 @@ insert map7,"gfx/donut1.map7"
 insert pal,"gfx/donut1.pal"
 }
 
-// vim:ft=bass
+// vim:ft=snes

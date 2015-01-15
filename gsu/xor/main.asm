@@ -115,4 +115,4 @@ scope setupVideo: {
 // GSU code
 include "gsu/main.asm"
 
-// vim:ft=bass
+// vim:ft=snes

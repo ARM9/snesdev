@@ -141,4 +141,4 @@ directory:
 brr_heap_start:
     insert holdit, "holdit.brr"
 
-// vim:ft=bass
+// vim:ft=snes

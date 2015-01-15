@@ -63,4 +63,4 @@ _forever:
 
 insert sound_driver, "main.spc"
 
-// vim:ft=bass
+// vim:ft=snes

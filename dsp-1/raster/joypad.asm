@@ -131,4 +131,4 @@ __readJoypad4:
     __ReadJoypad(3, __pad4_held, __pad4_prev, __pad4_down)
 }
 
-// vim:ft=bass
+// vim:ft=snes

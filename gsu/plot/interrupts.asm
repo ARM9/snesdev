@@ -116,4 +116,4 @@ scope dummy_vectors: {
 constant size(pc() - dummy_vectors)
 }
 
-// vim:ft=bass
+// vim:ft=snes

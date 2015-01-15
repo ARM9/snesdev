@@ -115,4 +115,4 @@ initChannel7:
     HDMA._EnableChannel($80)
     rts
 }
-// vim:ft=bass
+// vim:ft=snes

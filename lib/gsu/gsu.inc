@@ -35,4 +35,4 @@ macro BlockSize(start) {
     print pc() - {start}
     print " bytes\n"
 }
-// vim:ft=bass
+// vim:ft=snes

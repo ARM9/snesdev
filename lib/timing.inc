@@ -52,4 +52,4 @@ L{#}:
     bne L{#}
 }
 
-// vim:ft=bass
+// vim:ft=snes

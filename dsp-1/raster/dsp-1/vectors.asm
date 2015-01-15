@@ -11,4 +11,4 @@ dspVec3Range:
 dspVec3Magnitude:
 	rtl
 
-// vim:ft=bass
+// vim:ft=snes

@@ -18,4 +18,4 @@ zp6h:;  fill 1
 zp7:;   fill 1
 zp7h:;  fill 1
 
-// vim:ft=bass
+// vim:ft=snes

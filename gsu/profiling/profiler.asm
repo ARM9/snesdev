@@ -37,4 +37,4 @@ runTests:
     cli
     rts
 
-// vim:ft=bass
+// vim:ft=snes

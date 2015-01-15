@@ -146,4 +146,4 @@ macro RGB15(evaluate r, evaluate g, evaluate b) {
     ({b}<<10 | {g}<<5 | {r})
 }
 
-// vim:ft=bass
+// vim:ft=snes

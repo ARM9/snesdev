@@ -121,4 +121,4 @@ scope writePpu: {
     rts
 }
 }
-// vim:ft=bass
+// vim:ft=snes

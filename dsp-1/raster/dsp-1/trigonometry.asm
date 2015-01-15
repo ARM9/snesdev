@@ -57,4 +57,4 @@ dspRotate2D:
     plp
     rts
 
-// vim:ft=bass
+// vim:ft=snes

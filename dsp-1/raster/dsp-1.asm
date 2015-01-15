@@ -185,4 +185,4 @@ include "dsp-1/projection.asm"
 include "dsp-1/trigonometry.asm"
 //include "dsp-1/vectors.asm"
 
-// vim:ft=bass
+// vim:ft=snes

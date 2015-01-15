@@ -208,4 +208,4 @@ scope bootSA1: {
 //- SA-1 code ------------------------------------
 include "sa1/sa1-main.asm"
 
-// vim:ft=bass
+// vim:ft=snes

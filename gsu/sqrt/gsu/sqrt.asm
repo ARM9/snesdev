@@ -61,4 +61,4 @@ _end:
     nop
 }
 
-// vim:ft=bass
+// vim:ft=snes

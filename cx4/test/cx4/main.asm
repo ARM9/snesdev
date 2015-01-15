@@ -40,4 +40,4 @@ cx4_start:
     unknown4
 
     cmp a,a
-// vim:ft=bass
+// vim:ft=snes

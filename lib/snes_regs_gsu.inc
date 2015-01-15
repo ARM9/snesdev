@@ -150,4 +150,4 @@ constant GSU_CACHE($3100) //GSU cache start exposed to scpu, writeable
 // 	PBR:0000-01FF    Code-Cache (when having manually stored opcodes in it)
 // PBR can be set to both ROM/RAM regions (or cache region), ROMBR only to ROM region (00h-5Fh), RAMBR only to RAM region (70h-71h).
 
-// vim:ft=bass
+// vim:ft=snes

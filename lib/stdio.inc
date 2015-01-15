@@ -246,4 +246,4 @@ macro scope itoa(str_ptr) {
     ldy.w #{str_ptr}>>16
     jsr stdlib.int_to_string
 }
-// vim:ft=bass
+// vim:ft=snes

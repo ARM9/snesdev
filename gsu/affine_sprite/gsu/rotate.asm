@@ -22,4 +22,4 @@ scope rotate: {
     nop
 }
 
-// vim:ft=bass
+// vim:ft=snes

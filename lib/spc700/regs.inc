@@ -70,4 +70,4 @@ constant DSP_VUNUSEDC($0E) // Voice Unused Byte C (1 Byte Of General-Purpose RAM
 
 // $80..$FF - Read-Only Mirror Of $00..$7F
 
-// vim:ft=bass
+// vim:ft=snes

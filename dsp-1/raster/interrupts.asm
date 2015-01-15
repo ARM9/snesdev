@@ -45,4 +45,4 @@ scope irqHandler: {
     stp
 }
 
-// vim:ft=bass
+// vim:ft=snes

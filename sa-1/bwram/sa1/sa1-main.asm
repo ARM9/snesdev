@@ -31,4 +31,4 @@ SA1_start:
     //wai
     bra -
 
-// vim:ft=bass
+// vim:ft=snes

@@ -76,4 +76,4 @@ include "rotate.asm"
 
 BlockSize(gsu_main)
 include "../../../lib/lut/sin8.inc"
-// vim:ft=bass
+// vim:ft=snes

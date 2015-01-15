@@ -60,4 +60,4 @@ _forever:
     bra _forever
 }
 
-// vim:ft=bass
+// vim:ft=snes

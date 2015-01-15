@@ -80,4 +80,4 @@ L0: // while(1){
     // }
 }
 
-// vim:ft=bass
+// vim:ft=snes

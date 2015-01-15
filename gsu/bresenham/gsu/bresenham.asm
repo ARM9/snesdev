@@ -80,4 +80,4 @@ L0: // while(1){
     // }
 }
 BlockSize(drawLine)
-// vim:ft=bass
+// vim:ft=snes

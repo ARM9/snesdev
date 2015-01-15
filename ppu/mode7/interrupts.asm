@@ -111,4 +111,4 @@ scope updateCamera: {
     rts
 }
 
-// vim:ft=bass
+// vim:ft=snes

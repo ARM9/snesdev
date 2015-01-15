@@ -28,4 +28,4 @@ include "sqrt.asm"
 
     pull base
 constant GSU_PRGROM_SIZE(pc() - GSU_PRGROM)
-// vim:ft=bass
+// vim:ft=snes

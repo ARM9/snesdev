@@ -111,4 +111,4 @@ scope initVideo: {
     rts
 }
 
-// vim:ft=bass
+// vim:ft=snes
