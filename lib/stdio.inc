@@ -41,16 +41,24 @@ macro puts(string) {
     bank0()
 scope stdout {
 
-scope init: {
-    php
-
+macro Init(bg_num, palette, prio) {
+    // requires bg12 and bg34nba_mirror to be declared
+    //a8
     rep #$30
-    lda.w #$2000
+
+    // palette
+    lda.w #(({palette} & 7) << 10)
+    // priority
+    and.w #~({prio} << 13)
+    ora.w #{prio} << 13
+    // reset stdout vram map properties
     sta.l stdout.vram_map_properties
 
-    plp
-    rts
+    sep #$20
+    lda.b #{bg_num}
+    jsr stdout.initBackground
 }
+
 // supported control characters:
 //  \n = 0x0A
 scope write_string: {
@@ -142,16 +150,21 @@ scope write_string_retaddr: {
 scope clearWramBuffer: {
     //a8
     //i16
+    php
+    rep #$10; sep #$20
     lda.b #0
     sta.l stdout.wram_buffer_pointer
     sta.l stdout.wram_buffer_pointer + 1
     FillWram(CONST_ZERO, stdout.wram_buffer, stdout.WRAM_BUFFER_SIZE)
+    plp
     rts
 }
 
 scope dmaWramBufferToVram: {
     //a8
     //i16
+    php
+    rep #$10; sep #$20
     lda.l stdout.wram_buffer_dirty
     beq _end
     {
@@ -163,6 +176,7 @@ scope dmaWramBufferToVram: {
     LoadVram(stdout.wram_buffer, VRAM_MAP_ADDR, stdout.WRAM_BUFFER_SIZE)
     }
 _end:
+    plp
     rts
 }
 
@@ -172,12 +186,87 @@ macro SetXY(column, row) {
     sta.l stdout.wram_buffer_pointer
 }
 
+    // set up map & tile ppu properties
+scope initBackground: {
+//returns: void
+//args:
+//  a8 = bg number
+    //a8
+    phx; phy; php
+    rep #$30
+
+    dec
+if !{defined DEBUG} {
+    cmp.w #4
+    bcs +
+    stp
++
+}
+    and.w #$000F
+    asl
+    tax
+    sep #$20
+    lda.b #((stdout.VRAM_MAP_ADDR >> 8) & $FC)
+
+    jmp (_jtable0,x)
+_jtable0:
+dw L_0
+dw L_1
+dw L_2
+dw L_3
+L_0:
+    sta.w REG_BG1SC
+    lda.b #((stdout.VRAM_TILES_ADDR >> 12) & $0F)
+    tsb.w bg12nba_mirror
+    lda.w bg12nba_mirror
+    sta.w REG_BG12NBA
+    lda.b #%0001
+    bra +
+L_1:
+    sta.w REG_BG2SC
+    lda.b #((stdout.VRAM_TILES_ADDR >> 12) & $0F) << 4
+    tsb.w bg12nba_mirror
+    lda.w bg12nba_mirror
+    sta.w REG_BG12NBA
+    lda.b #%0010
+    bra +
+L_2:
+    sta.w REG_BG3SC
+    lda.b #((stdout.VRAM_TILES_ADDR >> 12) & $0F)
+    tsb.w bg34nba_mirror
+    lda.w bg34nba_mirror
+    sta.w REG_BG34NBA
+    lda.b #%0100
+    bra +
+L_3:
+    sta.w REG_BG4SC
+    lda.b #((stdout.VRAM_TILES_ADDR >> 12) & $0F) << 4
+    tsb.w bg34nba_mirror
+    lda.w bg34nba_mirror
+    sta.w REG_BG34NBA
+    lda.b #%1000
++
+    tsb.w tm_mirror
+
+    plp; ply; plx
+    rts
+}
+
 macro SetPalette(palette) {
     //a16
-    lda.w #$2000 | (({palette} & 7) << 10)
+    lda.l stdout.vram_map_properties
+    and.w #~(7 << 10)
+    ora.w #(({palette} & 7) << 10)
     sta.l stdout.vram_map_properties
 }
 
+macro SetMapPriority(prio) {
+    //a16
+    lda.l stdout.vram_map_properties
+    and.w #~({prio} << 13)
+    ora.w #{prio} << 13
+    sta.l stdout.vram_map_properties
+}
 }
 
     loram()
@@ -219,12 +308,12 @@ int_to_string:
 _next:
     and.b #$0F
     cmp.b #$0A
-    bcs _is_hex
-    adc.b #16+32
-    bra +
-_is_hex:
+    bcc _is_dec
     clc
     adc.b #23+32
+    bra +
+_is_dec:
+    adc.b #16+32
 +
     sta [zp0],y
     rep #$20
@@ -238,6 +327,7 @@ _is_hex:
     plp
     rts
 }
+
 
 macro scope itoa(str_ptr) {
     //a16

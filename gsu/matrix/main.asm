@@ -32,7 +32,6 @@ include "../../lib/stdio.inc"
 
     bank0() // project files
 include "interrupts.asm"
-include "sqrt_test.asm"
 //-------------------------------------
 
     zpage()
@@ -40,6 +39,11 @@ frame_counter:;     fill 1
     
     bss()
 inidisp_mirror:;    fill 1
+
+bg12nba_mirror:;    fill 1
+bg34nba_mirror:;    fill 1
+tm_mirror:;         fill 1
+
 nmitimen_mirror:;   fill 1
 
 //-------------------------------------
@@ -59,7 +63,8 @@ scope main: {
 _gowram:
     jsr setupVideo
 
-    jsr sqrtTest
+    //jsr sqrtTest
+    puts("Hello world")
     Vsync()
 
     jsr stdout.dmaWramBufferToVram
@@ -71,14 +76,16 @@ _forever:
 }
 
 scope setupVideo: {
+    php
+    rep #$10; sep #$20
     LoadVram(torus_sans, stdout.VRAM_TILES_ADDR, torus_sans.size)
     LoadCgram(text_pal, $00, text_pal.size)
 
-    lda.b #((stdout.VRAM_MAP_ADDR >> 8) & $FC)
-    sta.w REG_BG1SC
-    sta.w REG_BG2SC
-    lda.b #(stdout.VRAM_TILES_ADDR >> 12)<<4 | ((stdout.VRAM_TILES_ADDR >> 12)&$F)
-    sta.w REG_BG12NBA
+    stdout.Init(1, 0, 0)
+    lda.b #2
+    jsr stdout.initBackground
+    lda.b #3
+    jsr stdout.initBackground
 
     //lda #$00
     //sta REG_CGWSEL
@@ -88,9 +95,10 @@ scope setupVideo: {
     sta.w REG_COLDATA
 
     lda.b #$00
-    sta.w $2105
-    lda.b #$03
-    sta.w $212C
+    sta.w REG_BGMODE
+
+    lda.w tm_mirror
+    sta.w REG_TM
 
     lda.b #$FF
     sta.w REG_BG1VOFS
@@ -107,6 +115,7 @@ scope setupVideo: {
     lda.b #$0F
     sta.w inidisp_mirror
 
+    plp
     rts
 }
 

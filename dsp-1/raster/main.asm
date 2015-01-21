@@ -26,8 +26,8 @@ include "../../lib/ppu.inc"
 include "../../lib/mem.inc"
 include "../../lib/timing.inc"
 include "../../lib/hdma.inc"
+include "../../lib/input.inc"
 include "interrupts.asm"
-include "joypad.asm"
 include "dsp-1.asm"
 
 include "camera.asm"
@@ -48,8 +48,6 @@ scope main: {
     sep #$20
 
     lda.b #DSP_BANK; pha; plb
-
-    Joypad.Init(1)
 
     jsr initVideo
 

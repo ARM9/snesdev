@@ -36,10 +36,16 @@ include "interrupts.asm"
 
     zpage()
 frame_counter:;     fill 1
-    
+
     bss()
 inidisp_mirror:;    fill 1
+
+bg12nba_mirror:;    fill 1
+bg34nba_mirror:;    fill 1
+tm_mirror:;         fill 1
+
 nmitimen_mirror:;   fill 1
+
 
 //-------------------------------------
 
@@ -47,18 +53,18 @@ nmitimen_mirror:;   fill 1
 scope main: {
     rep #$10
     sep #$20
-    
+
     LoadWram($8000, WRAM_PRG, $8000)
-    
+
     jsr setupVideo
-    
+
     rep #$20
     stdout.SetXY(5,25)
     stdout.SetPalette(1)
     sep #$20
     puts("foo bar\n")
     PrintString(long_string, 15, 27, 0)
-    
+
     //jsr stdout.clearWramBuffer
 
     jsr Interrupts.init

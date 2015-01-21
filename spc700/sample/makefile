@@ -1,4 +1,3 @@
-export PATH	:= $(DEVKITSNES)/bass/bass/:$(PATH)
 export EMU	:= $(DEVKITPRO)/emulators/snes
 
 ASFLAGS		:= -benchmark -create
