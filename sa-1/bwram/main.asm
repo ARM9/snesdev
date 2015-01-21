@@ -30,6 +30,14 @@ constant WRAM_PRG($7E8000)
 //------------------------------------------------
 
     bss()
+inidisp_mirror:;    fill 1
+
+bgmode_mirror:;     fill 1
+bg12nba_mirror:;    fill 1
+bg34nba_mirror:;    fill 1
+tm_mirror:;         fill 1
+
+nmitimen_mirror:;   fill 1
 bg1_x:; fill 2
 
 parity_string_bank0:; fill 4 + 3
@@ -60,8 +68,6 @@ main:
 
 scope WRAM_main: {
     sep #$20
-
-    jsr stdout.init
 
     jsr setupVideo
     jsr initSA1
@@ -109,9 +115,8 @@ _forever:
 
 scope setupVideo: {
     php
+    rep #$10; sep #$20
 
-    rep #$10
-    sep #$20
     LoadVram(torus_sans, $7000, torus_sans.size)
     LoadVram(lake, $0000, lake.size)
     LoadCgram(lake_pal, 0, lake_pal.size)
@@ -123,23 +128,20 @@ scope setupVideo: {
     sta.w REG_CGDATAW
 
     lda.b #$09
-    sta.w REG_BGMODE
-    lda.b #$05
-    sta.w REG_TM
+    sta.w bgmode_mirror
+
+    lda.b #$01
+    tsb.w tm_mirror
 
     lda.b #$22|2
     sta.w REG_BG1SC
     lda.b #$00
     sta.w REG_BG12NBA
 
-    lda.b #((stdout.VRAM_MAP_ADDR >> 8) & $FC)
-    sta.w REG_BG3SC
-    lda.b #(stdout.VRAM_TILES_ADDR >> 12)&$F
-    sta.w REG_BG34NBA
+    stdout.Init(3, 0, 1)
 
     lda.b #$0F
-    WaitForHblank()
-    sta.w REG_INIDISP
+    sta.w inidisp_mirror
 
     plp
     rts

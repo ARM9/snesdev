@@ -46,12 +46,12 @@ macro Init(bg_num, palette, prio) {
     //a8
     rep #$30
 
+    // reset stdout vram map properties
     // palette
     lda.w #(({palette} & 7) << 10)
     // priority
-    and.w #~({prio} << 13)
+    and.w #~(1 << 13)
     ora.w #{prio} << 13
-    // reset stdout vram map properties
     sta.l stdout.vram_map_properties
 
     sep #$20
@@ -186,6 +186,22 @@ macro SetXY(column, row) {
     sta.l stdout.wram_buffer_pointer
 }
 
+macro SetPalette(palette) {
+    //a16
+    lda.l stdout.vram_map_properties
+    and.w #~(7 << 10)
+    ora.w #(({palette} & 7) << 10)
+    sta.l stdout.vram_map_properties
+}
+
+macro SetMapPriority(prio) {
+    //a16
+    lda.l stdout.vram_map_properties
+    and.w #~({prio} << 13)
+    ora.w #{prio} << 13
+    sta.l stdout.vram_map_properties
+}
+
     // set up map & tile ppu properties
 scope initBackground: {
 //returns: void
@@ -196,13 +212,7 @@ scope initBackground: {
     rep #$30
 
     dec
-if !{defined DEBUG} {
-    cmp.w #4
-    bcs +
-    stp
-+
-}
-    and.w #$000F
+    and.w #$0007 //1-4
     asl
     tax
     sep #$20
@@ -252,21 +262,6 @@ L_3:
     rts
 }
 
-macro SetPalette(palette) {
-    //a16
-    lda.l stdout.vram_map_properties
-    and.w #~(7 << 10)
-    ora.w #(({palette} & 7) << 10)
-    sta.l stdout.vram_map_properties
-}
-
-macro SetMapPriority(prio) {
-    //a16
-    lda.l stdout.vram_map_properties
-    and.w #~({prio} << 13)
-    ora.w #{prio} << 13
-    sta.l stdout.vram_map_properties
-}
 }
 
     loram()

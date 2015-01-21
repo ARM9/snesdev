@@ -84,8 +84,6 @@ scope setupVideo: {
     stdout.Init(1, 0, 0)
     lda.b #2
     jsr stdout.initBackground
-    lda.b #3
-    jsr stdout.initBackground
 
     //lda #$00
     //sta REG_CGWSEL
