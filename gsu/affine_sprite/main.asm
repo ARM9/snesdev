@@ -26,18 +26,22 @@ _start:
 
 //-------------------------------------
     bank0()
+include "../../lib/dma.inc"
 include "../../lib/ppu.inc"
 include "../../lib/mem.inc"
 include "../../lib/timing.inc"
 include "framebuffer.asm"
 include "interrupts.asm"
+include "oam.asm"
+include "vram.asm"
 //-------------------------------------
 
     zpage()
 frame_counter:;     fill 1
 
     bss()
-inidisp_mirror:;    fill 1
+nmitimen_mirror:;   fill 1
+
 gsu_scmr_mirror:;   fill 1
 //-------------------------------------
 
@@ -47,15 +51,10 @@ main: {
     rep #$30
     BlockMoveN($7E0000, $700000, $8000)
     phk; plb
-    // make screen border tile
-    lda.w #$ffff
-    sta.b zp0
-    sep #$20
-    FillVram($7E0000, $2A00, $20)
-    FillVram($7E0000, $3000+$2A00, $20)
 
-    LoadVram(column_major_map, $2C00, column_major_map.size)
-    LoadCgram(sfx_pal, $00, sfx_pal.size)
+    sep #$20
+
+    jsr setupVideo
 
     LoadWram($008000, WRAM_PRG, $8000)
     LoadWram(dummy_vectors, $7E0104, dummy_vectors.size)
@@ -87,32 +86,41 @@ scope wramMain: {
     ldx.w #_gsu_start
     stx.w GSU_R15   // GSU is booted on write to R15
 
-    // Set up ppu
-    lda.b #1
-    sta.w REG_BGMODE
-
-    lda.b #(VRAM_FB_MAP >> 8) & $FC
-    sta.w REG_BG1SC
-
-    lda.b #0
-    sta.w REG_BG12NBA
-
-    lda.b #1
-    sta.w REG_TM
-
-    jsr Interrupts.setupIrq
+    jsr Interrupts.init
 
 _forever:
     wai
 
     // turn on screen after first frame is complete
-    lda.w framebuffer_counter
+    lda.w frame_counter
     and.b #1
     beq +
         lda.b #$0F
         sta.w inidisp_mirror
 +
     bra _forever
+}
+
+scope setupVideo: {
+    php
+    rep #$10; sep #$20
+    // make screen border tile
+    LoadCgram(sfx_pal, $00, sfx_pal.size)
+
+    // sprites
+    LoadCgram(ball.pal, $80, ball.pal.size)
+
+    lda.b #$ff
+    sta.b 0
+    FillVram(0, 0, $4000)
+
+    jsr OAM.init
+
+    lda.b #$10
+    sta.w tm_mirror
+
+    plp
+    rts
 }
 
 include "gsu/main.asm"

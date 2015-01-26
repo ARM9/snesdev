@@ -25,6 +25,7 @@ _start:
 
 //-------------------------------------
     bank0() // libraries
+include "../../lib/dma.inc"
 include "../../lib/ppu.inc"
 include "../../lib/mem.inc"
 include "../../lib/timing.inc"
@@ -38,14 +39,7 @@ include "interrupts.asm"
 frame_counter:;     fill 1
 
     bss()
-inidisp_mirror:;    fill 1
-
-bg12nba_mirror:;    fill 1
-bg34nba_mirror:;    fill 1
-tm_mirror:;         fill 1
-
 nmitimen_mirror:;   fill 1
-
 
 //-------------------------------------
 
@@ -76,26 +70,17 @@ _forever:
 }
 
 scope setupVideo: {
+    php
+    rep #$10; sep #$20
+
     LoadVram(torus_sans, stdout.VRAM_TILES_ADDR, torus_sans.size)
     LoadCgram(text_pal, $00, text_pal.size)
 
-    lda.b #((stdout.VRAM_MAP_ADDR >> 8) & $FC)
-    sta.w REG_BG1SC
-    sta.w REG_BG2SC
-    lda.b #(stdout.VRAM_TILES_ADDR >> 12)<<4 | ((stdout.VRAM_TILES_ADDR >> 12)&$F)
-    sta.w REG_BG12NBA
-
-    //lda #$00
-    //sta REG_CGWSEL
-    //lda #%00100011
-    //sta REG_CGADSUB
-    lda.b #$00
-    sta.w REG_COLDATA
+    stdout.Init(1, 0, 0)
+    stdout.InitBg(2)
 
     lda.b #$00
-    sta.w $2105
-    lda.b #$03
-    sta.w $212C
+    sta.w bgmode_mirror
 
     lda.b #$FF
     sta.w REG_BG1VOFS
@@ -109,9 +94,12 @@ scope setupVideo: {
     //sta REG_BG2HOFS
     //stz REG_BG2HOFS
 
+    jsr PPU.updateRegs
+
     lda.b #$0F
     sta.w inidisp_mirror
 
+    plp
     rts
 }
 

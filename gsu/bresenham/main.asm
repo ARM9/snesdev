@@ -26,6 +26,7 @@ _start:
 
 //-------------------------------------
     bank0()
+include "../../lib/dma.inc"
 include "../../lib/ppu.inc"
 include "../../lib/mem.inc"
 include "../../lib/timing.inc"
@@ -37,7 +38,6 @@ include "interrupts.asm"
 frame_counter:;     fill 1
 
     bss()
-inidisp_mirror:;    fill 1
 gsu_scmr_mirror:;   fill 1
 //-------------------------------------
 

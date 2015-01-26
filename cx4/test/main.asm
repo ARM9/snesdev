@@ -107,8 +107,8 @@ scope setupVideo: {
     plp
     rts
 }
-}
 //- cx4 code -------------------------------------
 include "cx4/main.asm"
 
+}
 // vim:ft=snes

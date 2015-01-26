@@ -88,4 +88,4 @@ dma_done:
     rts
 }
 
-// vim: ft=bass
+// vim:ft=snes

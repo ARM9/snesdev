@@ -78,9 +78,13 @@ _forever:
 }
 
 scope setupVideo: {
+    php
+    rep #$10; sep #$20
     LoadVram(torus_sans, stdout.VRAM_TILES_ADDR, torus_sans.size)
     LoadCgram(text_pal, $00, text_pal.size)
 
+    stdout.Init(1, 0, 0)
+    lda.b #2
     lda.b #((stdout.VRAM_MAP_ADDR >> 8) & $FC)
     sta.w REG_BG1SC
     sta.w REG_BG2SC
@@ -114,6 +118,7 @@ scope setupVideo: {
     lda.b #$0F
     sta.w inidisp_mirror
 
+    plp
     rts
 }
 

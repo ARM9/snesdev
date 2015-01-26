@@ -19,7 +19,7 @@
 //define a1(r3)
 //define a2(r5)
 //define a3(r9)
-define sp(r10) // a4
+define sp(r10)
 define lr(r11)
 define pc(r15)
 
@@ -27,6 +27,22 @@ macro AlignCache() {
     while ((pc() & 15) != 15) {
         nop
     }
+}
+
+macro pushr(reg) {
+    dec r10; dec r10
+    if ({reg} != 0) {
+        with r{reg}
+    }
+    stw (r10)
+}
+
+macro popr(reg) {
+    if ({reg} != 0) {
+        with r{reg}
+    }
+    ldw (r10)
+    inc r10; inc r10
 }
 
 // useful for checking

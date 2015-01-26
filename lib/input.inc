@@ -1,4 +1,7 @@
 
+if !{defined _INPUT_INC} {
+define _INPUT_INC(1)
+
 constant PAD_R($0010)
 constant PAD_L($0020)
 constant PAD_X($0040)
@@ -87,4 +90,6 @@ scope updatePads: {
 
 }
 
+
+}
 // vim:ft=snes

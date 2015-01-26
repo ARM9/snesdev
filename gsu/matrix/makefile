@@ -20,7 +20,7 @@ ifneq ($(DEBUG),)
 ASFLAGS	+= -d DEBUG=1
 endif
 
-ASFLAGS	+= -d ROM_NAME=$(TARGET).sfc -o $(TARGET).sfc
+ASFLAGS	+= -d ROM_NAME=$(TARGET).sfc -sym $(TARGET).sym -o $(TARGET).sfc
 
 #------------------------------------------------
 .PHONY: clean run

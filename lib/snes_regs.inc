@@ -1,18 +1,23 @@
 //PPU registers
 
+if !{defined _SNES_REGS} {
+define _SNES_REGS(1)
+
 constant REG_INIDISP($2100) // f--- xxxx, f = Force vblank x = screen brightness
 
 //OAM control registers
 constant REG_OBSEL($2101) // sssn nbbb, s = obj size, n = tile table 2 offset, b = tile base address>>14
 // Object size and tile address 
-	// sssnnbbb
+	// sssn nbbb
 	//	 sss = size
-		//000 =  8x8  and 16x16 sprites
-		//001 =  8x8  and 32x32 sprites
-		//010 =  8x8  and 64x64 sprites
-		//011 = 16x16 and 32x32 sprites
-		//100 = 16x16 and 64x64 sprites
-		//101 = 32x32 and 64x64 sprites
+scope OBSEL {
+constant size8_16($00)    // 000 =  8x8  and 16x16 sprites
+constant size8_32($20)    // 001 =  8x8  and 32x32 sprites
+constant size8_64($40)    // 010 =  8x8  and 64x64 sprites
+constant size16_32($60)   // 011 = 16x16 and 32x32 sprites
+constant size16_64($80)   // 100 = 16x16 and 64x64 sprites
+constant size32_64($A0)   // 101 = 32x32 and 64x64 sprites
+}
 // Each sprite entry in oam is 4 bytes (+2 bits in the high table), format is:
 //	1 xxxx xxxx
 //	2 yyyy yyyy
@@ -24,8 +29,9 @@ constant REG_OBSEL($2101) // sssn nbbb, s = obj size, n = tile table 2 offset, b
 // Sprite tile table in vram:
 // The first table is at the address specified by the tile base address bits of $2101, and the offset of the second is determined by the tile table offset bits of $2101.
 // The word address in VRAM of a sprite's first tile may be calculated as:
-// ((Base<<13) + (tttttttt<<4) + (N ? ((tile table offset+1)<<12) : 0)) & 0x7fff
+// ((Base<<13) + (tttttttt<<4) + (N ? ((tile table 2 offset+1)<<12) : 0)) & 0x7fff
 constant REG_OBJSEL($2101)
+constant REG_OAMADD($2102)
 constant REG_OAMADDL($2102) // aaaa aaaa, a = OAM address low byte
 constant REG_OAMADDH($2103) // p--- ---b, OAM address high bit and priority
 // Changing sprite priority sprite to sprite (not sprite to BG, see byte 4 of sprite entry for this):
@@ -36,7 +42,7 @@ constant REG_OAMADDH($2103) // p--- ---b, OAM address high bit and priority
 // during V-blank every frame
 // step 3: repeat
 
-constant REG_OAM_DATA($2104) // bbbb bbbb, OAM Data write register
+constant REG_OAMDATA($2104) // bbbb bbbb, OAM Data write register
 //Write 1 byte at a time to OAM, changes won't take effect until 2 bytes are written
 
 constant REG_BGMODE($2105) // DCBA emmm, e = mode 1 bg3 prio bit, mmm = BG mode
@@ -356,4 +362,6 @@ constant REG_NTLR0($430A)
 //	Similarly, a value of $00 will be "128 lines with repeat" when it doesn't mean "terminate the channel"(assuming this can only happen if you manually write $43xA?).
 //	This register is initialized at the end of V-Blank for every active HDMA channel.
 //	Note that if a game wishes to begin HDMA during the frame, it will most likely have to initalize this register.
+
+}
 // vim:ft=snes

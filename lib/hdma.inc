@@ -1,4 +1,5 @@
-
+if !{defined _HDMA_INC} {
+define _HDMA_INC(1)
 //-------------------------------------
     bss()
 hdmaen_mirror:; fill 1
@@ -37,6 +38,8 @@ while ({i} <= 7) {
 
     evaluate i({i} + 1)
 }
+}
+
 }
 
 if 0 {

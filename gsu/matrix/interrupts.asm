@@ -27,6 +27,21 @@ scope nmiHandler: {
     lda.w inidisp_mirror
     sta.w REG_INIDISP
 
+    rep #$20
+    lda.w bg1sc_mirror
+    sta.w REG_BG1SC // REG_BG2SC
+    lda.w bg3sc_mirror
+    sta.w REG_BG3SC // REG_BG4SC
+
+    lda.w bg12nba_mirror
+    sta.w REG_BG12NBA
+    //lda.w bg34nba_mirror
+    //sta.w REG_BG34NBA
+    sep #$20
+
+    lda.w tm_mirror
+    sta.w REG_TM
+
     jsr stdout.dmaWramBufferToVram
 
     rep #$30
@@ -35,6 +50,10 @@ scope nmiHandler: {
 }
 
 scope irqHandler: {
+    rep #$30
+    stdout.SetXY(1,1)
+    sep #$20
+    puts("irqHandler reached wtf??")
     stp
     rti
 }

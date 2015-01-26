@@ -1,3 +1,5 @@
+if !{defined _TIMING_INC} {
+define _TIMING_INC(1)
 
 macro scope WaitForHblank() {
     //a8
@@ -52,4 +54,5 @@ L{#}:
     bne L{#}
 }
 
+}
 // vim:ft=snes

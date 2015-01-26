@@ -25,6 +25,7 @@ _start:
 
 //-------------------------------------
     bank0() // libraries
+include "../../lib/dma.inc"
 include "../../lib/ppu.inc"
 include "../../lib/mem.inc"
 include "../../lib/timing.inc"
@@ -32,18 +33,13 @@ include "../../lib/stdio.inc"
 
     bank0() // project files
 include "interrupts.asm"
+include "matrix_test.asm"
 //-------------------------------------
 
     zpage()
 frame_counter:;     fill 1
     
     bss()
-inidisp_mirror:;    fill 1
-
-bg12nba_mirror:;    fill 1
-bg34nba_mirror:;    fill 1
-tm_mirror:;         fill 1
-
 nmitimen_mirror:;   fill 1
 
 //-------------------------------------
@@ -51,7 +47,7 @@ nmitimen_mirror:;   fill 1
     bank0()
 scope main: {
     rep #$30
-    
+
     // upload gsu program to sram
     BlockMoveN(GSU_PRGROM, GSU_SRAM_PRG, GSU_PRGROM_SIZE)
     phk; plb
@@ -59,19 +55,18 @@ scope main: {
     sep #$20
     LoadWram($8000, WRAM_PRG, $8000)
 
-    jml _gowram|WRAM_PRG
-_gowram:
     jsr setupVideo
 
-    //jsr sqrtTest
-    puts("Hello world")
+    jml _gowram|WRAM_PRG
+_gowram:
+
+    jsr matrixTest
+
     Vsync()
+    jsr Interrupts.init
 
-    jsr stdout.dmaWramBufferToVram
-
-    lda.w inidisp_mirror
-    sta.w REG_INIDISP
 _forever:
+    wai
     bra _forever
 }
 
@@ -82,21 +77,13 @@ scope setupVideo: {
     LoadCgram(text_pal, $00, text_pal.size)
 
     stdout.Init(1, 0, 0)
-    lda.b #2
-    jsr stdout.initBackground
+    stdout.InitBg(2)
 
-    //lda #$00
-    //sta REG_CGWSEL
-    //lda #%00100011
-    //sta REG_CGADSUB
     lda.b #$00
     sta.w REG_COLDATA
 
     lda.b #$00
     sta.w REG_BGMODE
-
-    lda.w tm_mirror
-    sta.w REG_TM
 
     lda.b #$FF
     sta.w REG_BG1VOFS

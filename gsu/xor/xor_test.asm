@@ -10,12 +10,12 @@ define r3($100)
 define r4($8003)
 //define result($8112)
 define result({r4}^{r3}^{r2}^{r1})
-    php
 
-    // store parameters
+    php
     rep #$30
     stdout.SetPalette(0)
 
+    // store parameters
     lda.w #{r1}
     sta.w GSU_R1
     lda.w #{r2}
@@ -73,12 +73,12 @@ _fail:
 scope xoriTest: {
 define r1($64)
 define result({r1}^$B)
-    php
 
-    // store parameters
+    php
     rep #$30
     stdout.SetPalette(0)
 
+    // store parameters
     lda.w #{r1}
     sta.w GSU_R1
 

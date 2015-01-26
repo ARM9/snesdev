@@ -1,5 +1,5 @@
 // zeropage "registers"
-
+// preferably include these before any other zpage()
     zpage()
 zp0:;   fill 1
 zp0h:;  fill 1

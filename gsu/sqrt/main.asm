@@ -85,10 +85,6 @@ scope setupVideo: {
     lda.b #(stdout.VRAM_TILES_ADDR >> 12)<<4 | ((stdout.VRAM_TILES_ADDR >> 12)&$F)
     sta.w REG_BG12NBA
 
-    //lda #$00
-    //sta REG_CGWSEL
-    //lda #%00100011
-    //sta REG_CGADSUB
     lda.b #$00
     sta.w REG_COLDATA
 

@@ -18,7 +18,7 @@ _gsu_start:
     ibt r0, #lut.sin8>>16
     romb
 
-    ibt r0, #$1f
+    //ibt r0, #$f5
     jal srand
     rol
 

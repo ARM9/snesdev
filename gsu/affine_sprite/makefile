@@ -1,3 +1,4 @@
+
 export EMU	:= $(DEVKITPRO)/emulators/snes
 
 ASFLAGS	:= -benchmark -create
@@ -20,15 +21,15 @@ ifneq ($(DEBUG),)
 ASFLAGS	+= -d DEBUG=1
 endif
 
-ASFLAGS	+= -d ROM_NAME=$(TARGET).sfc -o $(TARGET).sfc
+ASFLAGS	+= -d ROM_NAME=$(TARGET).sfc -sym $(TARGET).sym -o $(TARGET).sfc
 
 #------------------------------------------------
-.PHONY: clean run
+.PHONY: all clean run
 
-all:
+all: gfx
 	bass $(ASFLAGS) main.asm
 
-clean:
+clean: clean-gfx
 	rm -rf $(OUTPUT)
 
 debug: all
@@ -40,3 +41,4 @@ run: all
 run2: all
 	$(higan-a) $(OUTPUT)
 
+include gfx/makefile

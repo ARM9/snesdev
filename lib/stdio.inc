@@ -1,4 +1,9 @@
 
+if !{defined _STDIO_INC} {
+define _STDIO_INC(1)
+
+include "ppu.inc"
+
 macro PrintString(str_ptr) {
     //a8
     //i16
@@ -42,21 +47,84 @@ macro puts(string) {
 scope stdout {
 
 macro Init(bg_num, palette, prio) {
-    // requires bg12 and bg34nba_mirror to be declared
     //a8
-    rep #$30
+    rep #$20
 
     // reset stdout vram map properties
     // palette
-    lda.w #(({palette} & 7) << 10)
+    lda.w #$0000
+    if (({palette} != 0) && ({prio} != 0)) {
+        sta.l stdout.wram_buffer_pointer
+        lda.w #(({palette} & 7) << 10) | ({prio} << 13)
+    } else {
+        sta.l stdout.wram_buffer_pointer
+    }
     // priority
-    and.w #~(1 << 13)
-    ora.w #{prio} << 13
     sta.l stdout.vram_map_properties
 
     sep #$20
     lda.b #{bg_num}
     jsr stdout.initBackground
+    //PPU.InitBg({bg_num}, stdout.VRAM_MAP_ADDR, stdout.VRAM_TILES_ADDR)
+}
+
+macro InitBg(bg_num) {
+    //a8
+    //i16
+    lda.b #{bg_num}
+    jsr stdout.initBackground
+}
+
+    // set up map & tile ppu properties
+scope initBackground: {
+//returns: void
+//args:
+//  a8 = bg number
+    //a8
+    phx; php
+    rep #$30
+
+    dec
+    and.w #$0007 //1-4
+    asl
+    tax
+    sep #$20
+    lda.b #((stdout.VRAM_MAP_ADDR >> 8) & $FC)
+
+    jmp (_jtable0,x)
+_jtable0:
+dw L0
+dw L1
+dw L2
+dw L3
+L0:
+    sta.w bg1sc_mirror
+    lda.b #((stdout.VRAM_TILES_ADDR >> 12) & $0F)
+    tsb.w bg12nba_mirror
+    lda.b #%0001
+    bra +
+L1:
+    sta.w bg2sc_mirror
+    lda.b #((stdout.VRAM_TILES_ADDR >> 12) & $0F) << 4
+    tsb.w bg12nba_mirror
+    lda.b #%0010
+    bra +
+L2:
+    sta.w bg3sc_mirror
+    lda.b #((stdout.VRAM_TILES_ADDR >> 12) & $0F)
+    tsb.w bg34nba_mirror
+    lda.b #%0100
+    bra +
+L3:
+    sta.w bg4sc_mirror
+    lda.b #((stdout.VRAM_TILES_ADDR >> 12) & $0F) << 4
+    tsb.w bg34nba_mirror
+    lda.b #%1000
++
+    tsb.w tm_mirror
+
+    plp; plx
+    rts
 }
 
 // supported control characters:
@@ -109,7 +177,7 @@ _line_feed:
     bra _next
 
 _wrap:
-    ldx.w #0
+    ldx.w #$0000
     bra -
 
 _end:
@@ -186,80 +254,31 @@ macro SetXY(column, row) {
     sta.l stdout.wram_buffer_pointer
 }
 
+macro SetMapProperties(palette, prio) {
+    //a16
+    lda.w #(({palette} & 7) << 10) | ({prio} << 13)
+    // priority
+    sta.l stdout.vram_map_properties
+}
+
 macro SetPalette(palette) {
     //a16
     lda.l stdout.vram_map_properties
     and.w #~(7 << 10)
+    if ({palette} != 0) {
     ora.w #(({palette} & 7) << 10)
+    }
     sta.l stdout.vram_map_properties
 }
 
 macro SetMapPriority(prio) {
     //a16
     lda.l stdout.vram_map_properties
-    and.w #~({prio} << 13)
+    and.w #~(1 << 13)
+    if ({prio} != 0) {
     ora.w #{prio} << 13
+    }
     sta.l stdout.vram_map_properties
-}
-
-    // set up map & tile ppu properties
-scope initBackground: {
-//returns: void
-//args:
-//  a8 = bg number
-    //a8
-    phx; phy; php
-    rep #$30
-
-    dec
-    and.w #$0007 //1-4
-    asl
-    tax
-    sep #$20
-    lda.b #((stdout.VRAM_MAP_ADDR >> 8) & $FC)
-
-    jmp (_jtable0,x)
-_jtable0:
-dw L_0
-dw L_1
-dw L_2
-dw L_3
-L_0:
-    sta.w REG_BG1SC
-    lda.b #((stdout.VRAM_TILES_ADDR >> 12) & $0F)
-    tsb.w bg12nba_mirror
-    lda.w bg12nba_mirror
-    sta.w REG_BG12NBA
-    lda.b #%0001
-    bra +
-L_1:
-    sta.w REG_BG2SC
-    lda.b #((stdout.VRAM_TILES_ADDR >> 12) & $0F) << 4
-    tsb.w bg12nba_mirror
-    lda.w bg12nba_mirror
-    sta.w REG_BG12NBA
-    lda.b #%0010
-    bra +
-L_2:
-    sta.w REG_BG3SC
-    lda.b #((stdout.VRAM_TILES_ADDR >> 12) & $0F)
-    tsb.w bg34nba_mirror
-    lda.w bg34nba_mirror
-    sta.w REG_BG34NBA
-    lda.b #%0100
-    bra +
-L_3:
-    sta.w REG_BG4SC
-    lda.b #((stdout.VRAM_TILES_ADDR >> 12) & $0F) << 4
-    tsb.w bg34nba_mirror
-    lda.w bg34nba_mirror
-    sta.w REG_BG34NBA
-    lda.b #%1000
-+
-    tsb.w tm_mirror
-
-    plp; ply; plx
-    rts
 }
 
 }
@@ -323,12 +342,13 @@ _is_dec:
     rts
 }
 
-
 macro scope itoa(str_ptr) {
     //a16
     //i16
     ldx.w #{str_ptr}
     ldy.w #{str_ptr}>>16
     jsr stdlib.int_to_string
+}
+
 }
 // vim:ft=snes

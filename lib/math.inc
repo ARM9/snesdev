@@ -1,4 +1,7 @@
 
+if !{defined _MATH_INC} {
+define _MATH_INC(1)
+
     bss()
 __rand_seed1:;  fill 2
 __rand_seed2:;  fill 2
@@ -122,4 +125,5 @@ _div3:
     rts
 }
 
+}
 // vim:ft=snes

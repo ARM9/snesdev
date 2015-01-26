@@ -28,7 +28,8 @@ scope gsu_main: {
         //sub r0
         dec r0 // r0 = $ff
 
-        jal rotate
+        iwt r0, #ball.chr
+        jal drawRotatedSprite
         nop
 
         rpix // flush pixel cache

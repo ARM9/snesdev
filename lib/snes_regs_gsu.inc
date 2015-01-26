@@ -28,7 +28,8 @@ constant GSU_R15($301E) //Program counter, write MSB to start operation
 //constant GSU_POR() Plot option register
 // Access from snes cpu: -
 // ---o fhdt
-//	t = Transparency flag or rather whether to plot color 0 or not, 1 = plot color 0, 0 = don't plot color 0 (transparency on)
+//	t = Transparency, whether to plot color 0 or not.
+//      1 = plot color 0, 0 = don't plot color 0 (transparency on)
 //		If t is on and the color register is 0, the plot circuit only changes the X coordinate (R1)
 //	d = Dither flag, 1 = on (only valid in 4bpp mode?)
 //		if(R1&1 == R2&1) lower 4 bits in the color register are plotted.
@@ -39,7 +40,8 @@ constant GSU_R15($301E) //Program counter, write MSB to start operation
 //		This allows the data for 2 pixels to be stored in one byte.
 //	f = Freeze upper 4 bits, 1 = on (8bpp only)
 //		lock the upper 4 bits of the color register while processing the COLOR and GETC instructions and change the lower 4 bits only.
-//	o = Sprite mode, set to 1 to specify the bitmap in sprite mode.
+//      Useful for clamping colors to a palette row.
+//	o = Sprite mode, 1 = on (4bpp only?)
 // Plot option register flags:
 constant GSU_POR_OPAQUE($01)
 constant GSU_POR_DITHER($02)
@@ -90,7 +92,6 @@ constant GSU_CFGR($3037) //Config register
 // When operating at 21MHz (CLSR = $01) M must be 0(?) seems to work in 21mhz tho so screw that, give 1 cycle mult!
 constant GSU_CFGR_FASTMUL($20)
 constant GSU_CFGR_IRQ_MASK($80)
-
 
 constant GSU_SCBR($3038) //Screen base register
 // Access from snes cpu: W

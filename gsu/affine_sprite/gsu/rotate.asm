@@ -2,7 +2,7 @@
     arch snes.gsu
 
 // Plot a rotated 16x16 sprite to beginning of framebuffer
-scope rotate: {
+scope drawRotatedSprite: {
 // returns: void
 // args:
 //  r3      = s16 rotation (8.8)
@@ -17,6 +17,7 @@ scope rotate: {
 
 //X2 = (Y1 * sin(Angle) >> 15) + (X1 * cos(Angle) >> 15);
 //Y2 = (Y1 * cos(Angle) >> 15) - (X1 * sin(Angle) >> 15);
+
     
     ret
     nop
