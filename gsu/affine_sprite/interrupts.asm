@@ -1,4 +1,12 @@
 
+macro WaitGsuStop() {
+    //a8
+    lda.b #GSU_SFR_GO
+L{#}:
+    bit.w GSU_SFR   // Wait for GSU to stop
+    bne L{#}
+}
+
     bss()
 irq_index:;  fill 2
 
@@ -27,8 +35,8 @@ nmiHandler:
 
     inc.w frame_counter
 
-    jsr VRAM.update
     jsr OAM.update
+    jsr OAM.rotateSprite
     jsr PPU.updateRegs
 
     rep #$30

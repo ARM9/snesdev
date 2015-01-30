@@ -46,13 +46,10 @@ nmitimen_mirror:;   fill 1
 
     bank0()
 scope main: {
-    rep #$30
-
-    // upload gsu program to sram
-    BlockMoveN(GSU_PRGROM, GSU_SRAM_PRG, GSU_PRGROM_SIZE)
     phk; plb
-    // upload scpu program to wram
+    rep #$10
     sep #$20
+    // upload scpu program to wram
     LoadWram($8000, WRAM_PRG, $8000)
 
     jsr setupVideo

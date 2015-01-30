@@ -29,6 +29,7 @@ macro AlignCache() {
     }
 }
 
+// full descending stack
 macro pushr(reg) {
     dec r10; dec r10
     if ({reg} != 0) {

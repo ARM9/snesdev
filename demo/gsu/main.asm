@@ -15,6 +15,7 @@ constant scene_duration(4)
 
     bank0()
 _gsu_start:
+    iwt r10, #$300
     ibt r0, #lut.sin8>>16
     romb
 

@@ -5,22 +5,18 @@ include "../../../lib/gsu/gsu.inc"
 
 //------------------------------------------------
     sram0()
-fill $400
 transformed_points:;    fill points.size
 
 //------------------------------------------------
     bank0()
-constant GSU_SRAM_PRG($700000)
-GSU_PRGROM:
-
-    push base
-    base GSU_SRAM_PRG
 //------------------------------------------------
 
 gsuMatrixTest:
+    iwt r10, #$400 // stack pointer
+
     ibt r0, #points>>16
     romb
-    iwt r10, #$300 // stack pointer
+
     cache
 .L0:
     iwt r1, #$0010 //m12_11
@@ -32,8 +28,8 @@ gsuMatrixTest:
     iwt r12, #(points.size/3)
     iwt r14, #points
     jal mulMat3Vec3
-
     nop
+
     stop
     nop
     bra .L0
@@ -42,7 +38,6 @@ gsuMatrixTest:
 include "matrix3.asm"
 
 //------------------------------------------------
-    pull base
 scope points: {
 //db 1, 2, 3
 db $10, $20, $30
@@ -50,5 +45,4 @@ constant size(pc() - points)
 }
 
 //------------------------------------------------
-constant GSU_PRGROM_SIZE(pc() - GSU_PRGROM)
 // vim:ft=snes

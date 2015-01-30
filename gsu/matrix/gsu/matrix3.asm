@@ -93,7 +93,6 @@ L0:
     loop
     inc {vec3_out}
     
-    //popr(15)
     popr(11); ret
     nop
 }

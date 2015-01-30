@@ -1,4 +1,5 @@
 
+    bank0()
 insert sfx_pal, "gfx/colours.pal"
 
 scope ball: {

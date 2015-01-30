@@ -30,10 +30,8 @@ include "../../lib/dma.inc"
 include "../../lib/ppu.inc"
 include "../../lib/mem.inc"
 include "../../lib/timing.inc"
-include "framebuffer.asm"
 include "interrupts.asm"
 include "oam.asm"
-include "vram.asm"
 //-------------------------------------
 
     zpage()
@@ -49,7 +47,7 @@ gsu_scmr_mirror:;   fill 1
 main: {
     // wipe sram
     rep #$30
-    BlockMoveN($7E0000, $700000, $8000)
+    BlockMoveN($7E0000, $700000, $10000)
     phk; plb
 
     sep #$20
@@ -63,7 +61,7 @@ main: {
 }
 
 scope wramMain: {
-    sep #$20
+    rep #$10; sep #$20
 
     lda.b #1
     sta.w GSU_CLSR  // Set clock frequency to 21.4MHz
@@ -71,12 +69,12 @@ scope wramMain: {
     lda.b #(GSU_CFGR_IRQ_MASK | GSU_CFGR_FASTMUL)
     sta.w GSU_CFGR
 
-    lda.b #FRAMEBUFFER>>10
+    lda.b #$2000>>10//FRAMEBUFFER>>10
     sta.w GSU_SCBR  // Set screen base to $702000
 
-    lda.b #(GSU_SCMR_RON|GSU_SCMR_RAN) | GSU_SCMR_OBJ | GSU_SCMR_H128
-    sta.w GSU_SCMR
+    lda.b #(GSU_SCMR_RON|GSU_SCMR_RAN) | GSU_SCMR_OBJ | GSU_SCMR_4BPP
     sta.w gsu_scmr_mirror
+    sta.w GSU_SCMR
 
     stz.w GSU_RAMBR
 
@@ -86,11 +84,11 @@ scope wramMain: {
     ldx.w #_gsu_start
     stx.w GSU_R15   // GSU is booted on write to R15
 
+    WaitGsuStop()
+
     jsr Interrupts.init
 
 _forever:
-    wai
-
     // turn on screen after first frame is complete
     lda.w frame_counter
     and.b #1
@@ -98,6 +96,7 @@ _forever:
         lda.b #$0F
         sta.w inidisp_mirror
 +
+    wai
     bra _forever
 }
 
@@ -112,7 +111,7 @@ scope setupVideo: {
 
     lda.b #$ff
     sta.b 0
-    FillVram(0, 0, $4000)
+    FillVram(0, 0, $2000)
 
     jsr OAM.init
 

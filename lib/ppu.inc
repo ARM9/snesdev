@@ -13,9 +13,9 @@ macro RGB15(evaluate r, evaluate g, evaluate b) {
 // {
 inidisp_mirror:;    fill 1
 obsel_mirror:;      fill 1
-oamadd_mirror:
-oamaddl_mirror:;    fill 1
-oamaddh_mirror:;    fill 1
+//oamadd_mirror:
+//oamaddl_mirror:;    fill 1
+//oamaddh_mirror:;    fill 1
 // }
 
 // {
@@ -124,8 +124,7 @@ updateRegs: {
     rep #$30
     lda.w inidisp_mirror
     sta.w REG_INIDISP
-    lda.w oamaddl_mirror
-    sta.w REG_OAMADDL
+    // REG_OBSEL
 
     lda.w bgmode_mirror
     sta.w REG_BGMODE
