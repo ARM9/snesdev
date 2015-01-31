@@ -30,13 +30,6 @@ constant WRAM_PRG($7E8000)
 //------------------------------------------------
 
     bss()
-inidisp_mirror:;    fill 1
-
-bgmode_mirror:;     fill 1
-bg12nba_mirror:;    fill 1
-bg34nba_mirror:;    fill 1
-tm_mirror:;         fill 1
-
 nmitimen_mirror:;   fill 1
 bg1_x:; fill 2
 
@@ -134,9 +127,11 @@ scope setupVideo: {
     tsb.w tm_mirror
 
     lda.b #$22|2
-    sta.w REG_BG1SC
-    lda.b #$00
-    sta.w REG_BG12NBA
+    sta.w bg1sc_mirror
+
+    lda.w bg12nba_mirror
+    and.b #$F0
+    sta.w bg12nba_mirror
 
     stdout.Init(3, 0, 1)
 

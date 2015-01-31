@@ -34,19 +34,7 @@ scope nmiHandler: {
     sta.w REG_BG1HOFS
     stz.w REG_BG1HOFS
 
-    lda.w inidisp_mirror
-    sta.w REG_INIDISP
-
-    lda.w bgmode_mirror
-    sta.w REG_BGMODE
-
-    lda.w bg12nba_mirror
-    sta.w REG_BG12NBA
-    lda.w bg34nba_mirror
-    sta.w REG_BG34NBA
-
-    lda.w tm_mirror
-    sta.w REG_TM
+    jsr PPU.updateRegs
 
     rep #$30
     pld; plb; ply; plx; pla

@@ -2,6 +2,7 @@
 if !{defined _STDIO_INC} {
 define _STDIO_INC(1)
 
+include "dma.inc"
 include "ppu.inc"
 
 macro PrintString(str_ptr) {
@@ -53,14 +54,13 @@ macro Init(bg_num, palette, prio) {
     // reset stdout vram map properties
     // palette
     lda.w #$0000
-    if (({palette} != 0) && ({prio} != 0)) {
+    if (({palette} != 0) || ({prio} != 0)) {
         sta.l stdout.wram_buffer_pointer
         lda.w #(({palette} & 7) << 10) | ({prio} << 13)
+        sta.l stdout.vram_map_properties
     } else {
-        sta.l stdout.wram_buffer_pointer
+        sta.l stdout.vram_map_properties
     }
-    // priority
-    sta.l stdout.vram_map_properties
 
     sep #$20
     lda.b #{bg_num}
