@@ -56,14 +56,13 @@ _loopy: {
     ibt {x1}, #0
     move r12, {width}
 
-    from {width}; lsr
-    to {ty}; from {y1}; sub r0
     _loopx: {
         //r0 = width/2;
         //tx = x - r0;
         //ty = y - r0;
         from {width}; lsr
         to {tx}; from {x1}; sub r0
+        to {ty}; from {y1}; sub r0
 
         //xs = (ty * tsin + tx * tcos) + hwidth;
         to {ys}; from {ty}; mult {tsin}
@@ -89,10 +88,10 @@ _loopy: {
         // buffer what we can
         moves {xs}, {xs}
         bmi +; sub r0
-        from {xs}; sub {width}
-        blt +; sub r0
-        from {ys}; sub {width}
-        blt +; sub r0
+        from {xs}; hib; sub {width}
+        bge +; sub r0
+        from {ys}; hib; sub {width}
+        bge +; sub r0
         //plot(x, y, gfx_ptr[ys * height + xs];
         getc
         loop
