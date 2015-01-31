@@ -84,7 +84,8 @@ scope wramMain: {
     ldx.w #_gsu_start
     stx.w GSU_R15   // GSU is booted on write to R15
 
-    WaitGsuStop()
+    GsuWaitForStop()
+    stz.w GSU_SCMR
 
     jsr Interrupts.init
 
@@ -103,11 +104,11 @@ _forever:
 scope setupVideo: {
     php
     rep #$10; sep #$20
-    // make screen border tile
     LoadCgram(sfx_pal, $00, sfx_pal.size)
+    LoadCgram(sfx_pal+128+16, $80, 32)
 
     // sprites
-    LoadCgram(ball.pal, $80, ball.pal.size)
+    //LoadCgram(ball.pal, $80, ball.pal.size)
 
     lda.b #$ff
     sta.b 0

@@ -8,8 +8,8 @@ constant REG_INIDISP($2100) // f--- xxxx, f = Force vblank x = screen brightness
 //OAM control registers
 constant REG_OBSEL($2101) // sssn nbbb, s = obj size, n = tile table 2 offset, b = tile base address>>14
 // Object size and tile address 
-	// sssn nbbb
-	//	 sss = size
+    // sssn nbbb
+    //   sss = size
 scope OBSEL {
 constant size8_16($00)    // 000 =  8x8  and 16x16 sprites
 constant size8_32($20)    // 001 =  8x8  and 32x32 sprites
@@ -19,13 +19,13 @@ constant size16_64($80)   // 100 = 16x16 and 64x64 sprites
 constant size32_64($A0)   // 101 = 32x32 and 64x64 sprites
 }
 // Each sprite entry in oam is 4 bytes (+2 bits in the high table), format is:
-//	1 xxxx xxxx
-//	2 yyyy yyyy
-//	3 tttt tttt Note that this could also be considered as 'rrrrcccc' specifying the row and column of the tile in the 16x16 character table.
-//	4 hvoo pppN N = selects which tile table to use, p = set palette 0-7, o = priority, h/v flip
+//  1 xxxx xxxx
+//  2 yyyy yyyy
+//  3 tttt tttt Note that this could also be considered as 'rrrrcccc' specifying the row and column of the tile in the 16x16 character table.
+//  4 hvoo pppN N = selects which tile table to use, p = set palette 0-7, o = priority, h/v flip
 // Each byte in the high table contains settings for 4 sprites, ie 2 bits per sprite.
-//	first bit = X "sign" bit for x position 
-//	second bit = S size bit, used to determine which size to use, each sss setting in $2101 has two different sizes, see above. Set to 0 for small 1 for large
+//  first bit = X "sign" bit for x position 
+//  second bit = S size bit, used to determine which size to use, each sss setting in $2101 has two different sizes, see above. Set to 0 for small 1 for large
 // Sprite tile table in vram:
 // The first table is at the address specified by the tile base address bits of $2101, and the offset of the second is determined by the tile table offset bits of $2101.
 // The word address in VRAM of a sprite's first tile may be calculated as:
@@ -78,14 +78,14 @@ constant REG_VMAIN($2115) // i---mmaa
 // i = set to 0/1 for increment after writing $2118/2119
 // mm = Address translation
 // aa = Address increment step (0..3 = Increment Word-Address by 1,32,128,128)
-//	m m a a		Increment value for $2116 and $2117
-//	0 1 0 0		Increment by 8 (for 32 times) (4 color mode)
-//	1 0 0 0		Increment by 8 (for 64 times) (16 color mode)
-//	1 1 0 0		Increment by 8 (for 128 times) (256 color mode)
-//	0 0 0 0		Address Increments 1x1
-//	0 0 0 1		Address Increments 32x32
-//	0 0 1 0		Address Increments 128x128 (64x64?)
-//	0 0 1 1		Address Increments 128x128
+//  m m a a     Increment value for $2116 and $2117
+//  0 1 0 0     Increment by 8 (for 32 times) (4 color mode)
+//  1 0 0 0     Increment by 8 (for 64 times) (16 color mode)
+//  1 1 0 0     Increment by 8 (for 128 times) (256 color mode)
+//  0 0 0 0     Address Increments 1x1
+//  0 0 0 1     Address Increments 32x32
+//  0 0 1 0     Address Increments 128x128 (64x64?)
+//  0 0 1 1     Address Increments 128x128
 // Step 32 (without translation) is useful for updating BG Map columns (eg. after horizontal scrolling).
 // $89 to write 4bpp (bit) column, $85 seems to work as well?
 // The +32 incremental mode is what's usually used (on both NES and SNES) for updating the left/right screen "edges", while the +1 incremental mode is what's used for the top/bottom "edges". The +128 increment mode is mainly for mode 7.
@@ -122,11 +122,11 @@ constant REG_CGDATAW($2122) // -bbb bbgg gggr rrrr, color to be written, write t
 
 // Window mask settings
 // The following 3 registers have the format:
-//	ABCD abcd
-//		c/a = Enable window 1/2 for BG1/BG3/OBJ
-//		C/A = Enable window 1/2 for BG2/BG4/Color
-//		d/b = Window 1/2 Inversion for BG1/BG3/OBJ
-//		D/B = Window 1/2 Inversion for BG2/BG4/Color
+//  ABCD abcd
+//      c/a = Enable window 1/2 for BG1/BG3/OBJ
+//      C/A = Enable window 1/2 for BG2/BG4/Color
+//      d/b = Window 1/2 Inversion for BG1/BG3/OBJ
+//      D/B = Window 1/2 Inversion for BG2/BG4/Color
 // Example: window 2 enabled for BG1 outside and window 1 enabled for BG2 inside
 // lda #%00101100
 // sta $2123
@@ -142,13 +142,13 @@ constant REG_WH2($2128) // Window 2 Left Position
 constant REG_WH3($2129) // Window 2 Right Position
 
 // Window BG, OBJ and Color logic
-//	44/33/22/11/oo/cc = Mask logic for BG1/BG2/BG3/BG4/OBJ/Color
+//  44/33/22/11/oo/cc = Mask logic for BG1/BG2/BG3/BG4/OBJ/Color
 constant REG_WBGLOG($212A) // 4433 2211
 constant REG_WOBJLOG($212B) // ---- ccoo
 
 constant REG_TM($212C) // ---o 4321 Main screen designation
 constant REG_TS($212D) // ---o 4321 Subscreen designation
-constant REG_TMW($212E) //	---o 4321 Window Mask Designation for the Main Screen
+constant REG_TMW($212E) //  ---o 4321 Window Mask Designation for the Main Screen
 constant REG_TSW($212F) // ---o 4321 Window Mask Designation for the Subscreen
 
 // Color math registers
@@ -156,6 +156,11 @@ constant REG_CGWSEL($2130) // ccmm --sd Color Addition Select
 constant REG_CGADSUB($2131) // shbo 4321 Color math designation
 constant REG_COLDATA($2132) // bgrc cccc Color for color math
 
+// e = Mode 7 EXTBG ("Extra BG").
+// p = Enable pseudo-hires mode.
+// o = Overscan mode.
+// I = OBJ Interlace.
+// i = Screen interlace.
 constant REG_SETINI($2133) // se-- poIi Screen Mode/Video Select
 
 // You can read the two's complement product from M7A*(M7B>>8) here
@@ -171,8 +176,8 @@ constant REG_CGDATAR($213B) // Read cgram
 
 // $2137, $213C and $213D
 // Operation goes something like this:
-//	Read register $2137 to latch counter
-//	Read register twice for position (9 bits, bits 1-7 of high byte are ppu2 open bus)
+//  Read register $2137 to latch counter
+//  Read register twice for position (9 bits, bits 1-7 of high byte are ppu2 open bus)
 // Each register ($213C, $213D) keeps seperate track of whether to return the low or high byte. The high/low selector is reset to ‘low’ when $213f is read (the selector is NOT reset when the counter is latched). 
 // H Counter values range from 0 to 339, with 22-277 being visible on the screen. V Counter values range from 0 to 261 in NTSC mode (262 is possible every other frame when interlace is active) and 0 to 311 in PAL mode (312 in interlace?), with 1-224 (or 1-239(?) if overscan is enabled) visible on the screen.
 constant REG_OPHCT($213C) // ---- ---h hhhh hhhh, Horizontal scanline location
@@ -298,70 +303,70 @@ constant REG_A2A0L($4308)
 constant REG_A2A0H($4309)
 constant REG_NTLR0($430A)
 
-//	<---Registers used for DMA--->
+//  <---Registers used for DMA--->
 // DMA transfers take 8 master cycles per byte transferred, no matter if fastROM or not.
 // There is also an overhead of 8 master cycles per channel, and an overhead of 12-24 cycles for the whole transfer.
-//DMA Control Register			$43x0 // d--i fttt
-//	d = Transfer direction, 0 = A bus to B bus, 1 = B to A.
-//	i = Address increment, 0 = increment DMA address for each byte. 1 = decrement
-//	f = DMA fixed transfer
-//		0 = source address will be adjusted as specified by bit 4
-//		1 = source address will not be adjusted
-//	t = How data is written/read, see table below (dest = byte in $43x1):
-//	000 => 1 register write once             (1 byte:  p               )
-//	001 => 2 registers write once            (2 bytes: p, p+1          )
-//	010 => 1 register write twice            (2 bytes: p, p            )
-//	011 => 2 registers write twice each      (4 bytes: p, p,   p+1, p+1)
-//	100 => 4 registers write once            (4 bytes: p, p+1, p+2, p+3)
-//	101 => 2 registers write twice alternate (4 bytes: p, p+1, p,   p+1)
-//	110 => 1 register write twice            (2 bytes: p, p            )
-//	111 => 2 registers write twice each      (4 bytes: p, p,   p+1, p+1)
+//DMA Control Register          $43x0 // d--i fttt
+//  d = Transfer direction, 0 = A bus to B bus, 1 = B to A.
+//  i = Address increment, 0 = increment DMA address for each byte. 1 = decrement
+//  f = DMA fixed transfer
+//      0 = source address will be adjusted as specified by bit 4
+//      1 = source address will not be adjusted
+//  t = How data is written/read, see table below (dest = byte in $43x1):
+//  000 => 1 register write once             (1 byte:  p               )
+//  001 => 2 registers write once            (2 bytes: p, p+1          )
+//  010 => 1 register write twice            (2 bytes: p, p            )
+//  011 => 2 registers write twice each      (4 bytes: p, p,   p+1, p+1)
+//  100 => 4 registers write once            (4 bytes: p, p+1, p+2, p+3)
+//  101 => 2 registers write twice alternate (4 bytes: p, p+1, p,   p+1)
+//  110 => 1 register write twice            (2 bytes: p, p            )
+//  111 => 2 registers write twice each      (4 bytes: p, p,   p+1, p+1)
 
-//DMA Destination				$43x1 // aaaa aaaa
-//	a = Destination register for DMA write on address bus B ($21xx)
+//DMA Destination               $43x1 // aaaa aaaa
+//  a = Destination register for DMA write on address bus B ($21xx)
 
-//DMA Source Address (Low)		$43x2 // llll llll
-//DMA Source Address (High)		$43x3 // hhhh hhhh
-//DMA Source Bank				$43x4 // bbbb bbbb
-//	bhl = bank:address for the source on A bus in DMA transfer (eg. $80BEEF)
+//DMA Source Address (Low)      $43x2 // llll llll
+//DMA Source Address (High)     $43x3 // hhhh hhhh
+//DMA Source Bank               $43x4 // bbbb bbbb
+//  bhl = bank:address for the source on A bus in DMA transfer (eg. $80BEEF)
 
-//DMA Transfer Size (Low)		$43x5 // llll llll
-//DMA Transfer Size (High)		$43x6 // hhhh hhhh
+//DMA Transfer Size (Low)       $43x5 // llll llll
+//DMA Transfer Size (High)      $43x6 // hhhh hhhh
 // Size of the transfer, 2 bytes ($0000 = 64k transfer,$8000 = 32k transfer)
 
 
-//	<---Registers used for HDMA--->
+//  <---Registers used for HDMA--->
 // HDMA overhead is ~18 master cycles, plus 8 master cycles for each channel set for direct HDMA and 24 master cycles for each channel set for indirect HDMA.
-//HDMA Control Register			$43x0 // da-- -ttt
-//	d and t are same as DMA
-//	a = Set to 1 for indirect addressing, 0 for direct.
+//HDMA Control Register         $43x0 // da-- -ttt
+//  d and t are same as DMA
+//  a = Set to 1 for indirect addressing, 0 for direct.
 
-//HDMA Destination				$43x1 // aaaa aaaa
-//	a = same as DMA
-//HDMA Table Address (Low)		$43x2 // llll llll
-//HDMA Table Address (High)		$43x3 // hhhh hhhh
-//HDMA Table Bank				$43x4 // bbbb bbbb
-//	bhl = same as DMA
+//HDMA Destination              $43x1 // aaaa aaaa
+//  a = same as DMA
+//HDMA Table Address (Low)      $43x2 // llll llll
+//HDMA Table Address (High)     $43x3 // hhhh hhhh
+//HDMA Table Bank               $43x4 // bbbb bbbb
+//  bhl = same as DMA
 
-//HDMA Indirect Address (Low)	$43x5 // llll llll
-//HDMA Indirect Address (High)	$43x6 // hhhh hhhh
-//HDMA Indirect Bank				$43x7 // bbbb bbbb
-//	bhl = bank:address for indirect HDMA (eg. $7EFACE)
-//	You only need to set the bank byte for indirect HDMA.
-//	The resulting bank:address is the pointer used in the HDMA transfer.
+//HDMA Indirect Address (Low)   $43x5 // llll llll
+//HDMA Indirect Address (High)  $43x6 // hhhh hhhh
+//HDMA Indirect Bank                $43x7 // bbbb bbbb
+//  bhl = bank:address for indirect HDMA (eg. $7EFACE)
+//  You only need to set the bank byte for indirect HDMA.
+//  The resulting bank:address is the pointer used in the HDMA transfer.
 
 //HDMA Mid Frame Table Address (Low) $43x8 // aaaa aaaa, 
 //HDMA Mid Frame Table Address (High)$43x9 // aaaa aaaa, 
-//	At the beginning of the frame $43x2/3 are copied into $43x8/9 registers for all active HDMA channels,
-//	and then this register is updated as the table is read.
+//  At the beginning of the frame $43x2/3 are copied into $43x8/9 registers for all active HDMA channels,
+//  and then this register is updated as the table is read.
 
-//HDMA Line Counter Register			$43xA // rccc cccc, r = Repeat, c = Line count
-//	About $43xA:
-//	The register is decremeted before being checked for r status or c==0.
-//	Thus, setting a value of $80 is really "128 lines with no repeat" rather than "0 lines with repeat".
-//	Similarly, a value of $00 will be "128 lines with repeat" when it doesn't mean "terminate the channel"(assuming this can only happen if you manually write $43xA?).
-//	This register is initialized at the end of V-Blank for every active HDMA channel.
-//	Note that if a game wishes to begin HDMA during the frame, it will most likely have to initalize this register.
+//HDMA Line Counter Register            $43xA // rccc cccc, r = Repeat, c = Line count
+//  About $43xA:
+//  The register is decremeted before being checked for r status or c==0.
+//  Thus, setting a value of $80 is really "128 lines with no repeat" rather than "0 lines with repeat".
+//  Similarly, a value of $00 will be "128 lines with repeat" when it doesn't mean "terminate the channel"(assuming this can only happen if you manually write $43xA?).
+//  This register is initialized at the end of V-Blank for every active HDMA channel.
+//  Note that if a game wishes to begin HDMA during the frame, it will most likely have to initalize this register.
 
 }
 // vim:ft=snes

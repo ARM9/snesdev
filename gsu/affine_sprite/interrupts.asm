@@ -1,10 +1,19 @@
 
-macro WaitGsuStop() {
+macro GsuWaitForStop() {
     //a8
     lda.b #GSU_SFR_GO
 L{#}:
     bit.w GSU_SFR   // Wait for GSU to stop
     bne L{#}
+}
+
+macro GsuResume() {
+    //a8
+    lda.w gsu_scmr_mirror
+    sta.w GSU_SCMR
+    lda.w GSU_SFR
+    ora.b #GSU_SFR_GO
+    sta.w GSU_SFR
 }
 
     bss()
@@ -35,9 +44,9 @@ nmiHandler:
 
     inc.w frame_counter
 
+    jsr PPU.updateRegs
     jsr OAM.update
     jsr OAM.rotateSprite
-    jsr PPU.updateRegs
 
     rep #$30
     plb; pld; ply; plx; pla

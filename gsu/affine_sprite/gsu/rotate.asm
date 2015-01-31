@@ -1,22 +1,25 @@
 
     arch snes.gsu
 
-// Plot a rotated sprite to beginning of framebuffer
+// Plot a rotated sprite to start of framebuffer
+// only square sprites, width = height
 scope drawRotatedSprite: {
 // returns: void
 // args:
 define angle(r3)    // s8 angle
-define width(r4) // only square sprites
-define gfx_ptr(r9)
-//  r3      = s16 rotation (8.8)
+define width(r4)    // u8
+define gfx_ptr(r5)  // u8*
 // vars:
-define x1(r1)
-define y1(r2)
-define tcos_sin(r3) // packed
-define hwidth(r6)
-define ty(r7)
-define tx(r8)
-//	
+define x1(r1)       // u8
+define y1(r2)       // u8
+define tcos(r3)     // s8
+define tsin(r6)     // s8
+
+define tx(r9)       //
+define ty(r11)      //
+
+define xs(r8)       // \ texel coordinates for merge
+define ys(r7)       // /
 // clobbers:
 //  r0-r9, 
 
@@ -31,29 +34,82 @@ define tx(r8)
     //sin(angle)
     iwt r0, #lut.sin8
     to r14; add {angle}
-    // tcos_sin = sin8[angle&0xff]
-    to r6; getb
-
-    //cos(angle)
+    // start computing cos offset to give rom buffer some breathing room
     ibt r0, #64
     add {angle}
     lob
+    // done with angle
     iwt {angle}, #lut.sin8
-    to r14; add {angle}
-    // tcos_sin = sin8[(angle+64)&0xff]
-    to {tcos_sin}; from r6; getbh
+    // tsin = sin8[angle]
+    to {tsin}; getb
 
-    // hwidth = width/2, hheight = height/2;
-    to {hwidth}; from {width}; lsr
+    to r14; add {angle}
+    // rom buffering, set up loop
+    ibt {y1}, #0
+    iwt r13, #_loopx
+    // tcos = sin8[(angle+64)&0xff]
+    to {tcos}; getb
 
     //for(int y = 0; y < height; y++)
-_loopy:
-    iwt r13, #_loopx
-    
+_loopy: {
     //for(int x = 0; x < width; x++)
-
+    ibt {x1}, #0
     move r12, {width}
-_loopx:
+
+    from {width}; lsr
+    to {ty}; from {y1}; sub r0
+    _loopx: {
+        //r0 = width/2;
+        //tx = x - r0;
+        //ty = y - r0;
+        from {width}; lsr
+        to {tx}; from {x1}; sub r0
+
+        //xs = (ty * tsin + tx * tcos) + hwidth;
+        to {ys}; from {ty}; mult {tsin}
+        //with {ys}; hib
+        to {xs}; from {tx}; mult {tcos}
+        //with {xs}; hib
+        with {xs}; add {ys}
+        with {xs}; add r0
+
+        //ys = (ty * tcos - tx * tsin) + hheight;
+        to {ys}; from {ty}; mult {tcos}
+        //with {ys}; hib
+        to {ty}; from {tx}; mult {tsin}
+        //with {ty}; hib
+        with {ys}; sub {ty}
+        with {ys}; add r0
+
+        //if(xs >= 0 && xs < width && ys >= 0 && ys < height) {
+        bmi +; sub r0
+
+        merge
+        to r14; add {gfx_ptr}
+        // buffer what we can
+        moves {xs}, {xs}
+        bmi +; sub r0
+        from {xs}; sub {width}
+        blt +; sub r0
+        from {ys}; sub {width}
+        blt +; sub r0
+        //plot(x, y, gfx_ptr[ys * height + xs];
+        getc
+        loop
+        plot
+        bra _loopxexit
+        //} else {
+        // set pixel (x,y) transparent
+    +
+        sub r0; color
+        loop
+        plot
+    }
+_loopxexit:
+    from {y1}; sub {width}
+    bcc _loopy
+    inc {y1}
+    }
 
     popr(11)
     ret
