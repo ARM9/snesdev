@@ -22,6 +22,7 @@ _start:
 
 //-------------------------------------
     bank0()
+include "../../lib/dma.inc"
 include "../../lib/ppu.inc"
 include "../../lib/hdma.inc"
 include "interrupts.asm"
@@ -31,7 +32,6 @@ include "interrupts.asm"
 frame_count:; dw 0
 
     bss()
-inidisp_mirror:; db 0
 nmitimen_mirror:; db 0
 
 scope Camera: {

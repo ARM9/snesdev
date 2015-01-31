@@ -39,12 +39,6 @@ include "sqrt_test.asm"
 frame_counter:;     fill 1
     
     bss()
-inidisp_mirror:;    fill 1
-
-bg12nba_mirror:;    fill 1
-bg34nba_mirror:;    fill 1
-tm_mirror:;         fill 1
-
 nmitimen_mirror:;   fill 1
 
 //-------------------------------------
