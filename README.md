@@ -1,7 +1,7 @@
 Various homebrew demos for the super nintendo, with an emphasis on coprocessors.
 
 ## Requirements
-make and bass in your path
+make and [bass](https://github.com/ARM9/bass) in your path
 ## Building
 Just make in a directory with a makefile and a rom should be produced.
 ## Running
