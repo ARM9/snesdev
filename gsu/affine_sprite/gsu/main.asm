@@ -31,7 +31,7 @@ scope gsu_main: {
 
     move r3, r0
     iwt r4, #64
-    iwt r5, #ball.chr*16
+    iwt r5, #ball.chr
     jal drawRotatedSprite
     nop
 
