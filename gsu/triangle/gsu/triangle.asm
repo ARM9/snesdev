@@ -2,14 +2,18 @@
     arch snes.gsu
 
     sram0()
+vertex_buffer:
+    Tri_struct()
+
 _edge_buffer:
     fill 192*(2)
 
     bank0()
+
 scope drawTriangle: {
 // returns: void
 // args:
-define tri_ptr(r3)  // struct triangle* r3
+define tri_ptr(r3)  // Tri_struct* r3
 // vars:
 //  
 // clobbers:
@@ -35,6 +39,10 @@ loop_vertices:
     loop
     nop
 
+    to r14; add #6
+    getc
+
+    iwt r12, #55
     move r13, r15
     loop
     plot

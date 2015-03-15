@@ -3,20 +3,30 @@
 
 include "../../../lib/gsu/gsu.inc"
 
+//macro Tri_struct(x0, y0, z0, x1, y1, z1, x2, y2, z2, color) {
+macro Tri_struct() {
+    db 0, 0, 0
+    db 0, 0, 0
+    db 0, 0, 0
+    // color
+    db 0
+}
+macro Mat3_struct() {
+    db 0, 0, 0
+    db 0, 0, 0
+    db 0, 0, 0
+    //pad
+    db 0
+}
+
     sram0()
-tri_color:
-    dw 0
+mv_matrix:
+    Mat3_struct()
+my_tri_ram:
+    Tri_struct()
 
     bank0()
-scope my_tri: {
-v0:
-    db 50, 50, 10
-v1:
-    db 75, 75, 10
-v2:
-    db 25, 75, 10
-    constant size(pc() - my_tri)
-}
+include "models.inc"
 
 _gsu_start:
     ibt r0, #lut.sin8>>16
@@ -34,14 +44,26 @@ scope gsu_main: {
     ror
     bcs dont_draw
     nop
-        ibt r0, #$ff
+        ibt r0, #$00
         jal fillScreen
         nop
 
-        iwt r0, #lut.sin8
-        move r5, r0
+        //iwt r0, #lut.sin8
+        //move r5, r0
 
-        iwt r3, #my_tri
+        // load identity matrix
+        iwt r1, #$0010 //m12_11
+        iwt r2, #$0000 //m21_13
+        iwt r3, #$0010 //m23_22
+        iwt r4, #$0000 //m32_31
+        iwt r5, #$0010 //m00_33
+        iwt r6, #my_tri_ram
+        ibt r12, #3
+        iwt r14, #equilateral
+        jal mulMat3Vec3
+        nop
+
+        iwt r3, #my_tri_ram
         jal drawTriangle
         nop
 
@@ -53,9 +75,6 @@ scope gsu_main: {
         bra gsu_main
         nop
 dont_draw:
-    lms r0, (tri_color)
-    inc r0
-    sbk
 
     stop
     nop
@@ -85,7 +104,8 @@ scope fillScreen: {
     nop
 }
 
+include "matrix3.asm"
 include "triangle.asm"
-
+BlockSize(gsu_main)
 include "../../../lib/lut/sin8.inc"
 // vim:ft=snes
