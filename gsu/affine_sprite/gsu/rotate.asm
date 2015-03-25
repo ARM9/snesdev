@@ -15,8 +15,8 @@ define y1(r2)       // u8
 define tcos(r3)     // s8
 define tsin(r6)     // s8
 
-define tx(r9)       //
-define ty(r11)      //
+define tx(r9)       // \ temp regs
+define ty(r11)      // /
 
 define xs(r8)       // \ texel coordinates for merge
 define ys(r7)       // /
@@ -81,8 +81,9 @@ _loopy: {
         with {ys}; add r0
 
         //if(xs >= 0 && xs < width && ys >= 0 && ys < height) {
-        bmi +; sub r0
+        bmi +; nop
 
+        with {ys}; lsr
         merge
         to r14; add {gfx_ptr}
         // buffer what we can

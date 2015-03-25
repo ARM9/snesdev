@@ -46,6 +46,49 @@ macro popr(reg) {
     inc r10; inc r10
 }
 
+macro max(a, b) {
+// returns:
+//  s16 r0  = the bigger number
+// args:
+//  s16 a
+//  s16 b
+// vars:
+// clobbers:
+//  r0
+    // a < b ? b : a;
+    from {a}; sub {b}
+    blt L0{#};
+     with r0
+    from {a}
+    bra L1{#};
+     nop
+L0{#}:
+    //moves r0, {a}
+    from {b}
+L1{#}:
+}
+
+macro min(a, b) {
+// returns:
+//  s16 r0  = the smaller number
+// args:
+//  s16 a
+//  s16 b
+// vars:
+// clobbers:
+//  r0
+    // a < b ? a : b;
+    from {a}; sub {b}
+    blt L0{#};
+     with r0
+    from {b}
+    bra L1{#};
+     nop
+L0{#}:
+    //moves r0, {a}
+    from {a}
+L1{#}:
+}
 // useful for checking
 macro BlockSize(start) {
     print "\n{start} block size: "

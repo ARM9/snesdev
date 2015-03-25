@@ -12,9 +12,9 @@ macro Tri_struct() {
     db 0
 }
 macro Mat3_struct() {
-    db 0, 0, 0
-    db 0, 0, 0
-    db 0, 0, 0
+    db 1, 0, 0
+    db 0, 1, 0
+    db 0, 0, 1
     //pad
     db 0
 }
@@ -44,7 +44,7 @@ scope gsu_main: {
     ror
     bcs dont_draw
     nop
-        ibt r0, #$00
+        ibt r0, #$ff
         jal fillScreen
         nop
 
