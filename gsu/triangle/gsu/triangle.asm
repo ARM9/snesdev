@@ -38,7 +38,8 @@ scope drawTriangle: {
     iwt {tmp}, #max_x
     ibt r12, #2
     move r13, r15
-loop_vertices: {
+loop_vertices_minmax: {
+    // find max and min x y coordinates
     // v0.x v1.x v2.x 
     to {v0}
     ldb (r0)
@@ -68,30 +69,13 @@ loop_vertices: {
     loop
     nop
 }
-
-    // num scanlines
-    // v0 = max_x
-    // v1 = min_x
-    lm r0, (max_y)
-    to {v0}; lob    // max y
-    to {ry}; hib      // min y
-    // count = max_x - min_x
-    to r12; from {ry}; sub {v0}
     iwt r13, #x_loop
 y_loop: {
-    // todo: store scan lengths 
-    lm {rx}, (max_x)
-    to {v1}; lob    // max x
-    to {rx}; hib    // min x
     x_loop: {
         loop
         plot
     }
-    todo   with {rx}; sub r12
-    lm {rx}, (edge_buffer)
 
-    inc {ry}
-    from {v0}; sub {ry}
     bge y_loop
     nop
 }

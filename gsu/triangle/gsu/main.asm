@@ -3,6 +3,9 @@
 
 include "../../../lib/gsu/gsu.inc"
 
+macro Vec2_t() {
+    db 0, 0
+}
 //macro Tri_struct(x0, y0, z0, x1, y1, z1, x2, y2, z2, color) {
 macro Tri_struct() {
     db 0, 0, 0
