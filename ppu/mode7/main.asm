@@ -95,13 +95,13 @@ scope initVideo: {
     sta.w REG_BG4SC
 
     lda.b #$07
-    sta.w $2105
+    sta.w REG_BGMODE
 
     lda.b #$C0
-    sta.w $211A
+    sta.w REG_M7SEL
 
     lda.b #$01
-    sta.w $212C
+    sta.w REG_TM
 
     lda.b #$0F
     sta.w inidisp_mirror

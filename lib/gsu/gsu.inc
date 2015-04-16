@@ -38,6 +38,7 @@ macro pushr(reg) {
     stw (r10)
 }
 
+// empty descending would allow popr(r15) sub return
 macro popr(reg) {
     if ({reg} != 0) {
         with r{reg}
