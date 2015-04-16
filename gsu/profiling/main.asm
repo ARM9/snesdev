@@ -33,6 +33,7 @@ include "../../lib/stdio.inc"
 
     bank0() // project files
 include "interrupts.asm"
+include "profiler.asm"
 //-------------------------------------
 
     zpage()
@@ -40,6 +41,7 @@ frame_counter:;     fill 1
 
     bss()
 nmitimen_mirror:;   fill 1
+gsu_scmr_mirror:;   fill 1
 
 //-------------------------------------
 
@@ -52,19 +54,29 @@ scope main: {
 
     jsr setupVideo
 
-    rep #$20
-    stdout.SetXY(5,25)
-    stdout.SetPalette(1)
-    sep #$20
-    puts("foo bar\n")
-    PrintString(long_string, 15, 27, 0)
+    jml $7E0000|(wramMain & $ffff)
+}
 
-    //jsr stdout.clearWramBuffer
+scope wramMain: {
+
+    lda.b #1
+    sta.w GSU_CLSR  // Set clock frequency to 21.4MHz
+
+    lda.b #(GSU_CFGR_IRQ_MASK | GSU_CFGR_FASTMUL)
+    sta.w GSU_CFGR
+
+    stz.w GSU_SCBR
+
+    lda.b #(GSU_SCMR_RON|GSU_SCMR_RAN) | GSU_SCMR_4BPP | GSU_SCMR_H192
+    sta.w GSU_SCMR
+    sta.w gsu_scmr_mirror
+
+    stz.w GSU_RAMBR
+
+    jsr runTests
 
     jsr Interrupts.init
-
 _forever:
-    //jsr runTests
     wai
     bra _forever
 }
@@ -103,9 +115,7 @@ scope setupVideo: {
     rts
 }
 
-long_string:
-db "Here is some text hi more text more more need to fill the entire screen sheesh this is taking forever now this is a story all about how my life got flipped turned upside down and I'd like to take a minute just sit right there, I'll tell you how I became the prince of a town called bel air.\nIn west philadelphia born and raised on the playground is",$A,"where I spent most of my days chillin out maxin' relaxin' all cool and all shootin' some b-ball outside of a school when a couple of guys that were up to no good started making trouble in my neighbourhood I got in one little fight and my mom got scared and said you're moving with your auntie and uncle in bel air. aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa wrapped", 0
-
 // GSU code
+include "gsu/mult_test.asm"
 
 // vim:ft=snes

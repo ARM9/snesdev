@@ -39,4 +39,8 @@ scope irqHandler: {
     rti
 }
 
+scope emptyHandler: {
+    rti
+}
+
 // vim:ft=snes

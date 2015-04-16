@@ -2,13 +2,10 @@
     arch snes.gsu
 
     sram0()
-    max_x:; db 0
-    min_x:; db 0
-    max_y:; db 0
-    min_y:; db 0
-
-    align(2)
-TriangleBuffer:
+max_x:; db 0
+min_x:; db 0
+max_y:; db 0
+min_y:; db 0
 
     align(2)
 edge_buffer:
@@ -19,21 +16,16 @@ edge_buffer:
 scope drawTriangle: {
 // returns: void
 // args:
-    define tri_ptr(r3)  // Tri_struct* r3
+    define tri_ptr(r0)  // Tri_struct* r3
 // vars:
-    define rx(r1)
-    define ry(r2)
-    define count(r3)    //
-    define v0(r4)
-    define v1(r5)
-    define v2(r6)
-    define vt(r7)   // temporary vector/whatever storage
-    define imm(r8)
+    define v0(r3)
+    define v1(r4)
+    define v2(r5)
     define tmp(r9)
 // clobbers:
 // tbd
 
-    move r0, {tri_ptr}
+    //move r0, {tri_ptr}
 
     iwt {tmp}, #max_x
     ibt r12, #2
@@ -69,6 +61,9 @@ loop_vertices_minmax: {
     loop
     nop
 }
+    // write x1 count to edge buffer
+    
+    // draw scanlines
     iwt r13, #x_loop
 y_loop: {
     x_loop: {

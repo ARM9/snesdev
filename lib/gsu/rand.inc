@@ -1,7 +1,7 @@
 
     arch snes.gsu
 
-    sram0()
+    sram0() // todo: sramzp()
 sram_rand_seed1:;  fill 2
 sram_rand_seed2:;  fill 2
 

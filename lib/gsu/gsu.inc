@@ -89,7 +89,7 @@ L0{#}:
     from {a}
 L1{#}:
 }
-// useful for checking
+
 macro BlockSize(start) {
     print "\n{start} block size: "
     print pc() - {start}

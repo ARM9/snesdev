@@ -32,7 +32,7 @@ seek($FFD5)
 //------------------------------------------------
 seek($FFE4)             // native vectors
     dw 0                // cop
-    dw 0                // brk
+    dw emptyHandler     // brk
     dw 0                // abort
     dw nmiHandler       // nmi
     dw 0                // unused
