@@ -32,12 +32,12 @@ profileGsuProgram:
     lda.b #$20
     stx.b GSU_R15 // Go
 -
-    iny             // 2
+    iny             // 2 todo master cycles
     bit.b GSU_SFR   // 3
     bne -           // 3 , - 1 for last branch (not taken)
 
     stz.b GSU_SCMR
-    // scpu cycles, slight deviation due to scpu poll loop
+    // scpu cycles, slight deviation due to scpu poll loop and not counting master cycles
     rep #$30
     tya
     asl #3
