@@ -32,6 +32,7 @@ constant CART_DSP1($03)     // DSP-1
 constant CART_GSU($13)      // SuperFX
 constant CART_OBC1($23)     // OBC-1
 constant CART_SA1($33)      // SA-1
+constant CART_SDD1($43)     // S-DD1 (todo map mode 32???)
 constant CART_OTHER($E3)    // \ Todo: determine out how/if emulators use these
 constant CART_CUSTOM($F3)   // | to distinguish between obscure stuff like the
                             // / CX4, ST-0018, SPC7110 etc.

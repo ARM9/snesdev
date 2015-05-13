@@ -53,7 +53,6 @@ scope main: {
 
     jsr Player.init
     jsr Camera.init
-    jsr Camera.update
     jsr initMatrixHdma
     jsr initBgHdma
 

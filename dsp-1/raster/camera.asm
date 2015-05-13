@@ -33,6 +33,8 @@ scope init: {
     lda.w #$3f00
     sta.l Camera.Azs
 
+    jsr Camera.update
+
     plp
     rts
 }

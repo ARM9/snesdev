@@ -29,7 +29,6 @@ my_tri_ram:
     Tri_struct()
 
     bank0()
-include "models.inc"
 
 _gsu_start:
     ibt r0, #lut.sin8>>16
@@ -110,5 +109,7 @@ scope fillScreen: {
 include "matrix3.asm"
 include "triangle.asm"
 BlockSize(gsu_main)
+
+include "models.inc"
 include "../../../lib/lut/sin8.inc"
 // vim:ft=snes
