@@ -14,13 +14,13 @@ snes9x		:= $(EMU)/snes9x/snes9x-gtk
 endif
 
 TARGET	:= $(shell basename $(CURDIR))
-export OUTPUT	:= $(CURDIR)/$(TARGET).sfc
+OUTPUT	:= $(CURDIR)/$(TARGET).sfc
 
 ifneq ($(DEBUG),)
 ASFLAGS	+= -d DEBUG=1
 endif
 
-ASFLAGS	+= -d ROM_NAME=$(TARGET).sfc -o $(TARGET).sfc
+ASFLAGS	+= -d ROM_NAME=$(TARGET).sfc -sym $(TARGET).sym -o $(TARGET).sfc
 
 #------------------------------------------------
 .PHONY: clean run

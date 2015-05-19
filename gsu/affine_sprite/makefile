@@ -1,4 +1,3 @@
-
 export EMU	:= $(DEVKITPRO)/emulators/snes
 
 ASFLAGS	:= -benchmark -create
@@ -15,7 +14,7 @@ snes9x		:= $(EMU)/snes9x/snes9x-gtk
 endif
 
 TARGET	:= $(shell basename $(CURDIR))
-export OUTPUT	:= $(CURDIR)/$(TARGET).sfc
+OUTPUT	:= $(CURDIR)/$(TARGET).sfc
 
 ifneq ($(DEBUG),)
 ASFLAGS	+= -d DEBUG=1
