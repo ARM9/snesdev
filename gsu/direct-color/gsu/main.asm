@@ -23,7 +23,7 @@ scope gsu_main: {
         jal fillScreen
         nop
 
-        ibt r0, #0 // color
+        ibt r0, #$ff // color
 
         ibt r4, #2 // y coord
         ibt r9, #20 // yloop
