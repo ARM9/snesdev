@@ -20,7 +20,10 @@ scope chugFramebuffer: {
     //i16
     lda.b #GSU_SFR_GO
 -;  bit.w GSU_SFR   // Wait for GSU to stop
-    bne -
+    beq +
+    //bne -
+    jmp skip
++
 
     stz.w GSU_SCMR
 
@@ -84,7 +87,7 @@ dma_done:
     lda.w GSU_SFR
     ora.b #GSU_SFR_GO
     sta.w GSU_SFR
-
+skip:
     rts
 }
 
