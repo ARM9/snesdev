@@ -53,13 +53,12 @@ main:
     jsr initSA1
 
     LoadWram($008000, WRAM_PRG, $8000)
-    LoadWram(egg, $403000, egg.size)
 
     phk
     plb
-    jml $7E0000|WRAM_main
+    jml $7E0000|wramMain
 
-scope WRAM_main: {
+scope wramMain: {
     sep #$20
 
     jsr setupVideo

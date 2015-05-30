@@ -32,11 +32,7 @@ scope srand: {
 //  a16 = seed
     //a16
     sta.w __rand_seed2
-    lda.w __rand_seed1
-    rol
-    sta.w __rand_seed1
-    //lda.w #$0005
-    //sta.w __rand_seed2
+    rol.w __rand_seed1
     rts
 }
 

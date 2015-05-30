@@ -1,7 +1,5 @@
 
     bank1()
-    insert egg, "gfx/egg.bin"
-    insert tile, "gfx/tile.bin"
     insert torus_sans, "gfx/torus_sans.chr"
 
     bank1()
