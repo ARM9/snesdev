@@ -54,7 +54,7 @@ main: {
     FillVram($7E0000, $2A00, $20)
     FillVram($7E0000, $3000+$2A00, $20)
 
-    LoadVram(column_major_map, $2C00, column_major_map.size)
+    LoadVram(column_major_map, VRAM_FB_MAP, column_major_map.size)
     LoadCgram(sfx_pal, $00, sfx_pal.size)
 
     LoadWram($008000, WRAM_PRG, $8000)

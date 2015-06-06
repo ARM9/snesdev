@@ -12,7 +12,7 @@ constant FRAMEBUFFER_SIZE($5400) // is actually $6100 (should be $6000?), need t
 
 constant VRAM_SCREEN1($0000)
 constant VRAM_SCREEN2($0000)
-constant VRAM_FB_MAP($2C00)
+constant VRAM_FB_MAP($6C00)
 
     bank0()
 scope chugFramebuffer: {

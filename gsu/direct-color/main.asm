@@ -50,10 +50,9 @@ main: {
     lda.w #$ffff
     sta.b zp0
     sep #$20
-    FillVram($7E0000, $2A00, $20)
-    FillVram($7E0000, $3000+$2A00, $20)
+    FillVram($7E0000, $6A00, $20)
 
-    LoadVram(column_major_map, $2C00, column_major_map.size)
+    LoadVram(column_major_map, VRAM_FB_MAP, column_major_map.size)
 
     LoadWram($008000, WRAM_PRG, $8000)
     LoadWram(dummy_vectors, $7E0104, dummy_vectors.size)

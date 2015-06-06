@@ -110,6 +110,7 @@ scope setupVideo: {
     // sprites
     //LoadCgram(ball.pal, $80, ball.pal.size)
 
+    // fill some vram
     lda.b #$ff
     sta.b 0
     FillVram(0, 0, $2000)

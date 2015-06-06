@@ -12,15 +12,12 @@ constant FRAMEBUFFER_SIZE($5400) // is actually $6100 (should be $6000?), need t
 
 constant VRAM_SCREEN1($0000)
 constant VRAM_SCREEN2($3000)
-constant VRAM_FB_MAP($2C00)
 
     bank0()
 scope chugFramebuffer: {
     //a8
     //i16
-    lda.b #GSU_SFR_GO
--;  bit.w GSU_SFR   // Wait for GSU to stop
-    bne -
+    GsuWaitForStop()
 
     stz.w GSU_SCMR
 
@@ -79,11 +76,7 @@ set_bg12nba_screen2:
     inc.w framebuffer_counter
 
 dma_done:
-    lda.w gsu_scmr_mirror
-    sta.w GSU_SCMR
-    lda.w GSU_SFR
-    ora.b #GSU_SFR_GO
-    sta.w GSU_SFR
+    GsuResume()
 
     rts
 }

@@ -29,6 +29,7 @@ init: {
 
     plp
     rts
+}
 
 clear: {
     php
@@ -47,8 +48,7 @@ clear: {
     FillWram(OAM.HIDE_YO_SPRITES, OAM.table_lo, OAM.table_lo.size)
 
     //lda.w #$E0E0    //x,y = $0E,$0E
-    //ldx.w #$0000
-    //txy
+    //ldx.w #$0000 //ldx.w #OAM.table_lo.size
 //-
     //sta.w OAM.table_lo,x
     //stz.w OAM.table_lo+2,x  //clear attributes
@@ -92,7 +92,6 @@ rotateSprite: {
 
     plp
     rts
-}
 }
 
 // Each sprite entry in oam is 4 bytes (+2 bits in the high table), format is:
