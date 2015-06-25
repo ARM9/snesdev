@@ -1,4 +1,4 @@
-export PATH := $(DEVKITSNES)/tools/:$(PATH)
+export PATH	:= $(DEVKITSNES)/tools/:$(PATH)
 
 PNGFILES	:= $(wildcard gfx/*.png)
 SPRITES		:= $(PNGFILES:.png=.img.bin) $(PNGFILES:.png=.pal.bin)

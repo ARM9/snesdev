@@ -1,4 +1,11 @@
 
+macro ResetCache() {
+    php
+    sep #$20
+    stz.w GSU_SFR // this clears the data in the cache and resets CBR to 0x0000
+    plp
+}
+
 macro CallGSU(routine) {
     //a8
     //i16
@@ -7,13 +14,95 @@ macro CallGSU(routine) {
     jsr profileGsuProgram
 }
 
+    bank0()
+runTests: {
+    php
+    sei
+    stz $4200
+    
+    rep #$30
+    stdout.SetPalette(0)
+    sep #$20
+
+    // mult
+    puts("\n 21mhz slow mult: ")
+    lda.b #(GSU_CFGR_IRQ_MASK)
+    sta.w GSU_CFGR
+    CallGSU(multTest)
+
+    ResetCache()
+
+    puts("\n 21mhz fast mult: ")
+    lda.b #(GSU_CFGR_IRQ_MASK | GSU_CFGR_FASTMUL)
+    sta.w GSU_CFGR
+    CallGSU(multTest)
+
+    ResetCache()
+
+    //umult
+    puts("\n 21mhz slow umult:")
+    lda.b #(GSU_CFGR_IRQ_MASK)
+    sta.w GSU_CFGR
+    CallGSU(umultTest)
+
+    ResetCache()
+
+    puts("\n 21mhz fast umult:")
+    lda.b #(GSU_CFGR_IRQ_MASK | GSU_CFGR_FASTMUL)
+    sta.w GSU_CFGR
+    CallGSU(umultTest)
+
+    ResetCache()
+
+    //fmult
+    puts("\n 21mhz slow fmult:")
+    lda.b #(GSU_CFGR_IRQ_MASK)
+    sta.w GSU_CFGR
+    CallGSU(fmultTest)
+
+    ResetCache()
+
+    puts("\n 21mhz fast fmult:")
+    lda.b #(GSU_CFGR_IRQ_MASK | GSU_CFGR_FASTMUL)
+    sta.w GSU_CFGR
+    CallGSU(fmultTest)
+
+    ResetCache()
+
+    //lmult
+    puts("\n 21mhz slow lmult:")
+    lda.b #(GSU_CFGR_IRQ_MASK)
+    sta.w GSU_CFGR
+    CallGSU(lmultTest)
+
+    ResetCache()
+
+    puts("\n 21mhz fast lmult:")
+    lda.b #(GSU_CFGR_IRQ_MASK | GSU_CFGR_FASTMUL)
+    sta.w GSU_CFGR
+
+    lda.w nmitimen_mirror
+    sta.w $4200
+
+    //plp
+    //rts
+
+    // bsnes-plus with fast mult enabled "crashes" here
+    CallGSU(lmultTest)
+
+    lda.w nmitimen_mirror
+    sta.w $4200
+
+    plp
+    rts
+}
+
+
     bss()
 tmp_str:; fill 5
 
     bank0()
-profileGsuProgram:
-    //a8
-    //i16
+profileGsuProgram: {
     phd
     php
     sep #$20
@@ -59,81 +148,6 @@ profileGsuProgram:
     plp
     pld
     rts
-
-runTests:
-    sei
-    stz $4200
-    
-    rep #$30
-    stdout.SetPalette(0)
-    sep #$20
-
-    // slow mult
-    puts("\n 21mhz slow mult: ")
-    lda.b #(GSU_CFGR_IRQ_MASK)
-    sta.w GSU_CFGR
-    CallGSU(multTest)
-
-    // reset gsu cache
-    rep #$30
-    stz.w GSU_SFR
-    sep #$20
-
-    // fast mult
-    puts("\n 21mhz fast mult: ")
-    lda.b #(GSU_CFGR_IRQ_MASK | GSU_CFGR_FASTMUL)
-    sta.w GSU_CFGR
-    CallGSU(multTest)
-
-    //umult
-    puts("\n 21mhz slow umult:")
-    lda.b #(GSU_CFGR_IRQ_MASK)
-    sta.w GSU_CFGR
-    CallGSU(umultTest)
-
-    rep #$30
-    stz.w GSU_SFR
-    sep #$20
-
-    puts("\n 21mhz fast umult:")
-    lda.b #(GSU_CFGR_IRQ_MASK | GSU_CFGR_FASTMUL)
-    sta.w GSU_CFGR
-    CallGSU(umultTest)
-
-    //fmult
-    puts("\n 21mhz slow fmult:")
-    lda.b #(GSU_CFGR_IRQ_MASK)
-    sta.w GSU_CFGR
-    CallGSU(fmultTest)
-
-    rep #$30
-    stz.w GSU_SFR
-    sep #$20
-
-    puts("\n 21mhz fast fmult:")
-    lda.b #(GSU_CFGR_IRQ_MASK | GSU_CFGR_FASTMUL)
-    sta.w GSU_CFGR
-    CallGSU(fmultTest)
-
-    //lmult
-    puts("\n 21mhz slow lmult:")
-    lda.b #(GSU_CFGR_IRQ_MASK)
-    sta.w GSU_CFGR
-    CallGSU(lmultTest)
-
-    rep #$30
-    stz.w GSU_SFR
-    sep #$20
-
-    puts("\n 21mhz fast lmult:")
-    lda.b #(GSU_CFGR_IRQ_MASK | GSU_CFGR_FASTMUL)
-    sta.w GSU_CFGR
-    CallGSU(lmultTest)
-
-    lda.w nmitimen_mirror
-    sta.w $4200
-    clc
-
-    rts
+}
 
 // vim:ft=snes

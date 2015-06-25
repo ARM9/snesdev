@@ -1,4 +1,4 @@
-export EMU	:= $(DEVKITPRO)/emulators/snes
+EMU	:= $(DEVKITPRO)/emulators/snes
 
 ASFLAGS		:= -benchmark -create
 SPCFLAGS	:= -create -o main.spc

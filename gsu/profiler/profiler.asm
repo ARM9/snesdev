@@ -1,4 +1,11 @@
 
+macro ResetCache() {
+    php
+    sep #$20
+    stz.w GSU_SFR // this clears the data in the cache and resets CBR to 0x0000
+    plp
+}
+
 macro CallGSU(routine) {
     //a8
     //i16
@@ -7,13 +14,41 @@ macro CallGSU(routine) {
     jsr profileGsuProgram
 }
 
+    bank0()
+runTests: {
+    php
+    sei
+    stz $4200
+    
+    rep #$30
+    stdout.SetXY(0,1)
+    stdout.SetPalette(0)
+    sep #$20
+
+    puts("\n 21mhz slow mult:\n")
+    lda.b #(GSU_CFGR_IRQ_MASK)
+    sta.w GSU_CFGR
+    CallGSU(multTest)
+    
+    ResetCache()
+
+    puts("\n 21mhz fast mult:\n")
+    lda.b #(GSU_CFGR_IRQ_MASK | GSU_CFGR_FASTMUL)
+    sta.w GSU_CFGR
+    CallGSU(multTest)
+
+    lda.w nmitimen_mirror
+    sta.w $4200
+
+    plp
+    rts
+}
+
     bss()
 tmp_str:; fill 5
 
     bank0()
-profileGsuProgram:
-    //a8
-    //i16
+profileGsuProgram: {
     phd
     php
     sep #$20
@@ -37,58 +72,27 @@ profileGsuProgram:
     bne -           // 3 , - 1 for last branch (not taken)
 
     stz.b GSU_SCMR
-    // scpu cycles, slight deviation due to scpu poll loop and not counting master cycles
     rep #$30
     tya
-    asl #3
-    dec
+    // scpu cycles, slight deviation due to scpu poll loop and not counting master cycles
+    //asl #3
+    //dec
     // gsu cycles
-    sta.b zp0
-    asl #2
-    clc
-    adc.b zp0
+    //sta.b zp0
+    //asl #2
+    //clc
+    //adc.b zp0
 
     itoa(tmp_str)
 
     sep #$20
     puts(" 0x")
     PrintString(tmp_str)
-    puts(" gsu cycles.\n")
+    puts("\n")
 
     plp
     pld
     rts
-
-runTests:
-    sei
-    stz $4200
-    
-    rep #$30
-    stdout.SetXY(0,1)
-    stdout.SetPalette(0)
-    sep #$20
-
-    // slow mult
-    puts("\n 21mhz slow mult:\n")
-    lda.b #(GSU_CFGR_IRQ_MASK)
-    sta.w GSU_CFGR
-    CallGSU(multTest)
-
-    // reset gsu cache
-    rep #$30
-    stz.w GSU_SFR
-    sep #$20
-
-    // fast mult
-    puts("\n 21mhz fast mult:\n")
-    lda.b #(GSU_CFGR_IRQ_MASK | GSU_CFGR_FASTMUL)
-    sta.w GSU_CFGR
-    CallGSU(multTest)
-
-    lda.w nmitimen_mirror
-    sta.w $4200
-    clc
-
-    rts
+}
 
 // vim:ft=snes

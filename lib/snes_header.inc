@@ -17,11 +17,11 @@ constant SIZE_4MiB($0C)   // Amount of ROM in Donkey Kong Country 2 and 3
 // Valid range for cart RAM: $00-$07
 
 // Map modes
-constant MAP_LOROM($20) // LoROM
-constant MAP_HIROM($21) // HiROM
-constant MAP_FASTROM($10) // OR with one of the above for FastROM (3.58MHz)
-constant MAP_EXHIROM($25) // ExHiROM + SlowROM
-constant MAP_SA1ROM($23) // SA-1 ROM
+constant MAP_LOROM($20)     // LoROM
+constant MAP_HIROM($21)     // HiROM
+constant MAP_EXHIROM($25)   // ExHiROM
+constant MAP_FASTROM($10)   // OR with one of the above for FastROM (3.58MHz)
+constant MAP_SA1ROM($23)    // SA-1 ROM
 
 // Cartridge types
 constant CART_ROM($00)      // ROM only
@@ -33,7 +33,7 @@ constant CART_GSU($13)      // SuperFX
 constant CART_OBC1($23)     // OBC-1
 constant CART_SA1($33)      // SA-1
 constant CART_SDD1($43)     // S-DD1 (todo map mode 32???)
-constant CART_OTHER($E3)    // \ Todo: determine out how/if emulators use these
+constant CART_OTHER($E3)    // \ Todo: determine how/if emulators use these
 constant CART_CUSTOM($F3)   // | to distinguish between obscure stuff like the
                             // / CX4, ST-0018, SPC7110 etc.
 
