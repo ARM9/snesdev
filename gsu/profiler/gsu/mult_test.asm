@@ -1,6 +1,7 @@
 
     arch snes.gsu
 
+    bank0()
 multTest:
     iwt r12, #$2000
     cache

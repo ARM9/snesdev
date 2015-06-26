@@ -1,8 +1,11 @@
 
+// In addition, when the SCPU writes 0 to the GO flag of the GSU SFR (forced
+// stop if the gsu is executing) all of the cache flags are cleared and the
+// CBR is set to 0x0000.
 macro ResetCache() {
     php
     sep #$20
-    stz.w GSU_SFR // should clear the cache and reset CBR to 0x0000
+    stz.w GSU_SFR // should clear the cache (presumably just flags) and reset CBR to 0x0000
     plp
 }
 
@@ -25,17 +28,29 @@ runTests: {
     stdout.SetPalette(0)
     sep #$20
 
-    puts("\n 21mhz slow mult:\n")
-    lda.b #(GSU_CFGR_IRQ_MASK)
-    sta.w GSU_CFGR
-    CallGSU(multTest)
-    
-    ResetCache()
+    // todo perhaps add a switch to change clock/mult speed
+    lda.b #0
+    sta.w GSU_CLSR  // Set clock frequency to 10mhz
 
-    puts("\n 21mhz fast mult:\n")
     lda.b #(GSU_CFGR_IRQ_MASK | GSU_CFGR_FASTMUL)
     sta.w GSU_CFGR
+
+    puts("\n 10mhz fast multiplication\n")
+
+
+    puts("\n no cache:   ")
+    CallGSU(multTestNoCache)
+
+    puts("\n cache:      ")
     CallGSU(multTest)
+
+    puts("\n cache line: ")
+    CallGSU(multTestNoCache)
+
+    ResetCache()
+    puts("\n Cache cleared?")
+    puts("\n no cache:   ")
+    CallGSU(multTestNoCache)
 
     lda.w nmitimen_mirror
     sta.w $4200
@@ -74,19 +89,11 @@ profileGsuProgram: {
     stz.b GSU_SCMR
     rep #$30
     tya
-    // scpu cycles, slight deviation due to scpu poll loop and not counting master cycles
-    //asl #3
-    //dec
-    // gsu cycles
-    //sta.b zp0
-    //asl #2
-    //clc
-    //adc.b zp0
 
     itoa(tmp_str)
 
     sep #$20
-    puts(" 0x")
+    puts("0x")
     PrintString(tmp_str)
     puts("\n")
 

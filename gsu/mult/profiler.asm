@@ -2,7 +2,7 @@
 macro ResetCache() {
     php
     sep #$20
-    stz.w GSU_SFR // this clears the data in the cache and resets CBR to 0x0000
+    stz.w GSU_SFR // should clear the cache (presumably just flags) and reset CBR to 0x0000
     plp
 }
 
