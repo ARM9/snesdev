@@ -21,7 +21,10 @@ macro CallGSU(routine) {
 runTests: {
     php
     sei
-    stz $4200
+    sep #$20
+    stz.w $4200
+    lda.b #$80
+    sta.w REG_INIDISP
     
     rep #$30
     stdout.SetXY(0,1)

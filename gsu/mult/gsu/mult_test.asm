@@ -1,12 +1,15 @@
 
     arch snes.gsu
 
+    include "../../../lib/gsu/gsu.inc"
+
     bank0()
+    AlignCache()
 multTest:
+    cache
     iwt r1, #$aaaa
     iwt r2, #$aaaa
     iwt r12, #$2000
-    cache
     move r13, r15
 -;
     from r1     // 1
@@ -18,11 +21,12 @@ multTest:
     nop
 
     fill 16
+    AlignCache()
 umultTest:
+    cache
     iwt r1, #$aaaa
     iwt r2, #$aaaa
     iwt r12, #$2000
-    cache
     move r13, r15
 -;
     from r1     // 1
@@ -34,11 +38,12 @@ umultTest:
     nop
 
     fill 16
+    AlignCache()
 fmultTest:
+    cache
     iwt r1, #$aaaa
     iwt r6, #$aaaa
     iwt r12, #$2000
-    cache
     move r13, r15
 -;
     from r1     // 1
@@ -50,11 +55,12 @@ fmultTest:
     nop
 
     fill 16
+    AlignCache()
 lmultTest:
+    cache
     iwt r1, #$aaaa
     iwt r6, #$aaaa
     iwt r12, #$2000
-    cache
     move r13, r15
 -;  
     from r1     // 1

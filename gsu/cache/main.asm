@@ -67,7 +67,7 @@ scope wramMain: {
 
     stz.w GSU_RAMBR
 
-    // todo add more tests
+    // todo add a menu and more tests
     jsr runTests
 
     jsr Interrupts.init

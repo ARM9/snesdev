@@ -2,7 +2,9 @@
 macro ResetCache() {
     php
     sep #$20
-    stz.w GSU_SFR // should clear the cache (presumably just flags) and reset CBR to 0x0000
+    //lda.b #GSU_SFR_GO
+    //sta.w GSU_SFR
+    stz.w GSU_SFR // should clear the cache flags and reset CBR to 0x0000
     plp
 }
 
@@ -18,11 +20,17 @@ macro CallGSU(routine) {
 runTests: {
     php
     sei
-    stz $4200
+    sep #$20
+    stz.w $4200
+    lda.b #$80
+    sta.w REG_INIDISP
     
     rep #$30
     stdout.SetPalette(0)
     sep #$20
+
+    lda.b #1
+    sta.w GSU_CLSR  // Set clock frequency to 21.4MHz
 
     // mult
     puts("\n 21mhz slow mult: ")
@@ -80,14 +88,6 @@ runTests: {
     puts("\n 21mhz fast lmult:")
     lda.b #(GSU_CFGR_IRQ_MASK | GSU_CFGR_FASTMUL)
     sta.w GSU_CFGR
-
-    lda.w nmitimen_mirror
-    sta.w $4200
-
-    //plp
-    //rts
-
-    // bsnes-plus with fast mult enabled "crashes" here
     CallGSU(lmultTest)
 
     lda.w nmitimen_mirror

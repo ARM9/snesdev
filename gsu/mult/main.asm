@@ -59,12 +59,6 @@ scope main: {
 
 scope wramMain: {
 
-    lda.b #1
-    sta.w GSU_CLSR  // Set clock frequency to 21.4MHz
-
-    lda.b #(GSU_CFGR_IRQ_MASK | GSU_CFGR_FASTMUL)
-    sta.w GSU_CFGR
-
     stz.w GSU_SCBR
 
     lda.b #(GSU_SCMR_RON|GSU_SCMR_RAN) | GSU_SCMR_4BPP | GSU_SCMR_H192
