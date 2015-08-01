@@ -1,0 +1,12 @@
+
+menu
+
+10/21mhz switch 
+
+mult/umult/fmult/lmult test, 21mhz fast mult stress test
+
+cache invalidation (write to < xxfh in cache, write 0 to go flag)
+
+plot timings
+
+rom/sram buffer timing (getb ldw ldb sbk etc.)
