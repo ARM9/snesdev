@@ -2,14 +2,15 @@
     arch snes.gsu
 
 scope mulMat3Vec3: {
-// returns: void
-// args:
-    define m12_11(r1) // \ s8 2 matrix components packed in 1 reg
-    define m21_13(r2) // |
-    define m23_22(r3) // |
-    define m32_31(r4) // |
-    define m00_33(r5) // /
-    define vec3_out(r6) // vec3_s8* data in ram
+// output:
+    // r6 = pointer to transformed vectors
+// input:
+    define m12_11(r1)   // \ s8 2 matrix components packed in each reg
+    define m21_13(r2)   // |
+    define m23_22(r3)   // |
+    define m32_31(r4)   // |
+    define m00_33(r5)   // /
+    define vec3_out(r6) // vec3_s8* transformed vectors in ram
     define count(r12)   // u16 number of vectors to multiply
     define vec3_in(r14) // vec3_s8* vectors in rom
 // vars:
@@ -98,8 +99,8 @@ L0:
 }
 
 scope mulMat3: {
-// returns:
-// args:
+// output:
+// input:
     define m12_11(r1)
     define m21_13(r2)
     define m23_22(r3)

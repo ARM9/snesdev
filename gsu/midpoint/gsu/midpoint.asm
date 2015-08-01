@@ -3,8 +3,8 @@
 
 // Midpoint algorithm implementation
 scope drawCircle: {
-// returns: void
-// args:
+// output: void
+// input:
     define x1(r3)   // u8 center x
     define y1(r4)   // u8 center y
     define radius(r5) // u8

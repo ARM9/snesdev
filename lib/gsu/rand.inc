@@ -9,9 +9,9 @@ sram_rand_seed2:;  fill 2
 
 // quick and dirty prng
 scope rand: {
-// returns:
+// output:
 //  s16 r0  = pseudo-random number
-// args: -
+// input: -
 // vars:
 // clobbers:
 //  r0-r2
@@ -32,8 +32,8 @@ scope rand: {
 }
 
 scope srand: {
-// returns: void
-// args:
+// output: void
+// input:
     define seed(r0) // u16
 // vars:
     define seed_ptr(r1) // u16*

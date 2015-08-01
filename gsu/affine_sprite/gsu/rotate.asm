@@ -4,8 +4,8 @@
 // Plot a rotated sprite to start of framebuffer
 // only square sprites, width = height
 scope drawRotatedSprite: {
-// returns: void
-// args:
+// output: void
+// input:
 define angle(r3)    // s8 angle
 define width(r4)    // u8
 define gfx_ptr(r5)  // u8*

@@ -11,9 +11,9 @@ GSU_PRGROM:
     base GSU_SRAM_PRG
 
 scope gsuXorTest: {
-// returns:
+// output:
 //  r0 = r1 XOR (r2 XOR (r3 XOR r4))
-// args: (initiated by scpu)
+// input: (initialized by scpu)
 //  r1 = u16
 //  r2 = u16
 //  r3 = u16
@@ -26,9 +26,9 @@ scope gsuXorTest: {
 }
 
 scope gsuXoriTest: {
-// returns:
+// output:
 //  r0 = r1 XOR #$0B
-// args: (initiated by scpu)
+// input: (initialized by scpu)
 //  r1 = u16
     from r1
     to r0

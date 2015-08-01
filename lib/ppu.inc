@@ -48,6 +48,7 @@ tsw_mirror:;        fill 1
 cgwsel_mirror:;     fill 1
 cgadsub_mirror:;    fill 1
 coldata_mirror:;    fill 1
+setini_mirror:;     fill 1
 // }
 
     bank0()
@@ -86,6 +87,9 @@ updateRegs: {
     sta.w REG_TSW
     lda.w cgadsub_mirror
     sta.w REG_CGADSUB
+    sep #$20
+    lda.w setini_mirror
+    sta.w REG_SETINI
 
     plp
     rts

@@ -95,8 +95,8 @@ scope updateCoords: {
     sbk
 }
 scope fillScreen: {
-// returns: void
-// args:
+// output: void
+// input:
 //  u16 r0 = fill value
 // vars:
 //  u16* r3 = screen base

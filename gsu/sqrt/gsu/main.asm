@@ -11,9 +11,9 @@ GSU_PRGROM:
     base GSU_SRAM_PRG
 
 scope gsuSqrtTest: {
-// returns:
+// output:
 //  r0 = square root of x
-// args: (initiated by scpu)
+// input: (initiated by scpu)
 //  r0 = x
     move r3, r0
     jal sqrt16

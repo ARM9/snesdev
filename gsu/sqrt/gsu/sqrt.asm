@@ -1,9 +1,9 @@
     arch snes.gsu
 
 scope sqrt16: {
-// returns:
+// output:
 //  u16 r1  = square root of num
-// args:
+// input:
     define num(r3)  // u16
 // vars:
     define res(r1)  // u16

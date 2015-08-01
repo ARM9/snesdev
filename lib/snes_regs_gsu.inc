@@ -100,6 +100,7 @@ constant GSU_SCBR($3038) //Screen base register
 constant GSU_CLSR($3039) //Clock select register
 // Access from snes cpu: W
 // ---- ---S, S = Clock speed, 0 = 10.7MHz 1 = 21.4MHz 
+constant GSU_CLSR_21MHZ($01)
 
 // RON/RAN flags
 constant GSU_SCMR($303A) //Screen mode register

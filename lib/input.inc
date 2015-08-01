@@ -43,8 +43,8 @@ scope Joypad {
     __pads_prev:
     __pad1_prev:; dw 0
 
-    __pads_down:
-    __pad1_down:; dw 0
+    __pads_pressed:
+    __pad1_pressed:; dw 0
 
     __pads_released:
     __pad1_released:; dw 0
@@ -56,7 +56,7 @@ scope Joypad: {
 
 macro Pressed(pad) {
     //a16
-    lda.w Joypad.__pad{pad}_down
+    lda.w Joypad.__pad{pad}_pressed
 }
 
 macro Held(pad) {
@@ -64,26 +64,27 @@ macro Held(pad) {
     lda.w Joypad.__pad{pad}_held
 }
 
-macro __ReadJoypad(padnum, held, prev, down) {
+macro __ReadJoypad(padnum, held, prev, pressed) {
     lda.w {held}
     sta.w {prev}
     lda.w REG_JOY1L + ({padnum} * 2)
     sta.w {held}
     eor.w {prev}
     and.w {held}
-    sta.w {down}
+    sta.w {pressed}
 }
 
 scope updatePads: {
-// returns: void
-// args: void
+// Call during vblank
+// output: void
+// input: void
     php
     rep #$30
 
     lda.w #$0001
 -;  bit.w REG_HVBJOY
     bne -
-    Joypad.__ReadJoypad(0, __pad1_held, __pad1_prev, __pad1_down)
+    Joypad.__ReadJoypad(0, __pad1_held, __pad1_prev, __pad1_pressed)
     plp
     rts
 }

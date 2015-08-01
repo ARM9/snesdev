@@ -14,8 +14,8 @@ edge_buffer:
     bank0()
 
 scope drawTriangle: {
-// returns: void
-// args:
+// output: void
+// input:
     define tri_ptr(r0)  // Tri_struct* r3
 // vars:
     define v0(r3)

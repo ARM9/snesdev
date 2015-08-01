@@ -4,8 +4,8 @@
 // Bresenham implementation
 // plenty of room for optimizations, have fun
 scope drawLine: {
-// returns: void
-// args:
+// output: void
+// input:
     define x1(r1)   // s16
     define y1(r2)   // s16
     define x2(r3)   // s16
@@ -79,5 +79,5 @@ L0: // while(1){
     add {sx}
     // }
 }
-
+BlockSize(drawLine)
 // vim:ft=snes

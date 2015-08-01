@@ -4,6 +4,7 @@ if !{defined _SNES_REGS} {
 define _SNES_REGS(1)
 
 constant REG_INIDISP($2100) // f--- xxxx, f = Force vblank x = screen brightness
+constant INIDISP_FBLANK($80)
 
 //OAM control registers
 constant REG_OBSEL($2101) // sssn nbbb, s = obj size, n = tile table 2 offset, b = tile base address>>14
@@ -156,12 +157,13 @@ constant REG_CGWSEL($2130) // ccmm --sd Color Addition Select
 constant REG_CGADSUB($2131) // shbo 4321 Color math designation
 constant REG_COLDATA($2132) // bgrc cccc Color for color math
 
-// e = Mode 7 EXTBG ("Extra BG").
-// p = Enable pseudo-hires mode.
-// o = Overscan mode.
-// I = OBJ Interlace.
-// i = Screen interlace.
 constant REG_SETINI($2133) // se-- poIi Screen Mode/Video Select
+// s = extsync bit, unknown
+constant SETINI_EXTBG($40)          // e = Mode 7 EXTBG ("Extra BG").
+constant SETINI_HIRES($08)          // p = Enable pseudo-hires mode.
+constant SETINI_OVERSCAN($04)       // o = Overscan mode.
+constant SETINI_OBJ_INTERLACE($02)  // I = OBJ Interlace.
+constant SETINI_INTERLACE($01)      // i = Screen interlace.
 
 // You can read the two's complement product from M7A*(M7B>>8) here
 constant REG_MPYL($2134) // xxxx xxxx, low byte of fractional part of the product
@@ -216,6 +218,13 @@ constant REG_JOYSER1($4017) // bit 5-7 open bus
 //CPU registers
 constant REG_NMITIMEN($4200) // n-yx ---a
 // n = NMI, y & x = IRQ, a = auto-joy
+scope NMITIMEN {
+constant nmi($80)
+constant hirq($20)
+constant virq($10)
+constant autojoy($01)
+}
+
 constant REG_WRIO($4201) // ab-- ----
 // b = controller 1 (and 3?), a = controller 2 (and 4?)
 

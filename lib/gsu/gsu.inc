@@ -44,9 +44,9 @@ macro popr(reg) {
 }
 
 macro max(a, b) {
-// returns:
+// output:
 //  s16 r0  = the bigger number
-// args:
+// input:
 //  s16 a
 //  s16 b
 // vars:
@@ -66,9 +66,9 @@ L1{#}:
 }
 
 macro min(a, b) {
-// returns:
+// output:
 //  s16 r0  = the smaller number
-// args:
+// input:
 //  s16 a
 //  s16 b
 // vars:
