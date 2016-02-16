@@ -93,55 +93,48 @@ macro log2(n) {
 // input:
 //  u16 n
 // clobbers:
-//  r0, r2, r3, n
+//  r0, r2, r3
 
     ibt r2, #0      // p
-    moves {n}, {n}  // if n == 0 then return 0
+    moves r0, {n}   // if n == 0 then return 0
     beq done{#}
      nop
     //if n >= 1<<8
-    // n >>= 8
     // p +=8
+    // n >>= 8
     iwt r3, #1<<8
-    from {n}; sub r3
+    cmp r3
     blt L0{#}
-     with {n}
-      hib
-      with r2
+     with r2
       add #8
+      hib
 L0{#}:
     //if n >= 1<<4
-    // n >>= 4
     // p +=4
+    // n >>= 4
     ibt r3, #1<<4
-    from {n}; sub r3
+    cmp r3
     blt L1{#}
-     from {n}
-      lsr           // r0 = n >> 1
-      lsr; lsr      // r0 >>= 2
-      to {n}; lsr   // n = r0 >> 1
+     to r3
       with r2
       add #4
-      from {n}
+      lsr; lsr; lsr; lsr
+      to r3
 L1{#}:
     //if n >= 1<<2
-    // n >>= 2
     // p +=2
+    // n >>= 2
     sub #1<<2
     blt L2{#}
-     from {n}
-      lsr
-      to {n}
-      lsr
+     nop
       inc r2; inc r2
-      from {n}
+      lsr; lsr
 L2{#}:
     //if n >= 1<<1
     // p +=1
     sub #1<<1   // r0 = n - r3
-    blt done{#}
-     nop
-      inc r2
+    with r2
+    adc #0
 done{#}:
 }
 
