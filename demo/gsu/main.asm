@@ -193,8 +193,7 @@ end_frame:
     stop
     nop
 
-    iwt r11, #gsu_main
-    jmp r11
+    iwt r15, #gsu_main
     nop
 }
 

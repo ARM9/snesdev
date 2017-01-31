@@ -8,9 +8,9 @@ __rand_seed2:;  fill 2
 
     bank0()
 scope rand: {
-// returns:
+// in: void
+// out:
 //  a16 = pseudo random number
-// args: void
     //a16
     lda.w __rand_seed2
     lsr
@@ -27,9 +27,9 @@ scope rand: {
 }
 
 scope srand: {
-// returns: void
-// args:
+// in:
 //  a16 = seed
+// out: void
     //a16
     sta.w __rand_seed2
     rol.w __rand_seed1
@@ -38,11 +38,11 @@ scope srand: {
 
 // unsigned 8*8 multiplication
 macro umult8(B) {
-//returns:
-//  a16 = product
-//args:
+// in:
 //  a8  = factor A
 //  B   = factor B
+// out:
+//  a16 = product
     //a8
     sta.w REG_WRMPYA
     lda {B}
@@ -52,11 +52,11 @@ macro umult8(B) {
 }
 
 macro umult8(A, B) {
-//returns:
-//  a16 = product
-//args:
+// in:
 //  A   = factor A
 //  B   = factor B
+// out:
+//  a16 = product
     //a8
     lda {A}
     sta.w REG_WRMPYA
@@ -68,12 +68,12 @@ macro umult8(A, B) {
 
 // unsigned 16/8 division
 macro udiv16x8() {
-//returns:
-//  REG_RDDIVL/H = quotient of x16/a8
-//  REG_RDMPYL/H = 16 bit remainder
-//args:
+// in:
 //  x16 = numerator
 //  a8  = denominator
+// out:
+//  REG_RDDIVL/H = quotient of x16/a8
+//  REG_RDMPYL/H = 16 bit remainder
     stx.w REG_WRDIVL
     sta.w REG_WRDIVB // slow        fast        total
     rep #$20         // 8+8+6       6+6+6       3
@@ -86,12 +86,12 @@ macro udiv16x8() {
 
 // signed 16/16 division
 scope div16: {
-//returns:
-//  zp0 = quotient of x16/a16
-//  x16 = remainder
-//args:
+// in:
 //  x16 = numerator
 //  a16 = denominator
+// out:
+//  zp0 = quotient of x16/a16
+//  x16 = remainder
 define quotient(zp0)
 
     stz.b {quotient}

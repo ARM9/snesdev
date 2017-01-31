@@ -119,6 +119,11 @@ scope writePpu: {
     xba
     sta.w REG_BG1VOFS
 
+    //lda.w Camera.horizon
+    //lsr #4
+    //sta.w bg_hdma.bgmode
+    //sta.w bg_hdma.tm
+
     plp
     rts
 }

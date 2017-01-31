@@ -56,9 +56,8 @@ macro max(a, b) {
     from {a}; sub {b}
     blt L0{#};
      with r0
-    from {a}
     bra L1{#};
-     nop
+     from {a}
 L0{#}:
     //moves r0, {a}
     from {b}
@@ -78,9 +77,8 @@ macro min(a, b) {
     from {a}; sub {b}
     blt L0{#};
      with r0
-    from {b}
     bra L1{#};
-     nop
+     from {b}
 L0{#}:
     //moves r0, {a}
     from {a}

@@ -7,7 +7,7 @@ constant GSU_SRAM_PRG($700000)
 
 GSU_PRGROM:
 
-    push base
+    pushvar base
     base GSU_SRAM_PRG
 
 scope gsuSqrtTest: {
@@ -26,6 +26,6 @@ scope gsuSqrtTest: {
 
 include "sqrt.asm"
 
-    pull base
+    pullvar base
 constant GSU_PRGROM_SIZE(pc() - GSU_PRGROM)
 // vim:ft=snes

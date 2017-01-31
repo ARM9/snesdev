@@ -7,7 +7,7 @@ constant GSU_SRAM_PRG($700000)
 
 GSU_PRGROM:
 
-    push base
+    pushvar base
     base GSU_SRAM_PRG
 
 scope gsuXorTest: {
@@ -37,6 +37,6 @@ scope gsuXoriTest: {
     stop; nop
 }
 
-    pull base
+    pullvar base
 constant GSU_PRGROM_SIZE(pc() - GSU_PRGROM)
 // vim:ft=snes

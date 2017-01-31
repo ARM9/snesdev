@@ -25,42 +25,6 @@ scope drawTriangle: {
 // clobbers:
 // tbd
 
-    //move r0, {tri_ptr}
-
-    iwt {tmp}, #max_x
-    ibt r12, #2
-    move r13, r15
-loop_vertices_minmax: {
-    // find max and min x y coordinates
-    // v0.x v1.x v2.x 
-    to {v0}
-    ldb (r0)
-    // next vertex
-    add #2
-    to {v1}
-    ldb (r0)
-    // next vertex
-    add #2
-    to {v2}
-    ldb (r0)
-
-    // max coord
-    max({v0}, {v1})//; move {vt}, r0
-    max(r0, {v2})
-    stb ({tmp})
-    inc {tmp}
-
-    // min coord
-    min({v0}, {v1})
-    min(r0, {v2})
-    stb ({tmp})
-    inc {tmp}
-
-    // next coordinate
-    sub #3
-    loop
-    nop
-}
     // write x1 count to edge buffer
     
     // draw scanlines
@@ -68,15 +32,15 @@ loop_vertices_minmax: {
 y_loop: {
     x_loop: {
         loop
-        plot
+         plot
     }
 
     bge y_loop
-    nop
+     nop
 }
 
     ret
-    nop
+     nop
 }
 
 // vim:ft=snes

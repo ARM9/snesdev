@@ -13,13 +13,15 @@ constant SIZE_512KiB($09) // Amount of ROM in Super Mario World
 constant SIZE_1MiB($0A)   // Amount of ROM in Mario Paint
 constant SIZE_2MiB($0B)   // Amount of ROM in Super Mario World 2
 constant SIZE_4MiB($0C)   // Amount of ROM in Donkey Kong Country 2 and 3
-// Valid range for ROM: $08-$0C, most emulators don't mind $05
-// Valid range for cart RAM: $00-$07
+// Valid range for ROM: $05-$0D, I'm not sure if any emulator cares, maybe with $0D
+// Valid range for cart RAM: $00-$07, higher may work depending on things
 
 // Map modes
 constant MAP_LOROM($20)     // LoROM
 constant MAP_HIROM($21)     // HiROM
+constant MAP_SDD1($22)      // S-DD1 LoROM
 constant MAP_EXHIROM($25)   // ExHiROM
+constant MAP_SPC7110($2A)   // SPC7110 HiROM
 constant MAP_FASTROM($10)   // OR with one of the above for FastROM (3.58MHz)
 constant MAP_SA1ROM($23)    // SA-1 ROM
 
@@ -32,10 +34,12 @@ constant CART_DSP1($03)     // DSP-1
 constant CART_GSU($13)      // SuperFX
 constant CART_OBC1($23)     // OBC-1
 constant CART_SA1($33)      // SA-1
-constant CART_SDD1($43)     // S-DD1 (todo map mode 32???)
+constant CART_SDD1($43)     // S-DD1
+constant CART_SRTC($53)     // S-RTC
 constant CART_OTHER($E3)    // \ Todo: determine how/if emulators use these
 constant CART_CUSTOM($F3)   // | to distinguish between obscure stuff like the
                             // / CX4, ST-0018, SPC7110 etc.
+constant CART_ROM_RAM_BAT_RTC($06)  // ROM+RAM+Battery+RTC-4513 for SPC7110
 
 // Destination codes, most emulators use this to determine PAL/NTSC
 constant DEST_JAPAN($00)

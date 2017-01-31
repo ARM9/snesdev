@@ -149,35 +149,53 @@ initMatrixHdma:
 initBgHdma:
     php
 
+    phb
+    rep #$30
+    // todo data sections
+    BlockMoveN(bg_hdma_data, bg_hdma, bg_hdma_data.size)
+    plb
+
     rep #$10
     sep #$20
 
     ldx.w #$0500
-    ldy.w #bgmode_hdma
-    lda.b #bgmode_hdma>>16
+    ldy.w #bg_hdma.bgmode
+    lda.b #bg_hdma.bgmode>>16
     jsr HDMA.initChannel3
 
     ldx.w #$2C00
-    ldy.w #tm_hdma
-    lda.b #tm_hdma>>16
+    ldy.w #bg_hdma.tm
+    lda.b #bg_hdma.tm>>16
     jsr HDMA.initChannel4
 
     plp
     rts
 
-bgmode_hdma:
+    bss()
+scope bg_hdma: {
+bgmode:
+    fill 5
+tm:
+    fill 5
+}
+
+    bank0()
+scope bg_hdma_data: {
+bgmode:
 db 33 // skipping one scanline to minimize quantization errors on the horizon
 db $9
 db 1
 db $7
 db 0
 
-tm_hdma:
+tm:
 db 33
 db 0//$16
 db 1
 db $11
 db 0
+constant size(pc() - bg_hdma_data)
+}
 
 include "dsp-1/arithmetic.asm"
 include "dsp-1/matrix.asm"

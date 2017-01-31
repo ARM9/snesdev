@@ -297,7 +297,6 @@ constant REG_JOY3L($421C) //
 constant REG_JOY3H($421D) // These registers are only updated when the Auto-Joypad Read bit (bit 0) of $4200 is set.
 constant REG_JOY4L($421E) // They are being updated while the Auto-Joypad Status bit (bit 0) of $4212 is set.
 constant REG_JOY4H($421F) // Reading during this time will return incorrect values.
-//.endscope
 
 //(H)DMA stuff, these registers can be read or written at any time, fast access time
 constant REG_DMAP0($4300) 
