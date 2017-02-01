@@ -23,13 +23,13 @@ y_loop:
     move r12, {width}
     x_loop:
         loop
-        plot
+         plot
     dec r7
     bne y_loop
-    inc r2
+     inc r2
 
     ret
-    nop
+     nop
 }
 
 // vim:ft=snes

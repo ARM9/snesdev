@@ -1,23 +1,24 @@
 
-macro ColumnMajorMap(variable width, variable height, variable mode) {
+macro ColumnMajorMap(width, height, mode) {
     // check if multiple of 16 because we pad with 8x8 px tiles on all 4 sides
-    if width%16 != 0 || height%16 != 0 {
+    if {width}%16 != 0 || {height}%16 != 0 {
         warning "ColumnMajorMap width or height NOT a multiple of 16!!"
     }
     constant max_cols(256/8)
     constant max_rows(224/8) // could theoretically have more with OBJ mode
-    variable cols(width/8)
-    variable rows(height/8)
+    variable cols({width}/8)
+    variable rows({height}/8)
     constant vert_padding((max_rows - rows))
     constant horiz_padding((max_cols - cols))
     variable map_size(cols*rows) // size in words
-    
-    if mode == 128 {
-        constant x_inc($10) // increments for next column
-    } else if mode == 160 {
-        constant x_inc($14)
+
+    // set map column incremen
+    if {mode} <= 128 {
+        constant x_inc($10) // 128
+    } else if {mode} <= 160 {
+        constant x_inc($14) // 160
     } else {
-        constant x_inc($18)
+        constant x_inc($18) // 192
     }
 
     variable tile(%0000'0000'0000'0000)

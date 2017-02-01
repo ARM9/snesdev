@@ -8,11 +8,13 @@ vbl_count:;             fill 2
 framebuffer_status:;    fill 2
 
 constant FRAMEBUFFER($702000)
-constant FRAMEBUFFER_SIZE($5400) // is actually $6100 (should be $6000?), need to limit plotting to $5400 by limiting x to 224
+constant FB_WIDTH(192)
+constant FB_HEIGHT(160)
+constant FRAMEBUFFER_SIZE(FB_WIDTH * FB_HEIGHT)
 
 constant VRAM_SCREEN1($0000)
 constant VRAM_SCREEN2($0000)
-constant VRAM_FB_MAP($6C00)
+constant VRAM_FB_MAP($7C00)//$6C00)
 
     bank0()
 scope chugFramebuffer: {

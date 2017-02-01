@@ -6,8 +6,8 @@ irq_index:;  fill 2
 scope Interrupts {
 
 define irq_htiming($00E0)
-define topIrq_vtiming($000E)
-define endIrq_vtiming($00CE)
+define topIrq_vtiming($001E)
+define endIrq_vtiming($00BE)
 
 setupIrq:
     //a8

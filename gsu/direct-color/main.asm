@@ -13,8 +13,6 @@ include "../../lib/zpage.inc"
 constant _STACK_TOP($2ff)
 include "../../lib/snes_init.inc"
 
-include "assets.asm"
-
 //-------------------------------------
 constant WRAM_PRG($7e8000) //relocated scpu program
 //-------------------------------------
@@ -31,6 +29,9 @@ include "../../lib/mem.inc"
 include "../../lib/timing.inc"
 include "framebuffer.asm"
 include "interrupts.asm"
+
+include "assets.asm"
+    
 //-------------------------------------
 
     zpage()
@@ -46,13 +47,9 @@ main: {
     rep #$30
     BlockMoveN($7E0000, $700000, $8000)
     phk; plb
-    // make screen border tile
-    lda.w #$ffff
-    sta.b zp0
-    sep #$20
-    FillVram($7E0000, $6A00, $20)
 
-    LoadVram(column_major_map, VRAM_FB_MAP, column_major_map.size)
+    sep #$20
+    LoadVram(fb_map, VRAM_FB_MAP, fb_map.size)
 
     LoadWram($008000, WRAM_PRG, $8000)
     LoadWram(dummy_vectors, $7E0104, dummy_vectors.size)
@@ -63,7 +60,7 @@ main: {
 scope wramMain: {
     sep #$20
 
-    lda.b #1
+    lda.b #GSU_CLSR_21MHZ
     sta.w GSU_CLSR  // Set clock frequency to 21.4MHz
 
     lda.b #(GSU_CFGR_IRQ_MASK)
@@ -72,7 +69,7 @@ scope wramMain: {
     lda.b #FRAMEBUFFER>>10
     sta.w GSU_SCBR  // Set screen base to $702000
 
-    lda.b #(GSU_SCMR_RON|GSU_SCMR_RAN) | GSU_SCMR_8BPP | GSU_SCMR_H192
+    lda.b #(GSU_SCMR_RON|GSU_SCMR_RAN) | GSU_SCMR_8BPP | GSU_SCMR_H160
     sta.w GSU_SCMR
     sta.w gsu_scmr_mirror
 
