@@ -29,9 +29,7 @@ _start:
 include "../../lib/dma.inc"
 include "../../lib/ppu.inc"
 include "../../lib/mem.inc"
-include "../../lib/timing.inc"
 include "framebuffer.asm"
-include "interrupts.asm"
 //-------------------------------------
 
     zpage()
@@ -45,20 +43,19 @@ gsu_scmr_mirror:;   fill 1
 main: {
     // wipe sram
     rep #$30
-    BlockMoveN($7E0000, $700000, $8000)
+    BlockMoveN($7E0000, $700000, $10000)
     phk; plb
     // make screen border tile
-    lda.w #$ffff
-    sta.b zp0
     sep #$20
-    FillVram($7E0000, $2A00, $20)
-    FillVram($7E0000, $3000+$2A00, $20)
+    lda.b #$00
+    sta.b zp0
+    FillVram($7E0000, $4000-$20, $40)
+    FillVram($7E0000, $8000-$20, $40)
 
     LoadVram(fb_map, VRAM_FB_MAP, fb_map.size)
     LoadCgram(sfx_pal, $00, sfx_pal.size)
 
     LoadWram($008000, WRAM_PRG, $8000)
-    LoadWram(dummy_vectors, $7E0104, dummy_vectors.size)
 
     jml $7E0000|(wramMain & $ffff)
 }
@@ -75,7 +72,7 @@ scope wramMain: {
     lda.b #FRAMEBUFFER>>10
     sta.w GSU_SCBR  // Set screen base to $702000
 
-    lda.b #(GSU_SCMR_RON|GSU_SCMR_RAN) | GSU_SCMR_4BPP | GSU_SCMR_H192
+    lda.b #(GSU_SCMR_RON|GSU_SCMR_RAN) | GSU_SCMR_8BPP | GSU_SCMR_H160
     sta.w GSU_SCMR
     sta.w gsu_scmr_mirror
 
@@ -88,7 +85,7 @@ scope wramMain: {
     stx.w GSU_R15   // GSU is booted on write to R15
 
     // Set up ppu
-    lda.b #1
+    lda.b #3
     sta.w REG_BGMODE
 
     lda.b #(VRAM_FB_MAP >> 8) & $FC
@@ -97,22 +94,21 @@ scope wramMain: {
     lda.b #0
     sta.w REG_BG12NBA
 
-    lda.b #$11
-    sta.w REG_TM    // Enable BG1 and OAM
+    lda.b #$01
+    sta.w REG_TM    // Enable BG1
 
-    jsr Interrupts.setupIrq
+    lda.b #GSU_SFR_GO
+-;  bit.w GSU_SFR   // Wait for GSU to stop
+    bne -
 
-_forever:
-    wai
+    stz.w GSU_SCMR
 
-    // turn on screen after first framebuffer is complete
-    lda.w framebuffer_counter
-    and.b #1
-    beq +
-        lda.b #$0F
-        sta.w inidisp_mirror
-+
-    bra _forever
+    LoadVram(FRAMEBUFFER, $0000, FB_SIZE)
+
+    lda.b #$0F
+    sta.w REG_INIDISP
+forever:
+    bra forever
 }
 
 include "gsu/main.asm"

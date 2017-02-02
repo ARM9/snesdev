@@ -52,7 +52,7 @@ main: {
     LoadVram(fb_map, VRAM_FB_MAP, fb_map.size)
 
     LoadWram($008000, WRAM_PRG, $8000)
-    LoadWram(dummy_vectors, $7E0104, dummy_vectors.size)
+    LoadWram(dummy_vectors, $7E0100, dummy_vectors.size)
 
     jml $7E0000|(wramMain & $ffff)
 }
@@ -85,7 +85,7 @@ scope wramMain: {
     lda.b #3
     sta.w REG_BGMODE
     lda.b #1
-    sta.w REG_CGWSEL
+    sta.w REG_CGWSEL    // enable direct color mode
 
     lda.b #(VRAM_FB_MAP >> 8) & $FC
     sta.w REG_BG1SC

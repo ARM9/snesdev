@@ -8,19 +8,32 @@ vbl_count:;             fill 2
 framebuffer_status:;    fill 2
 
 constant FRAMEBUFFER($702000)
-constant FRAMEBUFFER_SIZE($5400) // is actually $6100 (should be $6000?), need to limit plotting to $5400 by limiting x to 224
+constant FB_WIDTH(192)
+constant FB_HEIGHT(160)
+constant FB_BPP(8)  // bits per pixel
+constant FB_SIZE(FB_WIDTH * FB_HEIGHT * FB_BPP / 8)
 
-constant VRAM_SCREEN1($0000)
-constant VRAM_SCREEN2($3000)
-constant VRAM_FB_MAP($2C00)
+constant VRAM_SCREEN1($0000) // ] address of framebuffers in vram, in halfwords
+constant VRAM_SCREEN2($4000) // ]
+constant VRAM_FB_MAP($7C00)
 
     bank0()
+include "../../lib/gsu/map_gen.asm"
+scope fb_map: {
+    ColumnMajorMap(FB_WIDTH, FB_HEIGHT, FB_BPP, 0, 0x7fff, 4)
+}
+
 scope chugFramebuffer: {
-    //a8
-    //i16
+    php
+    rep #$10
+    sep #$20
+
     lda.b #GSU_SFR_GO
--;  bit.w GSU_SFR   // Wait for GSU to stop
-    bne -
+    bit.w GSU_SFR   // Wait for GSU to stop
+    beq +
+    plp
+    rts
++
 
     stz.w GSU_SCMR
 
@@ -30,7 +43,7 @@ scope chugFramebuffer: {
     sta.l vbl_count
     sep #$20
 
-    ldy.w #FRAMEBUFFER_SIZE / 2
+    ldy.w #FB_SIZE / 2
 
     and.b #1
     beq dma_fb_bottom
@@ -49,12 +62,12 @@ dma_fb_bottom:
         // dma bottom of framebuffer
         rep #$21
         lda.w doublebuffer_index
-        adc.w #FRAMEBUFFER_SIZE / 4
+        adc.w #FB_SIZE / 4
         tax
         sep #$20
         stx.w $2116
         lda.b #FRAMEBUFFER>>16
-        ldx.w #(FRAMEBUFFER + (FRAMEBUFFER_SIZE / 2))
+        ldx.w #(FRAMEBUFFER + (FB_SIZE / 2))
         jsr DMA.toVram
 
         lda.l framebuffer_status
@@ -85,6 +98,7 @@ dma_done:
     ora.b #GSU_SFR_GO
     sta.w GSU_SFR
 
+    plp
     rts
 }
 

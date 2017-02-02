@@ -55,7 +55,7 @@ main: {
     jsr setupVideo
 
     LoadWram($008000, WRAM_PRG, $8000)
-    LoadWram(dummy_vectors, $7E0104, dummy_vectors.size)
+    LoadWram(dummy_vectors, $7E0100, dummy_vectors.size)
 
     jml $7E0000|(wramMain & $ffff)
 }

@@ -111,7 +111,7 @@ scope fillScreen: {
 // clobbers:
 //  r3 r12 r13
     iwt r3, #FRAMEBUFFER
-    iwt r12, #FRAMEBUFFER_SIZE/2
+    iwt r12, #FB_SIZE/2
     move r13, {pc}
 -
     stw (r3)

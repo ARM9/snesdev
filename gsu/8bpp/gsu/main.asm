@@ -5,6 +5,8 @@ include "../../../lib/gsu/gsu.inc"
 
     bank0()
 _gsu_start:
+    sub r0
+    cmode
 
     AlignCache()
     cache
@@ -18,42 +20,43 @@ scope gsu_main: {
 draw:
         ibt r0, #$ff
         jal fillScreen
-        nop
-
-        sub r0
-        cmode
-        ibt r0, #2
-        color
-
-        iwt r1, #10
-        iwt r2, #12
-        iwt r3, #200
-        iwt r4, #260
-        jal drawLine
          nop
 
-        //define x(r1)
-        //define y(r2)
-        //define x_max(r3)
-        //define y_max(r4)
-        //ibt {y}, #0
-        //iwt {x_max}, #224
-        //iwt {y_max}, #64
-//-
-        //with {y}
-        //color
+        define x(r1)
+        define y(r2)
+        define x_len(r3)
+        define y_max(r4)
+        define x2(r5)
+        define pal2(r6)
+        ibt {y}, #8
+        iwt {x_len}, #(FB_WIDTH-32)/2
+        iwt {x2}, #8+(FB_WIDTH-32)/2
+        iwt {y_max}, #128
+        iwt {pal2}, #128
+-
+        with {y}
+        color
 
-        //ibt {x}, #0
-        //move r12, {x_max}
-        //move r13, r15
-        //loop
-        //plot
+        ibt {x}, #16
+        move r12, {x_len}
+        move r13, r15
+        loop
+         plot
 
-        //inc {y}
-        //with {y}
-        //cmp {y_max}
-        //bne -
-         //nop
+        from {y}
+        add {pal2}
+        color
+        move {x}, {x2}
+        move r12, {x_len}
+        move r13, r15
+        loop
+         plot
+
+        inc {y}
+        with {y}
+        cmp {y_max}
+        bne -
+         nop
 
         rpix // flush pixel cache
 
@@ -80,13 +83,13 @@ scope fillScreen: {
 // clobbers:
 //  r3 r12 r13
     iwt r3, #FRAMEBUFFER
-    iwt r12, #FRAMEBUFFER_SIZE/2
+    iwt r12, #FB_SIZE/2
     move r13, {pc}
 -
     stw (r3)
     inc r3
     loop
-    inc r3
+     inc r3
 
     ret
      nop
@@ -96,6 +99,5 @@ if pc()-gsu_main > 512 {
 warning "program too big for cache"
 }
 
-include "bresenham.asm"
 include "../../../lib/lut/sin8.inc"
 // vim:ft=snes

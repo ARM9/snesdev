@@ -34,9 +34,9 @@ seek($FFE4)             // native vectors
     dw 0                // cop
     dw 0                // brk
     dw 0                // abort
-    dw $10A             // nmi
+    dw $108             // nmi
     dw 0                // unused
-    dw $10E             // irq
+    dw $10C             // irq
     dw 0, 0             // -
 seek($FFF4)             // emulation mode vectors
     dw 0                // cop

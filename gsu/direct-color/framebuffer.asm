@@ -10,13 +10,19 @@ framebuffer_status:;    fill 2
 constant FRAMEBUFFER($702000)
 constant FB_WIDTH(192)
 constant FB_HEIGHT(160)
-constant FRAMEBUFFER_SIZE(FB_WIDTH * FB_HEIGHT)
+constant FB_BPP(8)
+constant FB_SIZE(FB_WIDTH * FB_HEIGHT * FB_BPP/8)
 
 constant VRAM_SCREEN1($0000)
 constant VRAM_SCREEN2($0000)
-constant VRAM_FB_MAP($7C00)//$6C00)
+constant VRAM_FB_MAP($7C00)
 
     bank0()
+include "../../lib/gsu/map_gen.asm"
+scope fb_map: {
+ColumnMajorMap(FB_WIDTH, FB_HEIGHT, FB_BPP, 0, 0x7800, 0)
+}
+
 scope chugFramebuffer: {
     //a8
     //i16
@@ -35,7 +41,7 @@ scope chugFramebuffer: {
     sta.l vbl_count
     sep #$20
 
-    ldy.w #FRAMEBUFFER_SIZE / 2
+    ldy.w #FB_SIZE / 2
 
     and.b #1
     beq dma_fb_bottom
@@ -54,12 +60,12 @@ dma_fb_bottom:
         // dma bottom of framebuffer
         rep #$21
         lda.w doublebuffer_index
-        adc.w #FRAMEBUFFER_SIZE / 4
+        adc.w #FB_SIZE / 4
         tax
         sep #$20
         stx.w $2116
         lda.b #FRAMEBUFFER>>16
-        ldx.w #(FRAMEBUFFER + (FRAMEBUFFER_SIZE / 2))
+        ldx.w #(FRAMEBUFFER + (FB_SIZE / 2))
         jsr DMA.toVram
 
         lda.l framebuffer_status

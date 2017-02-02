@@ -79,7 +79,7 @@ irqHandler:
     bmi + // Check if IRQ was triggered by console
     lda.l GSU_SFR // else clear gsu irq and do nothing in particular
     pla
-    rtl
+    rti
 
 +;  sei
     phb; phx; phy
@@ -92,28 +92,27 @@ irqHandler:
     
     rep #$30
     ply; plx; plb; pla
-    rtl
+    rti
 }
 
     bank0()
-//Interrupt vectors to be executed during 65816 operation in WRAM
+// Interrupt vectors to be executed during 65816 operation in WRAM
+// copy to $7E0100
 scope dummy_vectors: {
-    nop //cop
+    nop // 0100 brk, abort
     nop
-    nop //brk
-    nop
-    stp //abort
-    nop
-    bra + //NMI
-    //nop
-    nop //unused
-    nop
-    //IRQ
-    jsl $7E0000 | (Interrupts.irqHandler & $FFFF)
+    nop // padding
     rti
-+;  jsl $7E0000 | (Interrupts.nmiHandler & $FFFF)
+    nop // 0104 cop
+    nop
+    nop // padding
     rti
+    // 0108 NMI
+    jml $7E0000 | (Interrupts.nmiHandler & $FFFF)
+    // 010C IRQ
+    jml $7E0000 | (Interrupts.irqHandler & $FFFF)
 constant size(pc() - dummy_vectors)
 }
+
 
 // vim:ft=snes
