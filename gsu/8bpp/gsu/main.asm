@@ -4,74 +4,59 @@
 include "../../../lib/gsu/gsu.inc"
 
     bank0()
-_gsu_start:
+scope gsu: {
+
+start:
     sub r0
     cmode
 
     AlignCache()
     cache
-scope gsu_main: {
-    lms r0, (framebuffer_status) // check if framebuffer dma has completed
-    ror
-    bcc draw
+scope main: {
+    ibt r0, #$ff
+    jal fillScreen
      nop
-    iwt r15, #dont_draw
-     nop
-draw:
-        ibt r0, #$ff
-        jal fillScreen
-         nop
 
-        define x(r1)
-        define y(r2)
-        define x_len(r3)
-        define y_max(r4)
-        define x2(r5)
-        define pal2(r6)
-        ibt {y}, #8
-        iwt {x_len}, #(FB_WIDTH-32)/2
-        iwt {x2}, #8+(FB_WIDTH-32)/2
-        iwt {y_max}, #128
-        iwt {pal2}, #128
+    define x(r1)
+    define y(r2)
+    define x_len(r3)
+    define y_max(r4)
+    define x2(r5)
+    define pal2(r6)
+    ibt {y}, #8
+    iwt {x_len}, #(FB_WIDTH-32)/2
+    iwt {x2}, #8+(FB_WIDTH-32)/2
+    iwt {y_max}, #128
+    iwt {pal2}, #128
 -
-        with {y}
-        color
+    with {y}
+    color
 
-        ibt {x}, #16
-        move r12, {x_len}
-        move r13, r15
-        loop
-         plot
+    ibt {x}, #16
+    move r12, {x_len}
+    move r13, r15
+    loop
+     plot
 
-        from {y}
-        add {pal2}
-        color
-        move {x}, {x2}
-        move r12, {x_len}
-        move r13, r15
-        loop
-         plot
+    from {y}
+    add {pal2}
+    color
+    move {x}, {x2}
+    move r12, {x_len}
+    move r13, r15
+    loop
+     plot
 
-        inc {y}
-        with {y}
-        cmp {y_max}
-        bne -
-         nop
+    inc {y}
+    with {y}
+    cmp {y_max}
+    bne -
+     nop
 
-        rpix // flush pixel cache
-
-        stop
-        nop
-
-        iwt r15, #gsu_main
-         nop
-dont_draw:
+    rpix // flush pixel cache
 
     stop
     nop
-
-    iwt r15, #gsu_main
-     nop
 }
 
 scope fillScreen: {
@@ -94,8 +79,9 @@ scope fillScreen: {
     ret
      nop
 }
+}
 
-if pc()-gsu_main > 512 {
+if pc()-gsu.main > 512 {
 warning "program too big for cache"
 }
 

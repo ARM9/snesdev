@@ -29,6 +29,7 @@ _start:
 include "../../lib/dma.inc"
 include "../../lib/ppu.inc"
 include "../../lib/mem.inc"
+include "../../lib/timing.inc"
 include "framebuffer.asm"
 //-------------------------------------
 
@@ -78,10 +79,10 @@ scope wramMain: {
 
     stz.w GSU_RAMBR
 
-    lda.b #_gsu_start>>16
+    lda.b #gsu.start>>16
     sta.w GSU_PBR
 
-    ldx.w #_gsu_start
+    ldx.w #gsu.start
     stx.w GSU_R15   // GSU is booted on write to R15
 
     // Set up ppu
@@ -105,6 +106,11 @@ scope wramMain: {
 
     LoadVram(FRAMEBUFFER, $0000, FB_SIZE)
 
+    lda.b #-1
+    sta.w REG_BG1VOFS
+    stz.w REG_BG1VOFS
+
+    WaitForVblank()
     lda.b #$0F
     sta.w REG_INIDISP
 forever:

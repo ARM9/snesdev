@@ -94,9 +94,6 @@ scope wramMain: {
     lda.b #(VRAM_FB_MAP >> 8) & $FC
     sta.w REG_BG1SC
 
-    lda.b #0
-    sta.w REG_BG12NBA
-
     lda.b #1
     sta.w REG_TM
 

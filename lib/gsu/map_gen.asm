@@ -6,9 +6,10 @@
 // height: map height in pixels
 // bpp: bits per pixel, used to calculate vram offsets
 // palette: palette used for framebuffer (0-7), in direct color mode this corresponds to extra rgb bits
-// blank_addr: map entry for tile used for letterboxing
+// prio: priority bit, 1 or 0
+// blank_addr: vram address of tile used for letterboxing
 // blank_pal: palette number for blank tile
-macro ColumnMajorMap(width, height, bpp, palette, blank_addr, blank_pal) {
+macro ColumnMajorMap(width, height, bpp, palette, prio, blank_addr, blank_pal) {
     // check if multiple of 16 because we pad with 8x8 px tiles on all 4 sides
     if {width}%16 != 0 || {height}%16 != 0 {
         warning "ColumnMajorMap width or height NOT a multiple of 16!!"
@@ -37,8 +38,9 @@ macro ColumnMajorMap(width, height, bpp, palette, blank_addr, blank_pal) {
     }
 
     // map format: vhop ppcc cccc cccc
-    variable blank_tile(({blank_addr}/{bpp}/8) | ({blank_pal}<<10))
-map_data{#}:
+    // always set priority 1 on letterbox tiles
+    variable blank_tile((1<<13) | ({blank_pal}<<10) | ({blank_addr}/{bpp}/8))
+CMMmap_data{#}:
     // fill top rows
     variable i(max_cols*vert_padding/2)
     while i > 0 {
@@ -59,7 +61,7 @@ map_data{#}:
         // framebuffer
         variable x(0)
         while x < cols {
-            dw (x*x_inc + y) | ({palette}<<10)
+            dw (x*x_inc + y) | ({palette}<<10) | ({prio}<<13)
             variable x(x+1)
             variable i(i-1)
         }
@@ -78,7 +80,7 @@ map_data{#}:
         dw blank_tile
         variable i(i-1)
     }
-    constant size(pc() - map_data{#})
+    constant size(pc() - CMMmap_data{#})
 }
 
 // vim:ft=snes

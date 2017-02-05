@@ -17,15 +17,17 @@ macro WDSP_REG(REG) {
   stw REG_DSPADDR
 }
 
-macro SPCInit() { // SPC700 Initialisation
-  WDSP(DSP_FLG, #$20)  // Disable Echo Buffer Writes
-  WDSP(DSP_KON, #$00)  // Reset Key On Flags
-  WDSP(DSP_KOFF, #$FF) // Set Key Off Flags
-  WDSP(DSP_PMON, #$00) // Reset Pitch Modulation Enable Flags
-  WDSP(DSP_NON, #$00)  // Reset Noise Enable Flags
-  WDSP(DSP_EON, #$00)  // Reset Echo On Flags
-  WDSP(DSP_EVOLL, #0)  // Reset Echo Volume Left
-  WDSP(DSP_EVOLR, #0)  // Reset Echo Volume Right
+macro DSPInit() { // SPC700 Initialisation
+  WDSP(DSP_FLG, #$20)   // Disable Echo Buffer Writes
+  WDSP(DSP_KON, #$00)   // Reset Key On Flags
+  WDSP(DSP_KOFF, #$FF)  // Set Key Off Flags
+  WDSP(DSP_PMON, #$00)  // Reset Pitch Modulation Enable Flags
+  WDSP(DSP_NON, #$00)   // Reset Noise Enable Flags
+  WDSP(DSP_EON, #$00)   // Reset Echo On Flags
+  WDSP(DSP_EVOLL, #$00) // Reset Echo Volume Left
+  WDSP(DSP_EVOLR, #$00) // Reset Echo Volume Right
+  //WDSP(DSP_MVOLL, #$7F) // Reset Master Volume Left
+  //WDSP(DSP_MVOLR, #$7F) // Reset Master Volume Right
 }
 
 macro scope SPCWaitMS(AMOUNT) { // Wait For MilliSecond Amount (Granularity = 1ms, Max Wait = 255ms)
@@ -133,16 +135,16 @@ macro WriteCTRL(BYTE) { // Write Byte To SPC-700 Control Register
   SPCLoadByte() // Control DATA To $F1
 }
 
-constant C#(11)
+constant Db(11)
 constant D(10)
-constant D#(9)
+constant Eb(9)
 constant E(8)
 constant F(7)
-constant F#(6)
+constant Gb(6)
 constant G(5)
-constant G#(4)
+constant Ab(4)
 constant A(3)
-constant A#(2)
+constant Bb(2)
 constant B(1)
 constant C(0)
 

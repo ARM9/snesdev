@@ -20,7 +20,7 @@ constant VRAM_FB_MAP($7C00)
     bank0()
 include "../../lib/gsu/map_gen.asm"
 scope fb_map: {
-ColumnMajorMap(FB_WIDTH, FB_HEIGHT, FB_BPP, 0, 0x7800, 0)
+ColumnMajorMap(FB_WIDTH, FB_HEIGHT, FB_BPP, 0, 0, 0x7800, 0)
 }
 
 scope chugFramebuffer: {

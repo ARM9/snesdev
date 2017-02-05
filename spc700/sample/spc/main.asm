@@ -6,8 +6,6 @@ include "../../../lib/spc700/spc700_init.inc"
 
     //spc_zpage()
     origin 0
-foo:; fill 5
-bar:; fill 5
 
     //spc_code()
     origin 0
@@ -33,20 +31,22 @@ macro start_note(pitch, chan, inst) {
 
 main:
     clp
-    jsr init_dsp
+    DSPInit()
+    WDSP(DSP_DIR,  #directory>>8)
+    WDSP(DSP_KOFF,  #$00)
 
-    // Have timer 0 tick at TIMER_BPM
+    WDSP(DSP_MVOLL, #$7F)
+    WDSP(DSP_MVOLR, #$7F)
+
+    // Timer 0 TIMER_BPM
     str REG_T0DIV=#(8000 + TIMER_BPM/2) / TIMER_BPM
     str REG_CONTROL=#$81    // enable IPL ROM and TIMER0
 
-    // Start the three notes of major chord with some delay between each
-    //start_note BASE_PITCH*4/4, 0, 3
     start_note((BASE_PITCH+100)*5/4, 2, 1)
 
     lda #100
     jsr delay_beats
     start_note((BASE_PITCH+140)*5/4, 2, 1)
-    //start_note BASE_PITCH*5/4, 1, 2
 
     lda #100
     jsr delay_beats
@@ -55,25 +55,6 @@ main:
 
 _forever:
     bra _forever
-
-
-// Initializes global DSP registers
-init_dsp:
-    WDSP(DSP_FLG,  #$20)
-    WDSP(DSP_KON,  #0)
-    WDSP(DSP_KOFF, #$FF)
-    WDSP(DSP_DIR,  #directory>>8)
-
-    WDSP(DSP_PMON,  #0)
-    WDSP(DSP_KOFF,  #0)
-    WDSP(DSP_NON,   #0)
-    WDSP(DSP_EON,   #0)
-    WDSP(DSP_MVOLL, #$7F)
-    WDSP(DSP_MVOLR, #$7F)
-    WDSP(DSP_EVOLL, #0)
-    WDSP(DSP_EVOLR, #0)
-
-    rts
 
 // Moves data to x OR addr. X should be $00, $10 ... $70 to select the voice.
 // Data can be #immediate or Y.
