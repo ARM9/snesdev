@@ -75,7 +75,7 @@ define i(r8)    // s16
      plot
     //     int err = dx / 2
         define err(r0)
-        from {dx}; div2
+        from {dx}; asr
 
         move {i}, {dx}
     //     for (int i = dx; i >= 0; --i) {
@@ -105,7 +105,7 @@ end:
 ymajor:
     //     int err = dy / 2
         define err(r0)
-        from {dy}; div2
+        from {dy}; asr
 
         move {i}, {dy}
     //     for (int i = dy; i >= 0; --i) {
@@ -140,3 +140,4 @@ ymajor:
 }
 
 // vim:ft=snes
+
