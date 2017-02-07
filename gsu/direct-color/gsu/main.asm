@@ -103,9 +103,9 @@ dont_draw:
 }
 
 scope fillScreen: {
-// returns: void
-// args:
+// in:
 //  u16 r0 = fill value
+// out: void
 // vars:
 //  u16* r3 = screen base
 // clobbers:

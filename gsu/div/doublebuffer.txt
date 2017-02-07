@@ -1,7 +1,0 @@
-
-base = 0x2000
-size = 0x5400
-page0 = base
-page1 = base+size
-scbr0 = base>>10
-scbr1 = base+size>>10

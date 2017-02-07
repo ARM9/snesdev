@@ -2,17 +2,15 @@
     arch snes.gsu
 
 scope drawRect: {
-// returns: void
-// args:
+// in:
     // color r0
     define x1(r3)       // u8
     define y1(r4)       // u8
     define width(r5)    // u8
     define height(r6)   // u8
-// vars:
-
+// out: void
 // clobbers:
-//  r1-r2,r7,r12-r13
+//  r1 r2 r7 r12 r13
 
     color
     move r2, {y1}

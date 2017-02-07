@@ -43,22 +43,12 @@ gsu_scmr_mirror:;   fill 1
 
     bank0()
 main: {
-    // wipe sram
-    rep #$30
-    BlockMoveN($7E0000, $700000, $8000)
     phk; plb
-    // make screen border tile
-    lda.w #$ffff
-    sta.b zp0
-    sep #$20
-    FillVram($7E0000, $2A00, $20)
-    FillVram($7E0000, $3000+$2A00, $20)
 
-    LoadVram(column_major_map, VRAM_FB_MAP, column_major_map.size)
-    LoadCgram(sfx_pal, $00, sfx_pal.size)
+    rep #$10
+    sep #$20
 
     LoadWram($008000, WRAM_PRG, $8000)
-    LoadWram(dummy_vectors, $7E0100, dummy_vectors.size)
 
     jml $7E0000|(wramMain & $ffff)
 }
@@ -72,8 +62,8 @@ scope wramMain: {
     lda.b #(GSU_CFGR_IRQ_MASK | GSU_CFGR_FASTMUL)
     sta.w GSU_CFGR
 
-    lda.b #FRAMEBUFFER>>10
-    sta.w GSU_SCBR  // Set screen base to $702000
+    lda.b #0
+    sta.w GSU_SCBR  // Set screen base to $700000
 
     lda.b #(GSU_SCMR_RON|GSU_SCMR_RAN) | GSU_SCMR_4BPP | GSU_SCMR_H192
     sta.w GSU_SCMR
@@ -81,17 +71,17 @@ scope wramMain: {
 
     stz.w GSU_RAMBR
 
-    lda.b #_gsu_start>>16
+    lda.b #gsu.start>>16
     sta.w GSU_PBR
 
-    ldx.w #_gsu_start
+    ldx.w #gsu.start
     stx.w GSU_R15   // GSU is booted on write to R15
 
     // Set up ppu
     lda.b #1
     sta.w REG_BGMODE
 
-    lda.b #(VRAM_FB_MAP >> 8) & $FC
+    lda.b #0
     sta.w REG_BG1SC
 
     lda.b #0
@@ -100,19 +90,8 @@ scope wramMain: {
     lda.b #1
     sta.w REG_TM
 
-    jsr Interrupts.setupIrq
-
-_forever:
-    wai
-
-    // turn on screen after first framebuffer is complete
-    lda.w framebuffer_counter
-    and.b #1
-    beq +
-        lda.b #$0F
-        sta.w inidisp_mirror
-+
-    bra _forever
+-
+    bra -
 }
 
 include "gsu/main.asm"

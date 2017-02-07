@@ -76,11 +76,55 @@ print "div size: "
 print pc()-div
 print " bytes\n"
 
-scope rcp8_lut: {
-variable x(1)
-while x <= 128 {
-    db 0x100/x
-    variable x(x+1)
+// s8.8/u8
+scope div16x8: {
+// in:
+//  s16 numerator
+define num(r6)
+//  u8 denominator
+define den(r1)
+// out:
+//  s16 r0 = r6/r1
+
+    //ibt r0, #rcp_lut>>16
+    //romb
+
+    // den *= 2 for indexing into lut
+    with {den}; add {den}
+    iwt r0, #rcp_lut
+    to r14; add {den}   // r14 = rcp_lut + denominator
+    getb
+    inc r14
+    getbh
+
+    // use lmult to debug low word
+    //lmult // r0:r4 = r0 * r6  r0=hi16 r4=lo16
+    fmult   // r0 = r0 * r6 >> 16, carry = msb of low 16 bits of result
+
+    // precision is off by one bit for x/1
+
+    // 'rounds' fraction down
+    //adc r0
+
+    // 'rounds' fraction up (more like a bias towards higher values since it
+    // doesn't always round the fraction up, ex 0x2103/52 = 0x00a2 for both)
+    adc #0
+    add r0
+
+    ret
+     nop
+}
+
+// TODO move to sram for faster reads
+scope rcp_lut: {
+dw 0    // filler word to fix indexing otherwise 1/1 gets the value for 1/2 etc.
+constant precision((1<<15) - 1)
+variable i(1)
+while i <= 255 {
+    dw precision / i
+    //print precision / i
+    //print "\n"
+    variable i(i+1)
 }
 }
 
