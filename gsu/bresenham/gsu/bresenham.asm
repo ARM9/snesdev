@@ -78,7 +78,7 @@ define i(r8)    // s16
         from {dx}; div2
 
         move {i}, {dx}
-    //     while (x1 != x2) {
+    //     for (int i = dx; i >= 0; --i) {
 -
             dec {i}
             bmi end
@@ -108,7 +108,7 @@ ymajor:
         from {dy}; div2
 
         move {i}, {dy}
-    //     while (y1 != y2) {
+    //     for (int i = dy; i >= 0; --i) {
 -
             dec {i}
             bmi end
@@ -121,6 +121,7 @@ ymajor:
              nop
     //             err = err + dy
                 add {dy}
+    //             plot(x1,y1)
                 bra -
                  plot
     //         } else {
@@ -129,11 +130,11 @@ ymajor:
             // auto increments
     //             x1 = x1 - incx
                 dec {x1}
+    //             plot(x1,y1)
+                bra -
+                 plot
     //         }
 
-    //         plot(x1,y1)
-        bra -
-         plot
     //     }
     // }
 }
