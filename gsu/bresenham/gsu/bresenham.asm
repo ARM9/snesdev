@@ -17,7 +17,6 @@ define y2(r4)   // s16
 define dx(r5)   // s16
 define dy(r6)   // s16
 define incy(r7) // s16
-define i(r8)    // s16
 
     // if (x2 < x1) {
     from {x2}; sub {x1}
@@ -34,7 +33,6 @@ define i(r8)    // s16
         move {y2}, r5
     //}
 +
-    // }
     // int dx = abs(x2 - x1)
     bpl +
      nop
@@ -77,11 +75,11 @@ define i(r8)    // s16
         define err(r0)
         from {dx}; asr
 
-        move {i}, {dx}
+        moves r12, {dx}
+        beq end
     //     for (int i = dx; i >= 0; --i) {
+        move r13, r15
 -
-            dec {i}
-            bmi end
     //         err = err - dy
             sub {dy}
     //         if (err < 0) {
@@ -94,7 +92,7 @@ define i(r8)    // s16
     +
     //         x1 = x1 + incx
     //         plot(x1,y1)
-        bra -
+        loop
          plot
     //     }
 
@@ -107,35 +105,30 @@ ymajor:
         define err(r0)
         from {dy}; asr
 
-        move {i}, {dy}
+        moves r12, {dy}
+        beq end
     //     for (int i = dy; i >= 0; --i) {
+        move r13, r15
 -
-            dec {i}
-            bmi end
     //         y1 = y1 + incy
             with {y1}; add {incy}
     //         err = err - dx
             sub {dx}
     //         if (err < 0) {
             bpl +
-             nop
+             dec {x1}
+    //             x1 = x1 + incx
+                inc {x1}
     //             err = err + dy
                 add {dy}
-    //             plot(x1,y1)
-                bra -
-                 plot
-    //         } else {
-    +
-            // if we don't want to increment, decrement x1 instead since plot
-            // auto increments
-    //             x1 = x1 - incx
-                dec {x1}
-    //             plot(x1,y1)
-                bra -
-                 plot
     //         }
-
+    //     plot(x1,y1)
+    +
+            loop
+             plot
     //     }
+    ret
+     nop
     // }
 }
 

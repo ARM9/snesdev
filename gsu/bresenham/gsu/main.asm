@@ -3,6 +3,25 @@
 
 include "../../../lib/gsu/gsu.inc"
 
+macro DrawPixel(x, y, c) {
+    ibt r0, #{c}
+    color
+    iwt r1, #{x}
+    iwt r2, #{y}
+    plot
+}
+
+macro DrawLine(x1, y1, x2, y2, c) {
+    ibt r0, #{c}
+    color
+    iwt r1, #{x1}
+    iwt r2, #{y1}
+    iwt r3, #{x2}
+    iwt r4, #{y2}
+    jal drawLine
+     nop
+}
+
     sram0()
 line_x:; fill 2
 line_y:; fill 2
@@ -14,19 +33,23 @@ _gsu_start:
 
     sub r0 // fast way to set r0 = 0
     cmode // cmode = 0, see lib/snes_regs_gsu.inc for further information
-    ibt r0, #12
-    color
 
     AlignCache()
     cache
 scope gsu_main: {
     lms r0, (framebuffer_status) // check if framebuffer dma has completed
     ror
-    bcs dont_draw
-    nop
+    bcc draw
+     nop
+    iwt r15, #dont_draw
+     nop
+draw:
         ibt r0, #$ff
         jal fillScreen
-        nop
+         nop
+
+        ibt r0, #12
+        color
 
         iwt r0, #lut.sin8
         move r5, r0
@@ -41,15 +64,58 @@ scope gsu_main: {
         lms r2, (line_y)
         to r4; getb     // r4 = [romb:r14]  cos(x)
         jal drawLine
-        nop
+         nop
+
+        define x1(220)
+        define y1(190)
+        define x2(2)
+        define y2(50)
+
+        DrawLine(1, 1, 1, 1, 4)
+
+        DrawLine({x1}, {y1}, {x2}, {y2}, 4)
+        DrawLine({x2}+2, {y2}, {x1}+2, {y1}, 6)
+
+        DrawPixel({x1}, {y1}, 7)
+        DrawPixel({x2}, {y2}, 7)
+
+        DrawLine(100, 180, 220, 20, 5)
+        DrawLine(10, 180, 212, 191, 5)
+
+        // dy == dx
+        define x1(10)
+        define y1(10)
+        define x2(60)
+        define y2(60)
+        DrawLine({x1}, {y1}, {x2}, {y2}, 4)
+        DrawPixel({x1}-1, {y1}, 7)
+        DrawPixel({x2}-1, {y2}, 7)
+
+        // dy > dx
+        define x1(101)
+        define y1(20)
+        define x2(100)
+        define y2(80)
+        DrawLine({x1}, {y1}, {x2}, {y2}, 4)
+        DrawPixel({x1}-1, {y1}, 7)
+        DrawPixel({x2}-1, {y2}, 7)
+
+        // dy < dx
+        define x1(20)
+        define y1(5)
+        define x2(100)
+        define y2(9)
+        DrawLine({x1}, {y1}, {x2}, {y2}, 4)
+        DrawPixel({x1}, {y1}+1, 7)
+        DrawPixel({x2}, {y2}+1, 7)
 
         rpix // flush pixel cache
 
         stop
         nop
 
-        bra gsu_main
-        nop
+        iwt r15, #gsu_main
+         nop
 dont_draw:
     lms r0, (line_x)
     inc r0
@@ -64,8 +130,8 @@ dont_draw:
     stop
     nop
 
-    bra gsu_main
-    nop
+    iwt r15, #gsu_main
+     nop
 }
 
 scope fillScreen: {
@@ -83,10 +149,10 @@ scope fillScreen: {
     stw (r3)
     inc r3
     loop
-    inc r3
+     inc r3
 
     ret
-    nop
+     nop
 }
 
 include "bresenham.asm"
