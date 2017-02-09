@@ -19,8 +19,10 @@ scope chugFramebuffer: {
     //a8
     //i16
     lda.b #GSU_SFR_GO
--;  bit.w GSU_SFR   // Wait for GSU to stop
-    bne -
+    bit.w GSU_SFR   // Wait for GSU to stop
+    beq +
+    rts
++
 
     stz.w GSU_SCMR
 

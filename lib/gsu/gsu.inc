@@ -26,7 +26,7 @@ macro AlignCache() {
 }
 
 // full descending stack
-macro pushr(reg) {
+macro push(reg) {
     dec r10; dec r10
     if ({reg} != 0) {
         with r{reg}
@@ -35,7 +35,7 @@ macro pushr(reg) {
 }
 
 // empty descending would allow popr(r15) sub return
-macro popr(reg) {
+macro pop(reg) {
     if ({reg} != 0) {
         with r{reg}
     }
@@ -43,45 +43,80 @@ macro popr(reg) {
     inc r10; inc r10
 }
 
+// still same size as their word counterpart due to alt byte for stb/ldb
+// popb is 1 cycle faster in cache than pop word, and stb is potentially 1
+// cycle faster in cache
+// otherwise ldb/stb are slower but push word also has +3 cycles from an extra
+// dec/inc so pushb/popb are still a little faster
+macro pushb(reg) {
+    dec r10
+    if ({reg} != 0) {
+        with r{reg}
+    }
+    stb (r10)
+}
+macro popb(reg) {
+    if ({reg} != 0) {
+        with r{reg}
+    }
+    ldb (r10)
+    inc r10
+}
+
+// pass r0 as a, max(0,1) better than max(1,0) cba to make a conditional
 macro max(a, b) {
-// output:
-//  s16 r0  = the bigger number
-// input:
+// out:
+//  r0      = the bigger number
+//  flags   = updates O S Z see MOVES
+// in:
 //  s16 a
 //  s16 b
 // vars:
 // clobbers:
 //  r0
+
     // a < b ? b : a;
-    from {a}; sub {b}
+
+    if {a} != 0 {
+        from r{a};
+    }
+    sub r{b}
     blt L0{#};
      with r0
-    bra L1{#};
-     from {a}
-L0{#}:
     //moves r0, {a}
-    from {b}
+    bra L1{#};
+     from r{a}
+L0{#}:
+    //moves r0, {b}
+    from r{b}
 L1{#}:
 }
 
 macro min(a, b) {
-// output:
-//  s16 r0  = the smaller number
-// input:
+// out:
+//  r0      = the smaller number
+//  flags   = updates O S Z see MOVES
+// in:
 //  s16 a
 //  s16 b
 // vars:
 // clobbers:
 //  r0
+
     // a < b ? a : b;
-    from {a}; sub {b}
+
+    if {a} != 0 {
+        from r{a}
+    }
+    sub r{b}
     blt L0{#};
      with r0
+    //moves r0, {b}
     bra L1{#};
-     from {b}
+     from r{b}
 L0{#}:
     //moves r0, {a}
-    from {a}
+    from r{a}
 L1{#}:
 }
 

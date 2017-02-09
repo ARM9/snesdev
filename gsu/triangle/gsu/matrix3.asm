@@ -25,7 +25,7 @@ scope mulMat3Vec3: {
     // [m11 m12 m13]   [x1]   [m11*x1+m12*y1+m13*z1]
     // [m21 m22 m23] * [y1] = [m21*x1+m22*y1+m23*z1]
     // [m31 m32 m33]   [z1]   [m31*x1+m32*y1+m33*z1]
-    pushr(11)
+    push(11)
     move r13, r15
 L0:
     to {x1}; getb       // x1 = vec3_in[0]
@@ -94,7 +94,7 @@ L0:
     loop
     inc {vec3_out}
     
-    popr(11); ret
+    pop(11); ret
     nop
 }
 

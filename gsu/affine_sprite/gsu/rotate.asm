@@ -29,7 +29,7 @@ define ys(r7)       // /
 //X2 = (Y1 * sin(Angle) >> 15) + (X1 * cos(Angle) >> 15);
 //Y2 = (Y1 * cos(Angle) >> 15) - (X1 * sin(Angle) >> 15);
 
-    pushr(11)
+    push(11)
 
     //sin(angle)
     iwt r0, #lut.sin8
@@ -111,7 +111,7 @@ _loopxexit:
     inc {y1}
     }
 
-    popr(11)
+    pop(11)
     ret
     nop
 }

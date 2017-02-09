@@ -21,14 +21,14 @@ _gsu_start:
 
     //ibt r0, #$f5
     jal srand
-    rol
+     rol
 
     sub r0
     cmode
 
     //ibt r0, #$ff
     jal fillScreen
-    sub r0
+     sub r0
 
     AlignCache()
     cache
@@ -36,7 +36,7 @@ scope gsu_main: {
     lms r0, (framebuffer_status) // check if framebuffer dma has completed
     ror
     bcc _draw
-    nop
+     nop
 change_scene:
     //jal updateCoords
     //nop
@@ -49,18 +49,18 @@ change_scene:
     sbk
     sub r2
     bne + // r0 != r2
-    nop
+     nop
 
     ibt r5, #$81 // scene 1
 
     bra _store_scene
-    nop
+     nop
 +
     iwt r2, #30*scene_duration*2
     move r0, r3
     sub r2
     bne _change_scene_end // r0 < r2
-    nop 
+     nop 
 
     sub r0
     sms (scene_timer), r0
@@ -75,24 +75,24 @@ _change_scene_end:
     nop
 
     bra gsu_main
-    nop
+     nop
 
 _draw:
     lms r0, (scene)
     move r5, r0
     rol
     bcc + // clear screen if needed
-    nop
+     nop
     //ibt r0, #$ff
     jal fillScreen
-    sub r0
+     sub r0
 +
     move r0, r5
     and #1
     sms (scene), r0
     ror
     bcc line_scene
-    nop
+     nop
 
 circle_scene:
 
@@ -114,7 +114,7 @@ circle_scene:
     iwt r3, #140
     ibt r4, #90
     jal drawCircle
-    nop
+     nop
 
     lms r0, (line_x)
     move r5, r0
@@ -126,16 +126,16 @@ circle_scene:
     ibt r3, #69
     ibt r4, #70
     jal drawCircle
-    nop
+     nop
 
     jal updateCoords
-    nop
+     nop
 
     loop
-    nop
+     nop
 
     bra end_frame
-    nop
+     nop
 
 line_scene:
     //lms r0, (scene_timer)
@@ -149,7 +149,7 @@ line_scene:
     //sbk
 
     jal rand
-    nop
+     nop
 
     // set up loop
     ibt r12, #10
@@ -160,7 +160,8 @@ line_scene:
     lsr #2
     color
 
-    dec r10; dec r10; from r12; stw (r10)
+    push(12)
+    push(13)
 
     lms r6, (sram_rand_seed2)
     iwt r0, #lut.sin8
@@ -178,14 +179,15 @@ line_scene:
     to r4
     getb
     jal drawLine
-    nop
+     nop
 
     jal updateCoords
-    nop
+     nop
 
-    to r12; ldw (r10); inc r10
+    pop(13)
+    pop(12)
     loop
-    inc r10
+     nop
 
 end_frame:
     rpix // flush pixel cache
@@ -194,7 +196,7 @@ end_frame:
     nop
 
     iwt r15, #gsu_main
-    nop
+     nop
 }
 
 scope updateCoords: {
@@ -208,7 +210,7 @@ scope updateCoords: {
     lob
     
     ret
-    sbk
+     sbk
 }
 scope fillScreen: {
 // returns: void
@@ -225,10 +227,10 @@ scope fillScreen: {
     stw (r3)
     inc r3
     loop
-    inc r3
+     inc r3
 
     ret
-    nop
+     nop
 }
 
 include "midpoint.asm"

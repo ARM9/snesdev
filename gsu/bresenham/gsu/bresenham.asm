@@ -1,8 +1,8 @@
     arch snes.gsu
 
-// inner loop best/worst case of number of instructions executed
-// x inner loop best case: 10 worst: 12
-// y inner loop best case: 13 worst: 13
+// inner loop best/worst case number of bytes executed
+// x inner loop best case: 6 worst: 8
+// y inner loop best case: 8 worst: 10
 
 // Better bresenham implementation
 //align(16)
@@ -51,18 +51,17 @@ define incy(r7) // s16
     // if (x2 < x1) { incx = -1 } else { incx = 1 }
     // skip since incx is always 1 from above swap, x1 <= x2
 
-    // if (y2 < y1) { incy = -1 } else { incy = 1 }
     // could merge this with y2-y1 above if bpl/bge holds true for all inputs
     // in both cases
     // if we limit input domain to unsigned integers 0-256/0-224/whatever then
     // we can use bpl for both
+    // if (y2 < y1) { incy = -1 } else { incy = 1 }
+    ibt {incy}, #0
     from {y2}; sub {y1}
     bge +
-     ibt {incy}, #-1
-    bra ++
-     nop
-+
-    db 1    // ibt {incy}, #1
+     inc {incy}
+    dec {incy}
+    dec {incy}
 +
 
     // plot(x1,y1)
@@ -73,10 +72,10 @@ define incy(r7) // s16
      plot
     //     int err = dx / 2
         define err(r0)
-        from {dx}; asr
+        from {dx}; lsr
 
         moves r12, {dx}
-        beq end
+        //beq end // no need because dy >= 0, dx > dy, thus dx > 0
     //     for (int i = dx; i >= 0; --i) {
         move r13, r15
 -
@@ -103,27 +102,31 @@ end:
 ymajor:
     //     int err = dy / 2
         define err(r0)
-        from {dy}; asr
+        from {dy}; lsr
 
         moves r12, {dy}
         beq end
     //     for (int i = dy; i >= 0; --i) {
         move r13, r15
 -
-    //         y1 = y1 + incy
-            with {y1}; add {incy}
     //         err = err - dx
             sub {dx}
     //         if (err < 0) {
             bpl +
+            // TODO
+            // decrementing r1 should be fine because y1+=incy above already
+            // flushes pcache (change in r2)
              dec {x1}
+            // TODO
     //             x1 = x1 + incx
                 inc {x1}
     //             err = err + dy
                 add {dy}
     //         }
-    //     plot(x1,y1)
     +
+    //         y1 = y1 + incy
+            with {y1}; add {incy}
+    //         plot(x1,y1)
             loop
              plot
     //     }
@@ -131,6 +134,6 @@ ymajor:
      nop
     // }
 }
-
+BlockSize(drawLine)
 // vim:ft=snes
 
