@@ -56,13 +56,12 @@ define incy(r7) // s16
     // if we limit input domain to unsigned integers 0-256/0-224/whatever then
     // we can use bpl for both
     // if (y2 < y1) { incy = -1 } else { incy = 1 }
-    ibt {incy}, #0
+
     from {y2}; sub {y1}
     bge +
-     inc {incy}
-    dec {incy}
-    dec {incy}
+     ibt {incy}, #$ff
 +
+    nop // nop = db $01 hence ibt {incy}, #1
 
     // plot(x1,y1)
 

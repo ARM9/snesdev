@@ -40,4 +40,4 @@ run: all
 run2: all
 	$(higan-a) $(OUTPUT)
 
-include gfx/makefile
+#include gfx/makefile
