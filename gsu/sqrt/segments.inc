@@ -98,7 +98,7 @@ scope seg {
     print "--------------------------\n"
     if seg._current == seg.enum.bank0 {
         global variable seg.bank0._pc(pc())
-        seg.check_range(seg.bank0._pc, seg.bank0.start, seg.bank0.end, "bank0) // todo
+        seg.check_range(seg.bank0._pc, seg.bank0.start, seg.bank0.end, "bank0")
         print "  bank0 pc saved at:  "; hex(seg.bank0._pc); print "\n"
 
     } else if seg._current == seg.enum.bank1 {
